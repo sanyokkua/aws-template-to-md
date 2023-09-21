@@ -1,0 +1,23 @@
+{
+    "name": "aws-template-to-md",
+    "version": "1.0.0",
+    "description": "Converter of AWS CloudFormation template (Json) to readable MD document with only infrastructure elements",
+    "main": "index.js",
+    "scripts": {
+        "build": "rimraf ./build && tsc",
+        "start": "npm run build && node build/index.js",
+        "test": "jest"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@jest/globals": "^29.7.0",
+        "@types/jest": "^29.5.5",
+        "@types/node": "^20.6.3",
+        "jest": "^29.7.0",
+        "rimraf": "^5.0.1",
+        "ts-jest": "^29.1.1",
+        "typescript": "^5.2.2"
+    }
+}
