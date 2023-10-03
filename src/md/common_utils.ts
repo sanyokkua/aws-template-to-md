@@ -33,8 +33,7 @@ export function fnGetAtt(fnGetAttNode: FnGetAtt, resources: ResourcesMappedById)
     if (!("Fn::GetAtt" in fnGetAttNode)) {
         return undefined;
     }
-    const resourceId: string | undefined = fnGetAttNode["Fn::GetAtt"]
-        .find(value => value !== "Arn");
+    const resourceId: string | undefined = fnGetAttNode["Fn::GetAtt"].find(value => value !== "Arn");
     if (resourceId) {
         return resources[resourceId];
     }

@@ -39,7 +39,7 @@ export function getMappedDynamoDbTable(resources: [ResourcesMappedByType, Resour
                                                });
             return {
                 type: dynamoDb.Type,
-                name: dynamoDb.Properties.TableName,
+                name: dynamoDb.Name,
                 structure: {
                     keys: dynamoDbKeys,
                     attributes: dynamoDbAttributes,

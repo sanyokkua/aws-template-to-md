@@ -1,14 +1,15 @@
 import { parseCloudForgeTemplate } from "./aws/parser";
 import { mapAwsResourcesToMd }     from "./md/mapper";
 
-import fs from "fs";
+import fs                           from "fs";
+import { writeDescriptionForStack } from "./md/aws_md_writer";
 
 
 export function loadFile() {
     console.log(__dirname);
 
     const paths: string[] = [
-        "", // TODO: put file in folder and add path here (CloudFormation template in JSON format)
+
     ];
 
     paths.forEach(value => {
@@ -18,9 +19,10 @@ export function loadFile() {
         console.log(stats);
 
         const data = fs.readFileSync(filePath, "utf8");
-        const res = parseCloudForgeTemplate(data);
+        const res = parseCloudForgeTemplate(data, true, "", "");
         const documentResourcesTree = mapAwsResourcesToMd(res);
-        console.log(documentResourcesTree);
+        const resultMd = writeDescriptionForStack(documentResourcesTree);
+        console.log(resultMd);
         console.log("****************");
     });
 }

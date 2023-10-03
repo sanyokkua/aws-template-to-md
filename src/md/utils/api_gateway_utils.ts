@@ -56,7 +56,7 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
             });
 
         const type: string = currentResource.Type;
-        const name: string = currentResource.Properties.Name;
+        const name: string = currentResource.Name;
         const environment: string = stage !== undefined ? stage.Properties.StageName : "";
         const tracing: boolean = stage !== undefined ? stage.Properties.TracingEnabled : false;
         const methodSettings = stage !== undefined ? stage.Properties.MethodSettings

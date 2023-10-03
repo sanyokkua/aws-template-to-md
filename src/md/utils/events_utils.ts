@@ -48,7 +48,7 @@ export function getMappedEventsRule(resources: [ResourcesMappedByType, Resources
             const eventBusResource = eventBusId !== undefined ?
                                      resourcesById[eventBusId] as AwsEventsEventBus :
                                      undefined;
-            const eventBusName = eventBusResource !== undefined ? eventBusResource.Properties.Name : "";
+            const eventBusName = eventBusResource !== undefined ? eventBusResource.Name : "";
 
             const targets = rule.Properties.Targets
                                 .map(target => {
@@ -82,7 +82,7 @@ export function getMappedEventsRule(resources: [ResourcesMappedByType, Resources
 
             const res: EventsRule = {
                 type: rule.Type,
-                name: rule.Properties.Name,
+                name: rule.Name,
                 parentEventBus: eventBusName,
                 state: rule.Properties.State,
                 pattern: JSON.stringify(rule.Properties.EventPattern),

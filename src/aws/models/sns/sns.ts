@@ -47,6 +47,6 @@ export interface AwsSNSTopic extends CommonResourceInfo {
 export interface AwsSNSTopicPolicy extends CommonResourceInfo {
     "Properties": {
         "PolicyDocument": any,
-        "Topics": string[ ]
+        "Topics": string[]
     };
 }

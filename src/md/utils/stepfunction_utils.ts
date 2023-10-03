@@ -4,6 +4,21 @@ import { AWS_StepFunctions_StateMachine }             from "../../aws/constants"
 import { AwsStepFunctionsStateMachine }               from "../../aws/models/stepfunction/stepfunction";
 import { fnJoin }                                     from "../common_utils";
 
+function replaceIdsInDefinition(definition: string, resourcesById: ResourcesMappedById): string {
+    if (definition === undefined || definition.length == 0) {
+        return "";
+    }
+    for (let resourcesByIdKey in resourcesById) {
+        if (definition.indexOf(resourcesByIdKey) >= 0) {
+            const name: string = resourcesById[resourcesByIdKey].Name;
+            definition = definition.replace(resourcesByIdKey, name);
+        } else {
+            console.log(`Not found - ${resourcesByIdKey}`);
+        }
+    }
+    return definition;
+}
+
 export function getMappedStepFunctionsStateMachine(resources: [ResourcesMappedByType, ResourcesMappedById]): StepFunctionsStateMachine[] {
     const resourcesByType = resources[0];
     const resourcesById = resources[1];
@@ -18,9 +33,9 @@ export function getMappedStepFunctionsStateMachine(resources: [ResourcesMappedBy
         .map(resource => resource as AwsStepFunctionsStateMachine)
         .map(stepFunction => {
             const stateMachineName =
-                stepFunction.Properties.StateMachineName !== undefined &&
-                stepFunction.Properties.StateMachineName.length > 0
-                ? stepFunction.Properties.StateMachineName : stepFunction.ID;
+                stepFunction.Name !== undefined &&
+                stepFunction.Name.length > 0
+                ? stepFunction.Name : stepFunction.ID;
 
             let definition: string;
             if (typeof stepFunction.Properties.DefinitionString === "string") {
@@ -28,6 +43,8 @@ export function getMappedStepFunctionsStateMachine(resources: [ResourcesMappedBy
             } else {
                 definition = fnJoin(stepFunction.Properties.DefinitionString["Fn::Join"], resourcesById);
             }
+
+            definition = replaceIdsInDefinition(definition, resourcesById);
 
             return {
                 type: stepFunction.Type,

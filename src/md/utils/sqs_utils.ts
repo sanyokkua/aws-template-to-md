@@ -22,8 +22,8 @@ export function getMappedSQSQueue(resources: [ResourcesMappedByType, ResourcesMa
     return sqsResources
         .map(resource => resource as AwsSQSQueue)
         .map(sqs => {
-            const name = sqs.Properties.QueueName !== undefined && sqs.Properties.QueueName.length > 0
-                         ? sqs.Properties.QueueName : sqs.ID;
+            const name = sqs.Name !== undefined && sqs.Name.length > 0
+                         ? sqs.Name : sqs.ID;
             const contentBasedDeduplication = sqs.Properties.ContentBasedDeduplication !== undefined
                                               ? sqs.Properties.ContentBasedDeduplication : false;
             const fifoQueue = sqs.Properties.FifoQueue !== undefined

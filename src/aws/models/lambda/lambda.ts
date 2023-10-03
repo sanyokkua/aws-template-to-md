@@ -39,7 +39,7 @@ export interface AwsLambdaFunction extends CommonResourceInfo {
         },
         "VpcConfig": {
             "SecurityGroupIds": string[],
-            "SubnetIds": string[ ]
+            "SubnetIds": string[]
         }
     };
 }

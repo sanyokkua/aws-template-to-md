@@ -57,7 +57,6 @@ import {
     AWS_Events_Archive,
     AWS_Events_Connection,
     AWS_Events_EventBus,
-    AWS_Events_EventBusPolicy,
     AWS_Events_Rule,
     AWS_Lambda_EventSourceMapping,
     AWS_Lambda_Function,
@@ -73,7 +72,6 @@ import {
     AwsEventsArchive,
     AwsEventsConnection,
     AwsEventsEventBus,
-    AwsEventsEventBusPolicy,
     AwsEventsRule,
 }                                       from "./models/events/eventbus";
 import {
@@ -96,14 +94,25 @@ import {
 export type ResourcesMappedByType = { [key: string]: Resource[] };
 export type ResourcesMappedById = { [key: string]: Resource };
 
-function getNameOrId(name: string | undefined | null, id: string) {
+function getNameOrId(name: string | undefined | null, id: string, prefix: string | undefined, suffix: string | undefined) {
     if (name === undefined || name === null || name.length === 0) {
         return id;
     }
-    return id;
+    let result = name;
+    if (prefix !== undefined && prefix.length > 0) {
+        result = result.replace(prefix, "");
+    }
+    if (suffix !== undefined && suffix.length > 0) {
+        result = result.replace(suffix, "");
+    }
+    return result;
 }
 
-export function parseCloudForgeTemplate(templateJsonString: string): [ResourcesMappedByType, ResourcesMappedById] {
+export function parseCloudForgeTemplate(templateJsonString: string, fixNames?: boolean, prefix?: string, suffix?: string): [ResourcesMappedByType, ResourcesMappedById] {
+    if (fixNames !== undefined && fixNames && (prefix === undefined || suffix === undefined)) {
+        throw Error("If fixNames set true, then prefix and suffix also should present");
+    }
+
     let template: CloudForgeTemplate = JSON.parse(templateJsonString);
 
     const resourcesMappedByType: ResourcesMappedByType = {};
@@ -118,82 +127,77 @@ export function parseCloudForgeTemplate(templateJsonString: string): [ResourcesM
         switch (currentResource.Type) {
             case AWS_ApiGateway_Authorizer: {
                 currentResource.Name = getNameOrId((currentResource as AwsApiGatewayAuthorizer).Properties.Name,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_ApiGateway_Model: {
                 currentResource.Name = getNameOrId((currentResource as AwsApiGatewayModel).Properties.Name,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_ApiGateway_RequestValidator: {
                 currentResource.Name = getNameOrId((currentResource as AwsApiGatewayRequestValidator).Properties.Name,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_ApiGateway_RestApi: {
                 currentResource.Name = getNameOrId((currentResource as AwsApiGatewayRestApi).Properties.Name,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_DynamoDB_Table: {
                 currentResource.Name = getNameOrId((currentResource as AwsDynamoDbTable).Properties.TableName,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_Events_Archive: {
                 currentResource.Name = getNameOrId((currentResource as AwsEventsArchive).Properties.ArchiveName,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_Events_Connection: {
                 currentResource.Name = getNameOrId((currentResource as AwsEventsConnection).Properties.Name,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_Events_EventBus: {
                 currentResource.Name = getNameOrId((currentResource as AwsEventsEventBus).Properties.Name,
-                                                   currentResource.ID);
-                break;
-            }
-            case AWS_Events_EventBusPolicy: {
-                currentResource.Name = getNameOrId((currentResource as AwsEventsEventBusPolicy).Properties.EventBusName,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_Events_Rule: {
                 currentResource.Name = getNameOrId((currentResource as AwsEventsRule).Properties.Name,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_Lambda_EventSourceMapping: {
                 currentResource.Name = getNameOrId((currentResource as AwsLambdaEventSourceMapping).Properties.EventSourceArn,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_Lambda_Function: {
                 currentResource.Name = getNameOrId((currentResource as AwsLambdaFunction).Properties.FunctionName,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_S3_Bucket: {
                 currentResource.Name = getNameOrId((currentResource as AwsS3Bucket).Properties.BucketName,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_SNS_Topic: {
                 currentResource.Name = getNameOrId((currentResource as AwsSNSTopic).Properties.TopicName,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_SQS_Queue: {
                 currentResource.Name = getNameOrId((currentResource as AwsSQSQueue).Properties.QueueName,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             case AWS_StepFunctions_StateMachine: {
                 currentResource.Name = getNameOrId((currentResource as AwsStepFunctionsStateMachine).Properties.StateMachineName,
-                                                   currentResource.ID);
+                                                   currentResource.ID, prefix, suffix);
                 break;
             }
             default: {

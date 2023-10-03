@@ -16,7 +16,7 @@ export interface AwsStepFunctionsStateMachine extends CommonResourceInfo {
                 "CloudWatchLogsLogGroup": {
                     "LogGroupArn": string
                 }
-            }[ ],
+            }[],
             "IncludeExecutionData": boolean,
             "Level": string
         },

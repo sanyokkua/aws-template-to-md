@@ -25,8 +25,8 @@ export function getMappedLambdaFunction(resources: [ResourcesMappedByType, Resou
     return lambdaResources
         .map(resource => resource as AwsLambdaFunction)
         .map(lambda => {
-            const functionName = lambda.Properties.FunctionName !== undefined && lambda.Properties.FunctionName.length > 0
-                                 ? lambda.Properties.FunctionName : lambda.ID;
+            const functionName = lambda.Name !== undefined && lambda.Name.length > 0
+                                 ? lambda.Name : lambda.ID;
             const memorySize: number =
                 lambda.Properties.MemorySize !== undefined &&
                 lambda.Properties.MemorySize !== null &&

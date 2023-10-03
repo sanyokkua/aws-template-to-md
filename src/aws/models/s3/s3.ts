@@ -96,11 +96,11 @@ export interface AwsS3Bucket extends CommonResourceInfo {
                         "Rules": {
                             "Name": string,
                             "Value": string
-                        }[ ]
+                        }[]
                     }
                 },
                 "Function": string
-            }[  ],
+            }[],
             "QueueConfigurations": {
                 "Event": string,
                 "Filter": {
@@ -108,11 +108,11 @@ export interface AwsS3Bucket extends CommonResourceInfo {
                         "Rules": {
                             "Name": string,
                             "Value": string
-                        }[ ]
+                        }[]
                     }
                 },
                 "Queue": string
-            }[  ],
+            }[],
             "TopicConfigurations": {
                 "Event": string,
                 "Filter": {
@@ -120,11 +120,11 @@ export interface AwsS3Bucket extends CommonResourceInfo {
                         "Rules": {
                             "Name": string,
                             "Value": string
-                        }[ ]
+                        }[]
                     }
                 },
                 "Topic": string
-            }[ ]
+            }[]
         },
         "ObjectLockConfiguration": {
             "ObjectLockEnabled": string,
@@ -140,7 +140,7 @@ export interface AwsS3Bucket extends CommonResourceInfo {
         "OwnershipControls": {
             "Rules": {
                 "ObjectOwnership": string
-            }[ ]
+            }[]
         },
         "PublicAccessBlockConfiguration": {
             "BlockPublicAcls": boolean,
@@ -183,7 +183,7 @@ export interface AwsS3Bucket extends CommonResourceInfo {
                         "TagFilters": {
                             "Key": string,
                             "Value": string
-                        }[  ]
+                        }[]
                     },
                     "Prefix": string,
                     "TagFilter": {
@@ -203,7 +203,7 @@ export interface AwsS3Bucket extends CommonResourceInfo {
                     }
                 },
                 "Status": string
-            }[  ]
+            }[]
         },
         "VersioningConfiguration": {
             "Status": string
@@ -227,7 +227,7 @@ export interface AwsS3Bucket extends CommonResourceInfo {
                     "HttpErrorCodeReturnedEquals": string,
                     "KeyPrefixEquals": string
                 }
-            }[  ]
+            }[]
         }
     };
     "UpdateReplacePolicy": string;

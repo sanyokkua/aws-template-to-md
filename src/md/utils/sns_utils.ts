@@ -3,7 +3,6 @@ import { SNSTopic }                                   from "../models";
 import { AWS_SNS_Subscription, AWS_SNS_Topic }        from "../../aws/constants";
 import { AwsSNSSubscription, AwsSNSTopic }            from "../../aws/models/sns/sns";
 
-// TODO:
 export function getMappedSNSTopic(resources: [ResourcesMappedByType, ResourcesMappedById]): SNSTopic[] {
     const resourcesByType = resources[0];
     const result: SNSTopic[] = [];
@@ -16,8 +15,8 @@ export function getMappedSNSTopic(resources: [ResourcesMappedByType, ResourcesMa
     return snsTopicResources
         .map(resource => resource as AwsSNSTopic)
         .map(sns => {
-            const name = sns.Properties.TopicName !== undefined && sns.Properties.TopicName.length > 0
-                         ? sns.Properties.TopicName : sns.ID;
+            const name = sns.Name !== undefined && sns.Name.length > 0
+                         ? sns.Name : sns.ID;
             let subs: { protocol: string, endpoint: string }[];
 
             if (sns.Properties.Subscription !== undefined && sns.Properties.Subscription.length > 0) {
