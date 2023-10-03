@@ -1,7 +1,7 @@
-import { AllowedResource, createMdTable, makeHeader, MdHeader, WriterFunction } from "./common";
-import { DocumentResourcesTree }                                                from "../models";
+import { AllowedResource, createContentBlock, createMdTable, MdHeader, WriterFunction } from "./common/common";
+import { DocumentResourcesTree }                                                        from "../models";
 
-export const writeListOfResources: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+function createResourceListContent(resourcesList: DocumentResourcesTree): string {
     const allResources: AllowedResource[] = [];
     const resources: AllowedResource[][] = [
         resourcesList.mappedApiGatewayRestApi,
@@ -14,24 +14,22 @@ export const writeListOfResources: WriterFunction = (resourcesList: DocumentReso
         resourcesList.mappedSNSTopic,
         resourcesList.mappedSQSQueue,
     ];
-    for (let i = 0; i < resources.length; i++) {
-        resources[i].forEach(res => allResources.push(res));
-    }
 
-    const HEADER_LINE: string[] = [
-        "Type",
-        "Name",
-    ];
+    resources.forEach(allowedResources => {
+        allowedResources.forEach(resource => allResources.push(resource));
+    });
+
+    const HEADER_LINE: string[] = ["Type", "Name"];
     const tableValues: string[][] = [];
 
     allResources.forEach(field => {
-        tableValues.push([
-                             field.type,
-                             field.name,
-                         ]);
+        tableValues.push([field.type, field.name]);
     });
 
-    const header = makeHeader("List of the main AWS Resources", MdHeader.HEADER_LEVEL_2);
-    const table = createMdTable(HEADER_LINE, tableValues);
-    return `${header}\n${table}`;
+    return createMdTable(HEADER_LINE, tableValues);
+}
+
+export const writeListOfResources: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+    const content: string = createResourceListContent(resourcesList);
+    return createContentBlock("List of the main AWS Resources", MdHeader.HEADER_LEVEL_2, content);
 };

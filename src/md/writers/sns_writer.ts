@@ -1,23 +1,26 @@
-import { createMdTable, makeHeader, MdHeader, WriterFunction } from "./common";
-import { DocumentResourcesTree, SNSTopic }                     from "../models";
+import { createContentBlock, createMdTable, MdHeader, NEW_LINE, WriterFunction } from "./common/common";
+import { DocumentResourcesTree, SNSTopic }                                       from "../models";
 
 function createTopicDescription(snsTopic: SNSTopic): string {
-    const HEADER_LINE: string[] = [
-        "Protocol",
-        "Endpoint",
-    ];
+    const HEADER_LINE: string[] = ["Protocol", "Endpoint"];
     const tableValues: string[][] = [];
 
     snsTopic.subscriptions.forEach(sub => {
-        tableValues.push([
-                             sub.protocol,
-                             sub.endpoint,
-                         ]);
+        tableValues.push([sub.protocol, sub.endpoint]);
     });
 
-    const header = makeHeader("Subscriptions:", MdHeader.HEADER_LEVEL_4);
-    const table = createMdTable(HEADER_LINE, tableValues);
-    return `${header}\n${table}`;
+    return createMdTable(HEADER_LINE, tableValues);
+}
+
+function createSnsContent(snsTopics: SNSTopic[]): string {
+    const resultText: string[] = [];
+
+    snsTopics.forEach(topic => {
+        const content: string = createTopicDescription(topic);
+        resultText.push(createContentBlock(topic.name, MdHeader.HEADER_LEVEL_3, content));
+    });
+
+    return resultText.join(NEW_LINE);
 }
 
 export const writeSnsTopics: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
@@ -26,15 +29,6 @@ export const writeSnsTopics: WriterFunction = (resourcesList: DocumentResourcesT
         return "";
     }
 
-    const resultText: string[] = [];
-    const header = makeHeader("AWS SNS Information", MdHeader.HEADER_LEVEL_2);
-    resultText.push(header);
-
-
-    for (let i = 0; i < snsTopics.length; i++) {
-        resultText.push(makeHeader(snsTopics[i].name, MdHeader.HEADER_LEVEL_3));
-        resultText.push(createTopicDescription(snsTopics[i]));
-    }
-
-    return resultText.join("\n");
+    const content: string = createSnsContent(snsTopics);
+    return createContentBlock("AWS SNS Information", MdHeader.HEADER_LEVEL_2, content);
 };

@@ -1,40 +1,35 @@
-import { createMdTable, makeHeader, MdHeader, WriterFunction } from "./common";
-import { DocumentResourcesTree }                               from "../models";
+import { createContentBlock, createMdTable, MdHeader, WriterFunction } from "./common/common";
+import { DocumentResourcesTree, LambdaFunction }                       from "../models";
 
-export const writeLambdaFunctions: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
-    const lambdaFunctions = resourcesList.mappedLambdaFunction;
-    if (lambdaFunctions === undefined || lambdaFunctions.length === 0) {
-        return "";
+function getEnvVarsAsCommaSeparatedListString(lambda: LambdaFunction): string {
+    let envVarsJsonString: string = lambda.envVars;
+
+    if (envVarsJsonString !== undefined && envVarsJsonString.length > 0) {
+        let parsedEnvVars;
+        try {
+            parsedEnvVars = JSON.parse(envVarsJsonString);
+            const envVarNames: string[] = [];
+
+            for (let key in parsedEnvVars) {
+                envVarNames.push(key);
+            }
+
+            envVarsJsonString = envVarNames.join(", ");
+        } catch (e) {
+            console.log(e);
+            envVarsJsonString = lambda.envVars;
+        }
     }
 
-    const HEADER_LINE: string[] = [
-        "Name",
-        "Arch",
-        "Runtime",
-        "Timeout",
-        "RAM",
-        "/tmp Size",
-        "Tracing",
-        "Env Vars",
-    ];
+    return envVarsJsonString;
+}
+
+function createLambdaContent(lambdaFunctions: LambdaFunction[]): string {
+    const HEADER_LINE: string[] = ["Name", "Arch", "Runtime", "Timeout", "RAM", "/tmp Size", "Tracing", "Env Vars"];
     const tableValues: string[][] = [];
 
     lambdaFunctions.forEach(lambda => {
-        let envVars = lambda.envVars;
-        if (envVars !== undefined && envVars.length > 0) {
-            let parsedEnvVars;
-            try {
-                parsedEnvVars = JSON.parse(envVars);
-                const envVarNames: string[] = [];
-                for (let key in parsedEnvVars) {
-                    envVarNames.push(key);
-                }
-                envVars = envVarNames.join(", ");
-            } catch (e) {
-                console.log(e);
-            }
-        }
-
+        const envVarsJsonString: string = getEnvVarsAsCommaSeparatedListString(lambda);
         tableValues.push([
                              lambda.name,
                              lambda.arch.join(", "),
@@ -43,11 +38,19 @@ export const writeLambdaFunctions: WriterFunction = (resourcesList: DocumentReso
                              `${lambda.memorySize}`,
                              `${lambda.tmpFolderMemory}`,
                              lambda.tracing,
-                             envVars,
+                             envVarsJsonString,
                          ]);
     });
 
-    const header = makeHeader("AWS Lambda Information", MdHeader.HEADER_LEVEL_2);
-    const table = createMdTable(HEADER_LINE, tableValues);
-    return `${header}\n${table}`;
+    return createMdTable(HEADER_LINE, tableValues);
+}
+
+export const writeLambdaFunctions: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+    const lambdaFunctions = resourcesList.mappedLambdaFunction;
+    if (lambdaFunctions === undefined || lambdaFunctions.length === 0) {
+        return "";
+    }
+
+    const content: string = createLambdaContent(lambdaFunctions);
+    return createContentBlock("AWS Lambda Information", MdHeader.HEADER_LEVEL_2, content);
 };

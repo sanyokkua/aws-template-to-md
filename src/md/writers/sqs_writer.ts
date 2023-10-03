@@ -1,19 +1,14 @@
-import { createMdTable, makeHeader, MdHeader, WriterFunction } from "./common";
-import { DocumentResourcesTree }                               from "../models";
+import { createContentBlock, createMdTable, MdHeader, WriterFunction } from "./common/common";
+import { DocumentResourcesTree, SQSQueue }                             from "../models";
 
-export const writeSqsQueues: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
-    const sqsQueues = resourcesList.mappedSQSQueue;
-    if (sqsQueues === undefined || sqsQueues.length === 0) {
-        return "";
-    }
-
+function createSqsContent(sqsQueues: SQSQueue[]): string {
     const HEADER_LINE: string[] = [
         "Name",
         "Fifo",
         "Deduplication",
-        "Delay",
-        "Retention Period",
-        "Visibility Timeout",
+        "Delay (Sec)",
+        "Retention Period (Sec)",
+        "Visibility Timeout (Sec)",
     ];
     const tableValues: string[][] = [];
 
@@ -28,8 +23,15 @@ export const writeSqsQueues: WriterFunction = (resourcesList: DocumentResourcesT
                          ]);
     });
 
-    const header = makeHeader("AWS SQS Information", MdHeader.HEADER_LEVEL_2);
+    return createMdTable(HEADER_LINE, tableValues);
+}
 
-    const table = createMdTable(HEADER_LINE, tableValues);
-    return `${header}\n${table}`;
+export const writeSqsQueues: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+    const sqsQueues = resourcesList.mappedSQSQueue;
+    if (sqsQueues === undefined || sqsQueues.length === 0) {
+        return "";
+    }
+
+    const content: string = createSqsContent(sqsQueues);
+    return createContentBlock("AWS SQS Information", MdHeader.HEADER_LEVEL_2, content);
 };

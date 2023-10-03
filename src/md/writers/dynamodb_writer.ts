@@ -1,32 +1,52 @@
-import { createMdTable, makeHeader, MdHeader, WriterFunction } from "./common";
-import { DocumentResourcesTree, DynamoDbTable }                from "../models";
+import { createContentBlock, createMdTable, MdHeader, NEW_LINE, WriterFunction } from "./common/common";
+import { DocumentResourcesTree, DynamoDbTable }                                  from "../models";
+
+type DynamoDbItem = {
+    name: string;
+    type: string;
+    isKey: boolean;
+    keyType: string;
+}
 
 function createDynamoDbStructureDescription(dynamoDbTable: DynamoDbTable) {
-    const HEADER_LINE: string[] = [
-        "Field Name",
-        "Type",
-        "Key/SortKey",
-    ];
+    const HEADER_LINE: string[] = ["Field Name", "Type", "Is Key/SortKey", "Key Type"];
     const tableValues: string[][] = [];
 
-    dynamoDbTable.structure.keys.forEach(field => {
-        tableValues.push([
-                             field.name,
-                             field.type,
-                             "Yes",
-                         ]);
+    const attributes: DynamoDbItem[] = dynamoDbTable.structure.attributes.map(attr => {
+        const attName: string = attr.name;
+        const attType: string = attr.type;
+        const foundKey = dynamoDbTable.structure.keys.find(keyName => keyName.name === attName);
+        const attIsKey: boolean = foundKey !== undefined;
+        const attKeyType: string = foundKey !== undefined ? foundKey.type : "";
+        return {
+            name: attName,
+            type: attType,
+            isKey: attIsKey,
+            keyType: attKeyType,
+        };
     });
-    dynamoDbTable.structure.attributes.forEach(field => {
+
+    attributes.forEach(attribute => {
         tableValues.push([
-                             field.name,
-                             field.type,
-                             "No",
+                             attribute.name,
+                             attribute.type,
+                             attribute.isKey ? "Yes" : "No",
+                             attribute.keyType,
                          ]);
     });
 
-    const header = makeHeader("Structure of DynamoDB Table:", MdHeader.HEADER_LEVEL_4);
-    const table = createMdTable(HEADER_LINE, tableValues);
-    return `${header}\n${table}`;
+    return createMdTable(HEADER_LINE, tableValues);
+}
+
+function createDynamoDbTextContent(dynamoDbTables: DynamoDbTable[]): string {
+    const resultText: string[] = [];
+
+    dynamoDbTables.forEach(dynamoDb => {
+        const content = createDynamoDbStructureDescription(dynamoDb);
+        resultText.push(createContentBlock(dynamoDb.name, MdHeader.HEADER_LEVEL_3, content));
+    });
+
+    return resultText.join(NEW_LINE);
 }
 
 export const writeDynamoDbTables: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
@@ -34,15 +54,7 @@ export const writeDynamoDbTables: WriterFunction = (resourcesList: DocumentResou
     if (dynamoDbTables === undefined || dynamoDbTables.length === 0) {
         return "";
     }
-    const resultText: string[] = [];
-    const header = makeHeader("AWS DynamoDB Information", MdHeader.HEADER_LEVEL_2);
-    resultText.push(header);
 
-
-    for (let i = 0; i < dynamoDbTables.length; i++) {
-        resultText.push(makeHeader(dynamoDbTables[i].name, MdHeader.HEADER_LEVEL_3));
-        resultText.push(createDynamoDbStructureDescription(dynamoDbTables[i]));
-    }
-
-    return resultText.join("\n");
+    const content: string = createDynamoDbTextContent(dynamoDbTables);
+    return createContentBlock("AWS DynamoDB Information", MdHeader.HEADER_LEVEL_2, content);
 };

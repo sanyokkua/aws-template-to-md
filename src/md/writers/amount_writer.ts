@@ -1,18 +1,9 @@
-import { AllowedResource, createMdTable, makeHeader, MdHeader, WriterFunction } from "./common";
-import { DocumentResourcesTree }                                                from "../models";
+import { AllowedResource, createContentBlock, createMdTable, MdHeader, WriterFunction } from "./common/common";
+import { DocumentResourcesTree }                                                        from "../models";
 
 type Amount = [number, string];
 
-
-function addAmount(resourcesList: AllowedResource[], amounts: Amount[]) {
-    if (resourcesList !== undefined && resourcesList.length > 0) {
-        const amount = resourcesList.length;
-        const typeOfResource: string = resourcesList[0].type;
-        amounts.push([amount, typeOfResource]);
-    }
-}
-
-export const writeAmountOfResources: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+function createAmountMapping(resourcesList: DocumentResourcesTree) {
     const amounts: Amount[] = [];
     const resources: AllowedResource[][] = [
         resourcesList.mappedApiGatewayRestApi,
@@ -25,24 +16,35 @@ export const writeAmountOfResources: WriterFunction = (resourcesList: DocumentRe
         resourcesList.mappedSNSTopic,
         resourcesList.mappedSQSQueue,
     ];
+
     for (let i = 0; i < resources.length; i++) {
-        addAmount(resources[i], amounts);
+        if (resources[i] !== undefined && resources[i].length > 0) {
+            const amount = resources[i].length;
+            const typeOfResource: string = resources[i][0].type;
+            amounts.push([amount, typeOfResource]);
+        }
     }
 
-    const HEADER_LINE: string[] = [
-        "Amount",
-        "Resource Type",
-    ];
+    return amounts;
+}
+
+function createContent(resourcesList: DocumentResourcesTree) {
+    const amounts: Amount[] = createAmountMapping(resourcesList);
+
+    const HEADER_LINE: string[] = ["Amount", "Resource Type"];
     const tableValues: string[][] = [];
 
-    amounts.forEach(field => {
+    amounts.forEach(row => {
         tableValues.push([
-                             `${field[0]}`,
-                             field[1],
+                             `${row[0]}`,
+                             row[1],
                          ]);
     });
 
-    const header = makeHeader("Amount of The Main AWS Resources", MdHeader.HEADER_LEVEL_2);
-    const table = createMdTable(HEADER_LINE, tableValues);
-    return `${header}\n${table}`;
+    return createMdTable(HEADER_LINE, tableValues);
+}
+
+export const writeAmountOfResources: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+    const content = createContent(resourcesList);
+    return createContentBlock("Amount of The Main AWS Resources", MdHeader.HEADER_LEVEL_2, content);
 };

@@ -9,7 +9,7 @@ import {
     SNSTopic,
     SQSQueue,
     StepFunctionsStateMachine,
-} from "../models";
+} from "../../models";
 
 export type WriterFunction = (resourcesList: DocumentResourcesTree) => string;
 
@@ -32,6 +32,7 @@ export enum MdHeader {
     HEADER_LEVEL_6 = "######",
 }
 
+export const NEW_LINE: string = "\n";
 
 export enum MdStyle {
     BOLD = "**",
@@ -50,19 +51,15 @@ export enum CodeSyntax {
 }
 
 
-export function makeHeader(text: string, headerLevel: MdHeader): string {
+export function createMdHeader(text: string, headerLevel: MdHeader): string {
     return `\n${headerLevel} ${text}\n`;
-}
-
-export function applyStyle(text: string, style: MdStyle): string {
-    return `${style}${text}${style}`;
 }
 
 export function createMdList(header: string, values: string[], listType: MdListType): string {
     const text: string[] = [];
 
     if (header !== undefined && header.length > 0) {
-        text.push(makeHeader(header, MdHeader.HEADER_LEVEL_2));
+        text.push(createMdHeader(header, MdHeader.HEADER_LEVEL_2));
     }
 
     for (let i = 0; i < values.length; i++) {
@@ -76,6 +73,10 @@ export function createMdList(header: string, values: string[], listType: MdListT
     }
 
     return text.join("\n");
+}
+
+export function createStyledText(text: string, style: MdStyle): string {
+    return `${style}${text}${style}`;
 }
 
 function joinTableColumns(values: string[]): string {
@@ -115,4 +116,14 @@ export function createMdTable(headerLine: string[], values: string[][]): string 
 export function createMdCodeBlock(codeString: string, syntax: CodeSyntax): string {
     const CODE_BLOCK_SYMBOL: string = "```";
     return `${CODE_BLOCK_SYMBOL}${syntax}\n${codeString}\n${CODE_BLOCK_SYMBOL}`;
+}
+
+export function createContentBlock(header: string, headerLevel: MdHeader, content: string): string {
+    const resultStrings: string[] = [];
+    const headerText: string = createMdHeader(header, headerLevel);
+
+    resultStrings.push(headerText);
+    resultStrings.push(content);
+
+    return resultStrings.join(NEW_LINE);
 }

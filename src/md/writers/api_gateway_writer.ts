@@ -1,14 +1,8 @@
-import { createMdTable, makeHeader, MdHeader, WriterFunction } from "./common";
-import { ApiGatewayRestApi, DocumentResourcesTree }            from "../models";
+import { createContentBlock, createMdTable, MdHeader, NEW_LINE, WriterFunction } from "./common/common";
+import { ApiGatewayRestApi, DocumentResourcesTree }                              from "../models";
 
-function createApiGatewayDescription(apiGatewayRestApi: ApiGatewayRestApi) {
-    const HEADER_LINE: string[] = [
-        "Method",
-        "Endpoint",
-        "Integration Type",
-        "Destination",
-        "Model Schema",
-    ];
+function createApiGatewayEndpointsTable(apiGatewayRestApi: ApiGatewayRestApi) {
+    const HEADER_LINE: string[] = ["Method", "Endpoint", "Integration Type", "Destination", "Model Schema"];
     const tableValues: string[][] = [];
 
     apiGatewayRestApi.endpoints.forEach(endpoint => {
@@ -21,9 +15,18 @@ function createApiGatewayDescription(apiGatewayRestApi: ApiGatewayRestApi) {
                          ]);
     });
 
-    const header = makeHeader("Endpoint information:", MdHeader.HEADER_LEVEL_4);
-    const table = createMdTable(HEADER_LINE, tableValues);
-    return `${header}\n${table}`;
+    return createMdTable(HEADER_LINE, tableValues);
+}
+
+function createApiGatewayTextContent(apiGateways: ApiGatewayRestApi[]): string {
+    const resultText: string[] = [];
+
+    apiGateways.forEach(apiGateway => {
+        const content = createApiGatewayEndpointsTable(apiGateway);
+        resultText.push(createContentBlock(apiGateway.name, MdHeader.HEADER_LEVEL_3, content));
+    });
+
+    return resultText.join(NEW_LINE);
 }
 
 export const writeAwsApiGateways: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
@@ -31,15 +34,8 @@ export const writeAwsApiGateways: WriterFunction = (resourcesList: DocumentResou
     if (apiGateways === undefined || apiGateways.length === 0) {
         return "";
     }
-    const resultText: string[] = [];
-    const header = makeHeader("AWS Api Gateway Information", MdHeader.HEADER_LEVEL_2);
 
-    resultText.push(header);
+    const content = createApiGatewayTextContent(apiGateways);
+    return createContentBlock("AWS Api Gateway Information", MdHeader.HEADER_LEVEL_2, content);
 
-    for (let i = 0; i < apiGateways.length; i++) {
-        resultText.push(makeHeader(apiGateways[i].name, MdHeader.HEADER_LEVEL_3));
-        resultText.push(createApiGatewayDescription(apiGateways[i]));
-    }
-
-    return resultText.join("\n");
 };

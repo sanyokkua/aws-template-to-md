@@ -9,7 +9,6 @@ export function loadFile() {
     console.log(__dirname);
 
     const paths: string[] = [
-
     ];
 
     paths.forEach(value => {

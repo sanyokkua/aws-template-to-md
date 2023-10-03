@@ -1,46 +1,41 @@
-import { CodeSyntax, createMdCodeBlock, createMdTable, makeHeader, MdHeader, WriterFunction } from "./common";
-import { DocumentResourcesTree, EventsRule }                                                  from "../models";
+import {
+    CodeSyntax,
+    createContentBlock,
+    createMdCodeBlock,
+    createMdTable,
+    MdHeader,
+    NEW_LINE,
+    WriterFunction,
+}                                            from "./common/common";
+import { DocumentResourcesTree, EventsRule } from "../models";
 
 
-function createRuleDescription(eventsRule: EventsRule) {
-    const resultString: string[] = [];
+function createRuleDescriptionTable(eventsRule: EventsRule): string {
+    const RULE_DESCRIPTION_HEADER: string[] = ["Name", "Parent Event Bus", "State"];
+    const ruleDescriptionData: string[][] = [[eventsRule.name, eventsRule.parentEventBus, eventsRule.state]];
 
-    const RULE_HEADER_LINE: string[] = [
-        "Name",
-        "Parent Event Bus",
-        "State",
-    ];
+    return createMdTable(RULE_DESCRIPTION_HEADER, ruleDescriptionData);
+}
 
-    const ruleTableValues: string[][] = [
-        [
-            eventsRule.name,
-            eventsRule.parentEventBus,
-            eventsRule.state,
-        ],
-    ];
-
-    resultString.push(createMdTable(RULE_HEADER_LINE, ruleTableValues));
-
-
+function extractRulePatternAsCodeBlock(eventsRule: EventsRule): string {
     let pattern = eventsRule.pattern;
+
     if (pattern !== undefined && pattern.length > 0) {
         try {
             const parsedPattern = JSON.parse(pattern);
             const stringify = JSON.stringify(parsedPattern, null, 2);
             pattern = createMdCodeBlock(stringify, CodeSyntax.JSON);
-            resultString.push(makeHeader("Pattern:", MdHeader.HEADER_LEVEL_4));
-            resultString.push(pattern);
         } catch (e) {
             console.log(e);
+            pattern = eventsRule.pattern;
         }
     }
 
-    const RULE_TARGET_HEADER_LINE: string[] = [
-        "Type",
-        "Name",
-        "DLQ",
-        "SQS Params",
-    ];
+    return pattern;
+}
+
+function createRuleTargetsTable(eventsRule: EventsRule) {
+    const RULE_TARGET_HEADER_LINE: string[] = ["Type", "Name", "DLQ", "SQS Params"];
     const ruleTargetTableValues: string[][] = [];
 
     eventsRule.targets.forEach(target => {
@@ -52,9 +47,32 @@ function createRuleDescription(eventsRule: EventsRule) {
                                    ]);
     });
 
-    resultString.push(makeHeader("Rule Targets:", MdHeader.HEADER_LEVEL_4));
-    resultString.push(createMdTable(RULE_TARGET_HEADER_LINE, ruleTargetTableValues));
-    return resultString.join("\n");
+    return createMdTable(RULE_TARGET_HEADER_LINE, ruleTargetTableValues);
+}
+
+function createRuleDescription(eventsRule: EventsRule) {
+    const resultString: string[] = [];
+
+    const ruleDescriptionTable: string = createRuleDescriptionTable(eventsRule);
+    const rulePatternCodeBlock: string = extractRulePatternAsCodeBlock(eventsRule);
+    const ruleTargetsTable: string = createRuleTargetsTable(eventsRule);
+
+    resultString.push(ruleDescriptionTable);
+    resultString.push(createContentBlock("Rule Pattern", MdHeader.HEADER_LEVEL_4, rulePatternCodeBlock));
+    resultString.push(createContentBlock("Rule Targets", MdHeader.HEADER_LEVEL_4, ruleTargetsTable));
+
+    return resultString.join(NEW_LINE);
+}
+
+function createEventRulesContent(rules: EventsRule[]): string {
+    const resultText: string[] = [];
+
+    rules.forEach(rule => {
+        const content = createRuleDescription(rule);
+        resultText.push(createContentBlock(rule.name, MdHeader.HEADER_LEVEL_3, content));
+    });
+
+    return resultText.join(NEW_LINE);
 }
 
 export const writeEventRules: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
@@ -62,15 +80,7 @@ export const writeEventRules: WriterFunction = (resourcesList: DocumentResources
     if (rules === undefined || rules.length === 0) {
         return "";
     }
-    const resultText: string[] = [];
-    const header = makeHeader("AWS Event Rule Information", MdHeader.HEADER_LEVEL_2);
-    resultText.push(header);
 
-
-    for (let i = 0; i < rules.length; i++) {
-        resultText.push(makeHeader(rules[i].name, MdHeader.HEADER_LEVEL_3));
-        resultText.push(createRuleDescription(rules[i]));
-    }
-
-    return resultText.join("\n");
+    const content: string = createEventRulesContent(rules);
+    return createContentBlock("AWS Event Rule Information", MdHeader.HEADER_LEVEL_2, content);
 };
