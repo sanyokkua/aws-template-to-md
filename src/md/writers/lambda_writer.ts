@@ -25,7 +25,16 @@ function getEnvVarsAsCommaSeparatedListString(lambda: LambdaFunction): string {
 }
 
 function createLambdaContent(lambdaFunctions: LambdaFunction[]): string {
-    const HEADER_LINE: string[] = ["Name", "Arch", "Runtime", "Timeout", "RAM", "/tmp Size", "Tracing", "Env Vars"];
+    const HEADER_LINE: string[] = [
+        "Name",
+        "Arch",
+        "Runtime",
+        "Timeout (Sec)",
+        "RAM (Mb)",
+        "/tmp Size (Mb)",
+        "Tracing",
+        "Env Vars",
+    ];
     const tableValues: string[][] = [];
 
     lambdaFunctions.forEach(lambda => {
