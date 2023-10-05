@@ -1,5 +1,12 @@
-import { AllowedResource, createContentBlock, createMdTable, MdHeader, WriterFunction } from "./common/common";
-import { DocumentResourcesTree }                                                        from "../models";
+import {
+    AllowedResource,
+    AwsWriterFunction,
+    createContentBlock,
+    createMdTable,
+    MdHeader,
+    WriterOptions,
+}                                from "./common/common_md_functions";
+import { DocumentResourcesTree } from "../models/models";
 
 function createResourceListContent(resourcesList: DocumentResourcesTree): string {
     const allResources: AllowedResource[] = [];
@@ -29,7 +36,7 @@ function createResourceListContent(resourcesList: DocumentResourcesTree): string
     return createMdTable(HEADER_LINE, tableValues);
 }
 
-export const writeListOfResources: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+export const writeListOfResources: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
     const content: string = createResourceListContent(resourcesList);
     return createContentBlock("List of the main AWS Resources", MdHeader.HEADER_LEVEL_2, content);
 };

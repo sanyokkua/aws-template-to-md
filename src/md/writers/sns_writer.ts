@@ -1,5 +1,12 @@
-import { createContentBlock, createMdTable, MdHeader, NEW_LINE, WriterFunction } from "./common/common";
-import { DocumentResourcesTree, SNSTopic }                                       from "../models";
+import {
+    AwsWriterFunction,
+    createContentBlock,
+    createMdTable,
+    MdHeader,
+    NEW_LINE,
+    WriterOptions,
+}                                          from "./common/common_md_functions";
+import { DocumentResourcesTree, SNSTopic } from "../models/models";
 
 function createTopicDescription(snsTopic: SNSTopic): string {
     const HEADER_LINE: string[] = ["Protocol", "Endpoint"];
@@ -23,7 +30,7 @@ function createSnsContent(snsTopics: SNSTopic[]): string {
     return resultText.join(NEW_LINE);
 }
 
-export const writeSnsTopics: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+export const writeSnsTopics: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
     const snsTopics = resourcesList.mappedSNSTopic;
     if (snsTopics === undefined || snsTopics.length === 0) {
         return "";

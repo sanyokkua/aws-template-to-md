@@ -1,6 +1,7 @@
 import { ResourcesMappedById, ResourcesMappedByType }   from "../aws/parser";
 import {
     ApiGatewayRestApi,
+    CommonResource,
     DocumentResourcesTree,
     DynamoDbTable,
     EventsEventBus,
@@ -10,7 +11,7 @@ import {
     SNSTopic,
     SQSQueue,
     StepFunctionsStateMachine,
-}                                                       from "./models";
+}                                                       from "./models/models";
 import { getMappedApiGatewayRestApi }                   from "./utils/api_gateway_utils";
 import { getMappedEventsEventBus, getMappedEventsRule } from "./utils/events_utils";
 import { getMappedDynamoDbTable }                       from "./utils/dynamodb_utils";
@@ -19,6 +20,7 @@ import { getMappedLambdaFunction }                      from "./utils/lambda_uti
 import { getMappedS3Bucket }                            from "./utils/s3_utils";
 import { getMappedSNSTopic }                            from "./utils/sns_utils";
 import { getMappedSQSQueue }                            from "./utils/sqs_utils";
+import { getCommonResources }                           from "./utils/common_resource_utils";
 
 export function mapAwsResourcesToMd(resources: [ResourcesMappedByType, ResourcesMappedById]): DocumentResourcesTree {
     const mappedApiGatewayRestApi: ApiGatewayRestApi[] = getMappedApiGatewayRestApi(resources);
@@ -30,6 +32,7 @@ export function mapAwsResourcesToMd(resources: [ResourcesMappedByType, Resources
     const mappedS3Bucket: S3Bucket[] = getMappedS3Bucket(resources);
     const mappedSNSTopic: SNSTopic[] = getMappedSNSTopic(resources);
     const mappedSQSQueue: SQSQueue[] = getMappedSQSQueue(resources);
+    const mappedAllResourcesToCommonResource: CommonResource[] = getCommonResources(resources);
 
     return {
         mappedApiGatewayRestApi: mappedApiGatewayRestApi,
@@ -41,5 +44,6 @@ export function mapAwsResourcesToMd(resources: [ResourcesMappedByType, Resources
         mappedS3Bucket: mappedS3Bucket,
         mappedSNSTopic: mappedSNSTopic,
         mappedSQSQueue: mappedSQSQueue,
+        mappedAllResources: mappedAllResourcesToCommonResource,
     };
 }

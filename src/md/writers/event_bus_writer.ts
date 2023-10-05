@@ -1,5 +1,12 @@
-import { createContentBlock, createMdList, MdHeader, MdListType, WriterFunction } from "./common/common";
-import { DocumentResourcesTree, EventsEventBus }                                  from "../models";
+import {
+    AwsWriterFunction,
+    createContentBlock,
+    createMdList,
+    MdHeader,
+    MdListType,
+    WriterOptions,
+}                                                from "./common/common_md_functions";
+import { DocumentResourcesTree, EventsEventBus } from "../models/models";
 
 function createEventBusContent(eventBusList: EventsEventBus[]): string {
     const eventBusesMapped: string[] = eventBusList.map(eventBus => eventBus.name);
@@ -7,7 +14,7 @@ function createEventBusContent(eventBusList: EventsEventBus[]): string {
     return createMdList("Event Buses:", eventBusesMapped, MdListType.UNORDERED);
 }
 
-export const writeEventBuses: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+export const writeEventBuses: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
     const eventBusList = resourcesList.mappedEventsEventBus;
     if (eventBusList === undefined || eventBusList.length === 0) {
         return "";

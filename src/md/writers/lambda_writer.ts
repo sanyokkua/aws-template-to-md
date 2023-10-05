@@ -1,5 +1,11 @@
-import { createContentBlock, createMdTable, MdHeader, WriterFunction } from "./common/common";
-import { DocumentResourcesTree, LambdaFunction }                       from "../models";
+import {
+    AwsWriterFunction,
+    createContentBlock,
+    createMdTable,
+    MdHeader,
+    WriterOptions,
+}                                                from "./common/common_md_functions";
+import { DocumentResourcesTree, LambdaFunction } from "../models/models";
 
 function getEnvVarsAsCommaSeparatedListString(lambda: LambdaFunction): string {
     let envVarsJsonString: string = lambda.envVars;
@@ -14,7 +20,7 @@ function getEnvVarsAsCommaSeparatedListString(lambda: LambdaFunction): string {
                 envVarNames.push(key);
             }
 
-            envVarsJsonString = envVarNames.join(", ");
+            envVarsJsonString = envVarNames.sort().join(", ");
         } catch (e) {
             console.log(e);
             envVarsJsonString = lambda.envVars;
@@ -54,7 +60,7 @@ function createLambdaContent(lambdaFunctions: LambdaFunction[]): string {
     return createMdTable(HEADER_LINE, tableValues);
 }
 
-export const writeLambdaFunctions: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+export const writeLambdaFunctions: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
     const lambdaFunctions = resourcesList.mappedLambdaFunction;
     if (lambdaFunctions === undefined || lambdaFunctions.length === 0) {
         return "";

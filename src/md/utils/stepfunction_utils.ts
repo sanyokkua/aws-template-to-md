@@ -1,8 +1,8 @@
 import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
-import { StepFunctionsStateMachine }                  from "../models";
+import { StepFunctionsStateMachine }                  from "../models/models";
 import { AWS_StepFunctions_StateMachine }             from "../../aws/constants";
 import { AwsStepFunctionsStateMachine }               from "../../aws/models/stepfunction/stepfunction";
-import { fnJoin }                                     from "../common_utils";
+import { fnJoin }                                     from "../writers/common/common_parser_utils";
 
 function replaceIdsInDefinition(definition: string, resourcesById: ResourcesMappedById): string {
     if (definition === undefined || definition.length == 0) {
@@ -47,6 +47,7 @@ export function getMappedStepFunctionsStateMachine(resources: [ResourcesMappedBy
             definition = replaceIdsInDefinition(definition, resourcesById);
 
             return {
+                id: stepFunction.ID,
                 type: stepFunction.Type,
                 name: stateMachineName,
                 definition: definition,

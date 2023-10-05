@@ -1,5 +1,5 @@
 import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
-import { DynamoDbTable }                              from "../models";
+import { DynamoDbTable }                              from "../models/models";
 import { AWS_DynamoDB_Table }                         from "../../aws/constants";
 import { AwsDynamoDbTable }                           from "../../aws/models/dynamodb/dynamodb";
 
@@ -38,6 +38,7 @@ export function getMappedDynamoDbTable(resources: [ResourcesMappedByType, Resour
                                                    };
                                                });
             return {
+                id: dynamoDb.ID,
                 type: dynamoDb.Type,
                 name: dynamoDb.Name,
                 structure: {

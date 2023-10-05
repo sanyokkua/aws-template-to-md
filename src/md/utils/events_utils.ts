@@ -1,8 +1,8 @@
 import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
-import { EventsEventBus, EventsRule }                 from "../models";
+import { EventsEventBus, EventsRule }                 from "../models/models";
 import { AWS_Events_EventBus, AWS_Events_Rule }       from "../../aws/constants";
 import { AwsEventsEventBus, AwsEventsRule }           from "../../aws/models/events/eventbus";
-import { fnGetAtt }                                   from "../common_utils";
+import { fnGetAtt }                                   from "../writers/common/common_parser_utils";
 import { Resource }                                   from "../../aws/models/common";
 
 export function getMappedEventsEventBus(resources: [ResourcesMappedByType, ResourcesMappedById]): EventsEventBus[] {
@@ -18,7 +18,7 @@ export function getMappedEventsEventBus(resources: [ResourcesMappedByType, Resou
             return eventBusResource as AwsEventsEventBus;
         })
         .map(eventBus => {
-            const res: EventsEventBus = {name: eventBus.Properties.Name, type: eventBus.Type};
+            const res: EventsEventBus = {id: eventBus.ID, name: eventBus.Name, type: eventBus.Type};
             return res;
         })
         .forEach(eventBus => {
@@ -81,6 +81,7 @@ export function getMappedEventsRule(resources: [ResourcesMappedByType, Resources
                                 });
 
             const res: EventsRule = {
+                id: rule.ID,
                 type: rule.Type,
                 name: rule.Name,
                 parentEventBus: eventBusName,

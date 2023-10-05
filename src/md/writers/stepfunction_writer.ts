@@ -1,12 +1,13 @@
 import {
+    AwsWriterFunction,
     CodeSyntax,
     createContentBlock,
     createMdCodeBlock,
     MdHeader,
     NEW_LINE,
-    WriterFunction,
-}                                                           from "./common/common";
-import { DocumentResourcesTree, StepFunctionsStateMachine } from "../models";
+    WriterOptions,
+}                                                           from "./common/common_md_functions";
+import { DocumentResourcesTree, StepFunctionsStateMachine } from "../models/models";
 
 function createStepFunctionContent(stepFunctionsStateMachines: StepFunctionsStateMachine[]): string {
     const resultString: string[] = [];
@@ -21,7 +22,7 @@ function createStepFunctionContent(stepFunctionsStateMachines: StepFunctionsStat
     return resultString.join(NEW_LINE);
 }
 
-export const writeStepFunctions: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+export const writeStepFunctions: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
     const stepFunctionsStateMachines = resourcesList.mappedStepFunctionsStateMachine;
     if (stepFunctionsStateMachines === undefined || stepFunctionsStateMachines.length === 0) {
         return "";

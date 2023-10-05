@@ -1,5 +1,5 @@
 import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
-import { SQSQueue }                                   from "../models";
+import { SQSQueue }                                   from "../models/models";
 import { AWS_SQS_Queue }                              from "../../aws/constants";
 import { AwsSQSQueue }                                from "../../aws/models/sqs/sqs";
 
@@ -38,6 +38,7 @@ export function getMappedSQSQueue(resources: [ResourcesMappedByType, ResourcesMa
                                       ? sqs.Properties.VisibilityTimeout : AWS_SQS_VISIBILITY_TIMEOUT_DEFAULT;
 
             return {
+                id: sqs.ID,
                 type: sqs.Type,
                 name: name,
                 contentBasedDeduplication: contentBasedDeduplication,

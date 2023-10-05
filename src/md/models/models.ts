@@ -1,4 +1,10 @@
-export type ApiGatewayRestApi = {
+export interface CommonResource {
+    id: string;
+    type: string;
+    name: string;
+}
+
+export interface ApiGatewayRestApi extends CommonResource {
     type: string;  // AwsApiGatewayRestApi.Type
     name: string;  // AwsApiGatewayRestApi.Name
     environment: string; // AwsApiGatewayStage.Properties.StageName
@@ -9,7 +15,7 @@ export type ApiGatewayRestApi = {
         loggingLevel: string, // AwsApiGatewayStage.Properties.MethodSettings.LoggingLevel
         metricsEnabled: boolean,  // AwsApiGatewayStage.Properties.MethodSettings.MetricsEnabled
         resourcePath: string  // AwsApiGatewayStage.Properties.MethodSettings.ResourcePath
-    }[]
+    }[];
     endpoints: {
         url: string; // Build based on the AwsApiGatewayResource.Properties.PathPart
         method: string; // AwsApiGatewayMethod.Properties.HttpMethod
@@ -21,13 +27,11 @@ export type ApiGatewayRestApi = {
         type: string; // AwsApiGatewayAuthorizer.Properties.Type
     };
 }
-export type EventsEventBus = {
-    type: string;  // AwsEventsEventBus.Type
-    name: string;  // AwsEventsEventBus.Properties.Name
+
+export interface EventsEventBus extends CommonResource {
 }
-export type EventsRule = {
-    type: string;  // AwsEventsRule.Type
-    name: string; // AwsEventsRule.Name
+
+export interface EventsRule extends CommonResource {
     parentEventBus: string; // AwsEventsRule.EventBusName.Ref
     state: string;// AwsEventsRule.Sate
     pattern: string; // AwsEventsRule.EventPattern
@@ -36,11 +40,10 @@ export type EventsRule = {
         name: string;
         dlq: string;
         sqsParams: string;
-    }[]
+    }[];
 }
-export type DynamoDbTable = {
-    type: string;  // AwsDynamoDbTable.Type
-    name: string;  // AwsDynamoDbTable.Properties.TableName
+
+export interface DynamoDbTable extends CommonResource {
     structure: {
         keys: {
             name: string; // AwsDynamoDbTable.Properties.KeySchema.AttributeName
@@ -54,16 +57,14 @@ export type DynamoDbTable = {
     updateReplacePolicy: string; // AwsDynamoDbTable.UpdateReplacePolicy
     deletionPolicy: string; // AwsDynamoDbTable.DeletionPolicy
 }
-export type StepFunctionsStateMachine = {
-    type: string;  // AwsStepFunctionsStateMachine.Type
-    name: string;  // AwsStepFunctionsStateMachine.Properties.StateMachineName
+
+export interface StepFunctionsStateMachine extends CommonResource {
     definition: string; // AwsStepFunctionsStateMachine.Properties.DefinitionString
     updateReplacePolicy: string; // AwsStepFunctionsStateMachine.UpdateReplacePolicy
     deletionPolicy: string; // AwsStepFunctionsStateMachine.DeletionPolicy
 }
-export type LambdaFunction = {
-    type: string;  // AwsLambdaFunction.Type
-    name: string;  // AwsLambdaFunction.Properties.FunctionName
+
+export interface LambdaFunction extends CommonResource {
     arch: string[]; // AwsLambdaFunction.Properties.Architectures
     runtime: string; // AwsLambdaFunction.Properties.Runtime
     timeout: number; // AwsLambdaFunction.Properties.Timeout
@@ -72,23 +73,20 @@ export type LambdaFunction = {
     memorySize: number; // AwsLambdaFunction.Properties.MemorySize
     tmpFolderMemory: number; // AwsLambdaFunction.Properties.EphemeralStorage.Size
 }
-export type S3Bucket = {
-    type: string;  // AwsS3Bucket.Type
-    name: string;  // AwsS3Bucket.Properties.BucketName
+
+export interface S3Bucket extends CommonResource {
     updateReplacePolicy: string; // AwsDynamoDbTable.UpdateReplacePolicy
     deletionPolicy: string; // AwsDynamoDbTable.DeletionPolicy
 }
-export type SNSTopic = {
-    type: string;  // AwsSNSTopic.Type
-    name: string;  // AwsSNSTopic.Properties.TopicName
+
+export interface SNSTopic extends CommonResource {
     subscriptions: {
         protocol: string;// AwsSNSSubscription.Properties.Protocol
         endpoint: string;// AwsSNSSubscription.Properties.Endpoint
-    }[]
+    }[];
 }
-export type SQSQueue = {
-    type: string;  // AwsSQSQueue.Type
-    name: string;  // AwsSQSQueue.Properties.QueueName
+
+export interface SQSQueue extends CommonResource {
     contentBasedDeduplication: boolean; // AwsSQSQueue.Properties.ContentBasedDeduplication
     fifoQueue: boolean; // AwsSQSQueue.Properties.FifoQueue
     delaySeconds: number; // AwsSQSQueue.Properties.DelaySeconds
@@ -108,4 +106,5 @@ export type DocumentResourcesTree = {
     mappedS3Bucket: S3Bucket[];
     mappedSNSTopic: SNSTopic[];
     mappedSQSQueue: SQSQueue[];
+    mappedAllResources: CommonResource[];
 }

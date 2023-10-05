@@ -1,5 +1,5 @@
-import { FnGetAtt, FnJoinType, Resource } from "../aws/models/common";
-import { ResourcesMappedById }            from "../aws/parser";
+import { FnGetAtt, FnJoinType, Resource } from "../../../aws/models/common";
+import { ResourcesMappedById }            from "../../../aws/parser";
 
 export function fnJoin(fnJoinNode: FnJoinType, resources: ResourcesMappedById): string {
     const stringsToJoin: string[] = [];

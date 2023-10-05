@@ -1,5 +1,12 @@
-import { createContentBlock, createMdTable, MdHeader, NEW_LINE, WriterFunction } from "./common/common";
-import { DocumentResourcesTree, DynamoDbTable }                                  from "../models";
+import {
+    AwsWriterFunction,
+    createContentBlock,
+    createMdTable,
+    MdHeader,
+    NEW_LINE,
+    WriterOptions,
+}                                               from "./common/common_md_functions";
+import { DocumentResourcesTree, DynamoDbTable } from "../models/models";
 
 type DynamoDbItem = {
     name: string;
@@ -49,7 +56,7 @@ function createDynamoDbTextContent(dynamoDbTables: DynamoDbTable[]): string {
     return resultText.join(NEW_LINE);
 }
 
-export const writeDynamoDbTables: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+export const writeDynamoDbTables: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
     const dynamoDbTables = resourcesList.mappedDynamoDbTable;
     if (dynamoDbTables === undefined || dynamoDbTables.length === 0) {
         return "";

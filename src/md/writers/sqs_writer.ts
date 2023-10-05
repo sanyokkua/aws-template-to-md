@@ -1,5 +1,11 @@
-import { createContentBlock, createMdTable, MdHeader, WriterFunction } from "./common/common";
-import { DocumentResourcesTree, SQSQueue }                             from "../models";
+import {
+    AwsWriterFunction,
+    createContentBlock,
+    createMdTable,
+    MdHeader,
+    WriterOptions,
+}                                          from "./common/common_md_functions";
+import { DocumentResourcesTree, SQSQueue } from "../models/models";
 
 function createSqsContent(sqsQueues: SQSQueue[]): string {
     const HEADER_LINE: string[] = [
@@ -26,7 +32,7 @@ function createSqsContent(sqsQueues: SQSQueue[]): string {
     return createMdTable(HEADER_LINE, tableValues);
 }
 
-export const writeSqsQueues: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+export const writeSqsQueues: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
     const sqsQueues = resourcesList.mappedSQSQueue;
     if (sqsQueues === undefined || sqsQueues.length === 0) {
         return "";

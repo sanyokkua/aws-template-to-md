@@ -1,5 +1,12 @@
-import { AllowedResource, createContentBlock, createMdTable, MdHeader, WriterFunction } from "./common/common";
-import { DocumentResourcesTree }                                                        from "../models";
+import {
+    AllowedResource,
+    AwsWriterFunction,
+    createContentBlock,
+    createMdTable,
+    MdHeader,
+    WriterOptions,
+}                                                from "./common/common_md_functions";
+import { CommonResource, DocumentResourcesTree } from "../models/models";
 
 type Amount = [number, string];
 
@@ -17,15 +24,24 @@ function createAmountMapping(resourcesList: DocumentResourcesTree) {
         resourcesList.mappedSQSQueue,
     ];
 
-    for (let i = 0; i < resources.length; i++) {
-        if (resources[i] !== undefined && resources[i].length > 0) {
-            const amount = resources[i].length;
-            const typeOfResource: string = resources[i][0].type;
-            amounts.push([amount, typeOfResource]);
+    const resourcesMapped: { [key: string]: CommonResource[] } = {};
+
+    resourcesList.mappedAllResources.forEach(value => {
+        if (resourcesMapped[value.type] === undefined || resourcesMapped[value.type] === null) {
+            resourcesMapped[value.type] = [];
         }
+        resourcesMapped[value.type].push(value);
+    });
+
+    for (let resourcesMappedKey in resourcesMapped) {
+        const amount = resourcesMapped[resourcesMappedKey].length;
+        const typeOfResource: string = resourcesMapped[resourcesMappedKey][0].type;
+        amounts.push([amount, typeOfResource]);
     }
 
-    return amounts;
+    return amounts.sort((a: Amount, b: Amount): number => {
+        return a[1].localeCompare(b[1]);
+    });
 }
 
 function createContent(resourcesList: DocumentResourcesTree) {
@@ -44,7 +60,9 @@ function createContent(resourcesList: DocumentResourcesTree) {
     return createMdTable(HEADER_LINE, tableValues);
 }
 
-export const writeAmountOfResources: WriterFunction = (resourcesList: DocumentResourcesTree): string => {
+export const writeAmountOfResources: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
     const content = createContent(resourcesList);
-    return createContentBlock("Amount of The Main AWS Resources", MdHeader.HEADER_LEVEL_2, content);
+    return createContentBlock("Amount of The AWS Resources in CloudFormation Template",
+                              MdHeader.HEADER_LEVEL_2,
+                              content);
 };

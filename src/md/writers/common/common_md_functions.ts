@@ -9,9 +9,13 @@ import {
     SNSTopic,
     SQSQueue,
     StepFunctionsStateMachine,
-} from "../../models";
+} from "../../models/models";
 
-export type WriterFunction = (resourcesList: DocumentResourcesTree) => string;
+export type WriterOptions = { [key: string]: boolean }
+
+export type GenericWriter = () => string;
+
+export type AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions) => string;
 
 export type AllowedResource = ApiGatewayRestApi |
                               EventsEventBus |
@@ -126,4 +130,12 @@ export function createContentBlock(header: string, headerLevel: MdHeader, conten
     resultStrings.push(content);
 
     return resultStrings.join(NEW_LINE);
+}
+
+export function createImageLink(description: string, link: string): string {
+    return `![${description}](${link})`;
+}
+
+export function createLink(name: string, link: string): string {
+    return `[${name}](${link})`;
 }

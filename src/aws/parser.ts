@@ -94,125 +94,127 @@ import {
 export type ResourcesMappedByType = { [key: string]: Resource[] };
 export type ResourcesMappedById = { [key: string]: Resource };
 
+function removePrefix(originalValue: string, prefix: string): string {
+    if (originalValue.startsWith(prefix)) {
+        return originalValue.slice(prefix.length);
+    } else {
+        return originalValue;
+    }
+}
+
+function removeSuffix(originalValue: string, suffix: string): string {
+    if (originalValue.endsWith(suffix)) {
+        return originalValue.slice(0, -suffix.length);
+    } else {
+        return originalValue;
+    }
+}
+
 function getNameOrId(name: string | undefined | null, id: string, prefix: string | undefined, suffix: string | undefined) {
     if (name === undefined || name === null || name.length === 0) {
         return id;
     }
     let result = name;
-    if (prefix !== undefined && prefix.length > 0) {
-        result = result.replace(prefix, "");
+    if (prefix !== undefined && prefix.length > 0 && result.startsWith(prefix)) {
+        result = removePrefix(result, prefix);
     }
-    if (suffix !== undefined && suffix.length > 0) {
-        result = result.replace(suffix, "");
+    if (suffix !== undefined && suffix.length > 0 && result.endsWith(suffix)) {
+        result = removeSuffix(result, suffix);
     }
     return result;
 }
 
-export function parseCloudForgeTemplate(templateJsonString: string, fixNames?: boolean, prefix?: string, suffix?: string): [ResourcesMappedByType, ResourcesMappedById] {
-    if (fixNames !== undefined && fixNames && (prefix === undefined || suffix === undefined)) {
-        throw Error("If fixNames set true, then prefix and suffix also should present");
-    }
-
-    let template: CloudForgeTemplate = JSON.parse(templateJsonString);
+export function parseCloudForgeTemplate(templateJsonString: string, prefix?: string, suffix?: string): [ResourcesMappedByType, ResourcesMappedById] {
+    const cloudForgeTemplate: CloudForgeTemplate = JSON.parse(templateJsonString);
+    const resourcesFromTemplate = cloudForgeTemplate.Resources;
 
     const resourcesMappedByType: ResourcesMappedByType = {};
     const resourcesMappedById: ResourcesMappedById = {};
 
-    const resources = template.Resources;
-    for (let key in resources) {
-        const currentResource = resources[key];
-        const resourceType = currentResource.Type;
-        currentResource.ID = key;
+    for (const key in resourcesFromTemplate) {
+        const resource = resourcesFromTemplate[key];
+        const resourceType = resource.Type;
+        const resourceID = key;
 
-        switch (currentResource.Type) {
+        let expectedName;
+        switch (resource.Type) {
             case AWS_ApiGateway_Authorizer: {
-                currentResource.Name = getNameOrId((currentResource as AwsApiGatewayAuthorizer).Properties.Name,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsApiGatewayAuthorizer).Properties.Name;
                 break;
             }
             case AWS_ApiGateway_Model: {
-                currentResource.Name = getNameOrId((currentResource as AwsApiGatewayModel).Properties.Name,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsApiGatewayModel).Properties.Name;
                 break;
             }
             case AWS_ApiGateway_RequestValidator: {
-                currentResource.Name = getNameOrId((currentResource as AwsApiGatewayRequestValidator).Properties.Name,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsApiGatewayRequestValidator).Properties.Name;
                 break;
             }
             case AWS_ApiGateway_RestApi: {
-                currentResource.Name = getNameOrId((currentResource as AwsApiGatewayRestApi).Properties.Name,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsApiGatewayRestApi).Properties.Name;
                 break;
             }
             case AWS_DynamoDB_Table: {
-                currentResource.Name = getNameOrId((currentResource as AwsDynamoDbTable).Properties.TableName,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsDynamoDbTable).Properties.TableName;
                 break;
             }
             case AWS_Events_Archive: {
-                currentResource.Name = getNameOrId((currentResource as AwsEventsArchive).Properties.ArchiveName,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsEventsArchive).Properties.ArchiveName;
                 break;
             }
             case AWS_Events_Connection: {
-                currentResource.Name = getNameOrId((currentResource as AwsEventsConnection).Properties.Name,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsEventsConnection).Properties.Name;
                 break;
             }
             case AWS_Events_EventBus: {
-                currentResource.Name = getNameOrId((currentResource as AwsEventsEventBus).Properties.Name,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsEventsEventBus).Properties.Name;
                 break;
             }
             case AWS_Events_Rule: {
-                currentResource.Name = getNameOrId((currentResource as AwsEventsRule).Properties.Name,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsEventsRule).Properties.Name;
                 break;
             }
             case AWS_Lambda_EventSourceMapping: {
-                currentResource.Name = getNameOrId((currentResource as AwsLambdaEventSourceMapping).Properties.EventSourceArn,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsLambdaEventSourceMapping).Properties.EventSourceArn;
                 break;
             }
             case AWS_Lambda_Function: {
-                currentResource.Name = getNameOrId((currentResource as AwsLambdaFunction).Properties.FunctionName,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsLambdaFunction).Properties.FunctionName;
                 break;
             }
             case AWS_S3_Bucket: {
-                currentResource.Name = getNameOrId((currentResource as AwsS3Bucket).Properties.BucketName,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsS3Bucket).Properties.BucketName;
                 break;
             }
             case AWS_SNS_Topic: {
-                currentResource.Name = getNameOrId((currentResource as AwsSNSTopic).Properties.TopicName,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsSNSTopic).Properties.TopicName;
                 break;
             }
             case AWS_SQS_Queue: {
-                currentResource.Name = getNameOrId((currentResource as AwsSQSQueue).Properties.QueueName,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsSQSQueue).Properties.QueueName;
                 break;
             }
             case AWS_StepFunctions_StateMachine: {
-                currentResource.Name = getNameOrId((currentResource as AwsStepFunctionsStateMachine).Properties.StateMachineName,
-                                                   currentResource.ID, prefix, suffix);
+                expectedName = (resource as AwsStepFunctionsStateMachine).Properties.StateMachineName;
                 break;
             }
             default: {
-                currentResource.Name = currentResource.ID;
+                expectedName = undefined;
                 break;
             }
         }
 
+        resource.ID = resourceID;
+        resource.Name = getNameOrId(expectedName, resourceID, prefix, suffix);
+
         if (resourcesMappedByType[resourceType] !== undefined) {
-            resourcesMappedByType[resourceType].push(currentResource);
+            resourcesMappedByType[resourceType].push(resource);
         } else {
             resourcesMappedByType[resourceType] = [];
-            resourcesMappedByType[resourceType].push(currentResource);
+            resourcesMappedByType[resourceType].push(resource);
         }
-        resourcesMappedById[key] = currentResource;
+
+        resourcesMappedById[key] = resource;
     }
 
     return [resourcesMappedByType, resourcesMappedById];

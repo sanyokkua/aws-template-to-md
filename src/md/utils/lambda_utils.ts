@@ -1,5 +1,5 @@
 import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
-import { LambdaFunction }                             from "../models";
+import { LambdaFunction }                             from "../models/models";
 import { AWS_Lambda_Function }                        from "../../aws/constants";
 import { AwsLambdaFunction }                          from "../../aws/models/lambda/lambda";
 
@@ -44,6 +44,7 @@ export function getMappedLambdaFunction(resources: [ResourcesMappedByType, Resou
             const tmpFolderMemory = lambda.Properties.EphemeralStorage !== undefined && lambda.Properties.EphemeralStorage.Size !== undefined
                                     ? lambda.Properties.EphemeralStorage.Size : LAMBDA_Ephemeral_Storage_DEFAULT;
             return {
+                id: lambda.ID,
                 type: lambda.Type,
                 name: functionName,
                 arch: arch,

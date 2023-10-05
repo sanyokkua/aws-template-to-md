@@ -1,7 +1,7 @@
 import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
 import {
     ApiGatewayRestApi,
-}                                                     from "../models";
+}                                                     from "../models/models";
 import {
     AWS_ApiGateway_Authorizer,
     AWS_ApiGateway_Method,
@@ -18,7 +18,7 @@ import {
 }                                                     from "../../aws/models/apigateway/api";
 import {
     fnJoin,
-}                                                     from "../common_utils";
+}                                                     from "../writers/common/common_parser_utils";
 
 export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, ResourcesMappedById]): ApiGatewayRestApi[] {
     const resourcesByType = resources[0];
@@ -57,7 +57,8 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
 
         const type: string = currentResource.Type;
         const name: string = currentResource.Name;
-        const environment: string = stage !== undefined ? stage.Properties.StageName : "";
+        const environment: string = stage !== undefined ? stage.Name : "";
+
         const tracing: boolean = stage !== undefined ? stage.Properties.TracingEnabled : false;
         const methodSettings = stage !== undefined ? stage.Properties.MethodSettings
                                                           .map(settings => {
@@ -69,6 +70,7 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
                                                                   resourcePath: settings.ResourcePath,
                                                               };
                                                           }) : [];
+
         const endpoints = methods.map(method => {
             const resourceId = method.Properties.ResourceId.Ref;
             const resources: AwsApiGatewayResource[] = [];
@@ -116,6 +118,7 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
 
         const authType = authorizer !== undefined ? authorizer?.Properties.Type : "";
         const apiGateway: ApiGatewayRestApi = {
+            id: currentResource.ID,
             type: type,
             name: name,
             environment: environment,
