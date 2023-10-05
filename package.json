@@ -4,9 +4,10 @@
     "description": "Converter of AWS CloudFormation template (Json) to readable MD document with only infrastructure elements",
     "main": "index.js",
     "scripts": {
-        "build": "rimraf ./build && tsc",
-        "start": "npm run build && node build/index.js",
-        "test": "jest"
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
     },
     "keywords": [],
     "author": "",
@@ -15,9 +16,22 @@
         "@jest/globals": "^29.7.0",
         "@types/jest": "^29.5.5",
         "@types/node": "^20.6.3",
+        "@types/react": "18.2.24",
         "jest": "^29.7.0",
         "rimraf": "^5.0.1",
         "ts-jest": "^29.1.1",
         "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "@uiw/codemirror-extensions-basic-setup": "^4.21.18",
+        "@uiw/codemirror-extensions-langs": "^4.21.18",
+        "@uiw/react-codemirror": "^4.21.18",
+        "antd": "^5.9.4",
+        "next": "^13.5.4",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-markdown": "^9.0.0",
+        "remark-gfm": "^4.0.0",
+        "remarkable": "^2.0.1"
     }
 }
