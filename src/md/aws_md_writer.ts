@@ -1,11 +1,4 @@
-import { DocumentResourcesTree } from "./models/models";
-import {
-    AwsWriterFunction,
-    NEW_LINE,
-    WriterFunc,
-    WriterOptions,
-    WriterParams,
-}                                from "./writers/common/common_md_functions";
+import { NEW_LINE, WriterFunc, WriterOptions, WriterParams } from "./writers/common/common_md_functions";
 
 export interface WriterWrapper<T> {
     Name: string;
@@ -33,18 +26,6 @@ export class WriterWrapperImpl implements WriterWrapper<any> {
         return this.Writer(this.WriterParams, this.Options);
     }
 
-}
-
-export function createMarkdownDocument(resources: DocumentResourcesTree, writers: AwsWriterFunction[]): string {
-    const result: string[] = [];
-    writers.forEach(writer => {
-        const writingResult = writer(resources);
-        if (writingResult !== undefined && writingResult.length > 0) {
-            result.push(writingResult);
-        }
-    });
-
-    return result.join(NEW_LINE);
 }
 
 export function createMarkdownDocumentBasedOnTheWriters(writers: WriterWrapperImpl[]): string {

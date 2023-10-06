@@ -1,10 +1,10 @@
-import React, { useState }                         from "react";
-import { Col, Row }                                from "antd";
-import MdEditor                                    from "./md_editor";
-import MdViewer                                    from "./md_view";
-import EditingOptionsComponent, { EditingOptions } from "./editing_options";
-import { parseCloudFormationTemplate }             from "../../md/document_parser";
-import { ParserParameters }                        from "../../md/models/models";
+import React, { useState }             from "react";
+import { Col, Row }                    from "antd";
+import MdEditor                        from "./md_editor";
+import MdViewer                        from "./md_view";
+import EditingOptionsComponent         from "./editing_options";
+import { parseCloudFormationTemplate } from "../../md/document_parser";
+import { ParserParameters }            from "../../md/writers/customs/models";
 
 type AppContentProps = {}
 const AppContent: React.FC<AppContentProps> = (props: AppContentProps) => {
@@ -21,25 +21,9 @@ const AppContent: React.FC<AppContentProps> = (props: AppContentProps) => {
         }
     }
 
-    const onOptionsChange = (options: EditingOptions) => {
-        const params: ParserParameters = {
-            templateJsonValue: options.jsonTemplateValue,
-            templateResourceNamePrefixToRemove: options.prefixToRemove,
-            templateResourceNameSuffixToRemove: options.suffixToRemove,
-            enableArchitectureDiagramImgLinkTemplate: options.writeArchitectureDiagramImgLinkTemplate,
-            enableStepFunctionDefinition: options.writeStepFunctionDefinition,
-            enableStepFunctionDiagramLinkTemplate: options.writeStepFunctionDiagramLinkTemplate,
-            enableLambdaEnvVarValues: options.writeLambdaEnvVarValues,
-            repositoryName: options.repositoryName,
-            repositoryTags: options.writeTags,
-            repositoryInformation: options.writeRepositoryInfo,
-            repositoryMaintainers: options.writeMaintainers,
-            accountsInformation: options.writeAccountInfo,
-            additionalMarkdownContent: options.writeCustomMdText,
-            selectedWritersNames: options.writers,
-        };
-        setParserParameters(params);
-        parseTemplate(params);
+    const onOptionsChange = (options: ParserParameters) => {
+        setParserParameters(options);
+        parseTemplate(options);
     };
 
     return <div>

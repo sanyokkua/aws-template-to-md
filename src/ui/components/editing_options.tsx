@@ -2,35 +2,32 @@ import React, { useState }                                              from "re
 import type { SelectProps }                                             from "antd";
 import { Button, Checkbox, Col, Input, Row, Segmented, Select, Switch } from "antd";
 import type { CheckboxChangeEvent }                                     from "antd/es/checkbox";
-import { langs }                                                        from "@uiw/codemirror-extensions-langs";
+import {
+    langs,
+}                                                                       from "@uiw/codemirror-extensions-langs";
 import CodeMirror                                                       from "@uiw/react-codemirror";
 import JsonInputModal                                                   from "./json_input_modal";
 import OptionsTagEditor                                                 from "./options_tag_editor";
-import { AccountInfo, Maintainer, RepositoryInfo, Tag }                 from "../../md/writers/customs/models";
+import {
+    AccountInfo,
+    ArtifactDesign,
+    Maintainer,
+    ParserParameters,
+    RepositoryInfo,
+    Tag,
+}                                                                       from "../../md/writers/customs/models";
 import MaintainersEditor                                                from "./maintainers_editor";
 import AccountsEditor                                                   from "./accounts_editor";
 import CustomTextEditor                                                 from "./custom_text_editor";
 import RepositoryInfoEditor                                             from "./repository_info_editor";
-import { AVAILABLE_WRITERS }                                            from "../../md/document_parser";
+import {
+    AVAILABLE_WRITERS,
+}                                                                       from "../../md/document_parser";
+import ArtifactDesignInformationEditor                                  from "./artifact_design_editor";
+import RepositoryDescriptionEditor                                      from "./repository_description_editor";
 
-export type EditingOptions = {
-    jsonTemplateValue: string;
-    repositoryName: string;
-    prefixToRemove: string;
-    suffixToRemove: string;
-    writeStepFunctionDefinition: boolean;
-    writeStepFunctionDiagramLinkTemplate: boolean;
-    writeLambdaEnvVarValues: boolean;
-    writeArchitectureDiagramImgLinkTemplate: boolean;
-    writers: string[];
-    writeTags: Tag[];
-    writeMaintainers: Maintainer[];
-    writeRepositoryInfo: RepositoryInfo;
-    writeAccountInfo: AccountInfo[];
-    writeCustomMdText: string;
-}
 type EditingOptionsComponentProps = {
-    onParseButtonClicked: (options: EditingOptions) => void;
+    onParseButtonClicked: (options: ParserParameters) => void;
 }
 
 const WRITERS: SelectProps["options"] = AVAILABLE_WRITERS.map(name => {
@@ -41,7 +38,16 @@ const WRITERS: SelectProps["options"] = AVAILABLE_WRITERS.map(name => {
 });
 
 const DEFAULT_WRITERS: string[] = AVAILABLE_WRITERS.slice();
-const EDITORS: string[] = ["HIDE", "Tags", "Maintainers", "Repository", "Accounts", "CustomMD"];
+const EDITORS: string[] = [
+    "HIDE",
+    "Tags",
+    "Description",
+    "Maintainers",
+    "Repository",
+    "Accounts",
+    "Design",
+    "CustomMD",
+];
 
 const EditingOptionsComponent: React.FC<EditingOptionsComponentProps> = (props: EditingOptionsComponentProps) => {
     // Component Controls
@@ -65,6 +71,8 @@ const EditingOptionsComponent: React.FC<EditingOptionsComponentProps> = (props: 
     const [maintainers, setMaintainers] = useState<Maintainer[]>([]);
     const [repositoryInfo, setRepositoryInfo] = useState<RepositoryInfo>({} as RepositoryInfo);
     const [accountInfo, setAccountInfo] = useState<AccountInfo[]>([]);
+    const [designInfo, setDesignInfo] = useState<ArtifactDesign>({} as ArtifactDesign);
+    const [repoDescription, setRepoDescription] = useState<string>("");
     const [customMdText, setCustomMdText] = useState<string>("");
 
 
@@ -82,20 +90,22 @@ const EditingOptionsComponent: React.FC<EditingOptionsComponentProps> = (props: 
     const onSetCloudFormButtonClicked = () => setModalIsOpen(true);
     const onParseButtonClicked = () => {
         props.onParseButtonClicked({
-                                       jsonTemplateValue: jsonTemplateValue,
+                                       templateJsonValue: jsonTemplateValue,
+                                       templateResourceNamePrefixToRemove: prefix,
+                                       templateResourceNameSuffixToRemove: suffix,
+                                       enableArchitectureDiagramImgLinkTemplate: archDiagramCheckbox,
+                                       enableStepFunctionDefinition: sfDefCheckbox,
+                                       enableStepFunctionDiagramLinkTemplate: sfDiagramCheckbox,
+                                       enableLambdaEnvVarValues: lambdaVarsValuesCheckbox,
                                        repositoryName: repositoryName,
-                                       prefixToRemove: prefix,
-                                       suffixToRemove: suffix,
-                                       writeStepFunctionDefinition: sfDefCheckbox,
-                                       writeStepFunctionDiagramLinkTemplate: sfDiagramCheckbox,
-                                       writeLambdaEnvVarValues: lambdaVarsValuesCheckbox,
-                                       writeArchitectureDiagramImgLinkTemplate: archDiagramCheckbox,
-                                       writers: writers,
-                                       writeTags: tags,
-                                       writeMaintainers: maintainers,
-                                       writeRepositoryInfo: repositoryInfo,
-                                       writeAccountInfo: accountInfo,
-                                       writeCustomMdText: customMdText,
+                                       repositoryDescription: repoDescription,
+                                       repositoryTags: tags,
+                                       repositoryInformation: repositoryInfo,
+                                       repositoryMaintainers: maintainers,
+                                       accountsInformation: accountInfo,
+                                       artifactDesign: designInfo,
+                                       additionalMarkdownContent: customMdText,
+                                       selectedWritersNames: writers,
                                    });
     };
 
@@ -234,6 +244,18 @@ const EditingOptionsComponent: React.FC<EditingOptionsComponentProps> = (props: 
                     <AccountsEditor accountList={accountInfo}
                                     onValuesChanged={(value) => setAccountInfo(value)}/>
                 </Col>
+            </Row>}
+
+            {selectedEditor === "Design" && <Row>
+                <Col>
+                    <ArtifactDesignInformationEditor designInfo={designInfo}
+                                                     onValuesChanged={(value) => setDesignInfo(value)}/>
+                </Col>
+            </Row>}
+
+            {selectedEditor === "Description" && <Row>
+                <RepositoryDescriptionEditor description={repoDescription}
+                                             onValuesChanged={(value) => setRepoDescription(value)}/>
             </Row>}
 
             {selectedEditor === "CustomMD" && <Row>

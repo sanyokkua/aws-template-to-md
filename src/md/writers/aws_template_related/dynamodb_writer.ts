@@ -6,8 +6,8 @@ import {
     WriterFunc,
     WriterOptions,
     WriterParams,
-}                                               from "./common/common_md_functions";
-import { DocumentResourcesTree, DynamoDbTable } from "../models/models";
+}                                               from "../common/common_md_functions";
+import { DocumentResourcesTree, DynamoDbTable } from "../../models/models";
 
 type DynamoDbItem = {
     name: string;

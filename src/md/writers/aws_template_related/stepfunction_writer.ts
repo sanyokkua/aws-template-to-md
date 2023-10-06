@@ -8,8 +8,8 @@ import {
     WriterFunc,
     WriterOptions,
     WriterParams,
-}                                                           from "./common/common_md_functions";
-import { DocumentResourcesTree, StepFunctionsStateMachine } from "../models/models";
+}                                                           from "../common/common_md_functions";
+import { DocumentResourcesTree, StepFunctionsStateMachine } from "../../models/models";
 
 function createStepFunctionContent(stepFunctionsStateMachines: StepFunctionsStateMachine[],
                                    enableStepFunctionDefinition: boolean,

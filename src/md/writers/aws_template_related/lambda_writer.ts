@@ -5,8 +5,8 @@ import {
     WriterFunc,
     WriterOptions,
     WriterParams,
-}                                                from "./common/common_md_functions";
-import { DocumentResourcesTree, LambdaFunction } from "../models/models";
+}                                                from "../common/common_md_functions";
+import { DocumentResourcesTree, LambdaFunction } from "../../models/models";
 
 function getEnvVarsAsCommaSeparatedListString(lambda: LambdaFunction, enableEnvVarValues: boolean): string {
     let envVarsJsonString: string = lambda.envVars;

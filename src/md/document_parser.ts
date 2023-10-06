@@ -1,30 +1,72 @@
-import { DocumentResourcesTree, ParserParameters }                             from "./models/models";
+import { DocumentResourcesTree }                                               from "./models/models";
 import { parseCloudForgeTemplate, ResourcesMappedById, ResourcesMappedByType } from "../aws/parser";
 import { mapAwsResourcesToMdTypes }                                            from "./mapper";
 import { createMarkdownDocumentBasedOnTheWriters, WriterWrapperImpl }          from "./aws_md_writer";
 import { writeListOfResources }                                                from "./writers/resources_list_writer";
-import { writeAmountOfResources }                                              from "./writers/amount_writer";
-import { writeAwsApiGateways }                                                 from "./writers/api_gateway_writer";
-import { writeEventBuses }                                                     from "./writers/event_bus_writer";
-import { writeEventRules }                                                     from "./writers/event_rule_writer";
-import { writeDynamoDbTables }                                                 from "./writers/dynamodb_writer";
-import { writeLambdaFunctions }                                                from "./writers/lambda_writer";
-import { writeSqsQueues }                                                      from "./writers/sqs_writer";
-import { writeSnsTopics }                                                      from "./writers/sns_writer";
-import { writeStepFunctions }                                                  from "./writers/stepfunction_writer";
-import { writeS3Buckets }                                                      from "./writers/s3_writer";
+import {
+    writeAmountOfResources,
+}                                                                              from "./writers/aws_template_related/amount_writer";
+import {
+    writeAwsApiGateways,
+}                                                                              from "./writers/aws_template_related/api_gateway_writer";
+import {
+    writeEventBuses,
+}                                                                              from "./writers/aws_template_related/event_bus_writer";
+import {
+    writeEventRules,
+}                                                                              from "./writers/aws_template_related/event_rule_writer";
+import {
+    writeDynamoDbTables,
+}                                                                              from "./writers/aws_template_related/dynamodb_writer";
+import {
+    writeLambdaFunctions,
+}                                                                              from "./writers/aws_template_related/lambda_writer";
+import {
+    writeSqsQueues,
+}                                                                              from "./writers/aws_template_related/sqs_writer";
+import {
+    writeSnsTopics,
+}                                                                              from "./writers/aws_template_related/sns_writer";
+import {
+    writeStepFunctions,
+}                                                                              from "./writers/aws_template_related/stepfunction_writer";
+import {
+    writeS3Buckets,
+}                                                                              from "./writers/aws_template_related/s3_writer";
 import { writeAccountInfo }                                                    from "./writers/account_info_writer";
 import { writeRepositoryName }                                                 from "./writers/repository_name_writer";
 import { writeTags }                                                           from "./writers/tag_writer";
 import { writeMaintainers }                                                    from "./writers/maintainers_writer";
 import { writeRepositoryCommonInfo }                                           from "./writers/repository_info_writer";
 import { writeCustomText }                                                     from "./writers/md_writer";
+import {
+    writeRepositoryDescription,
+}                                                                              from "./writers/repository_description_writer";
+import {
+    TABLE_OF_CONTENT_MARKER_TEXT,
+    writeTableOfContentMarker,
+}                                                                              from "./writers/document_table_of_content_marker_writer";
+import {
+    writeArtifactDesign,
+}                                                                              from "./writers/artifact_design_section_writer";
+import { ParserParameters }                                                    from "./writers/customs/models";
+import {
+    writeTableOfContent,
+}                                                                              from "./writers/document_table_of_content_writer";
 
 const WRITER_REPOSITORY_NAME = "repositoryName";
 const WRITER_REPOSITORY_TAGS = "tags";
+
+const WRITER_REPOSITORY_DESCRIPTION = "repoDescription";
+const WRITER_REPOSITORY_TABLE_OF_CONTENT = "tableOfContent";
+
 const WRITER_REPOSITORY_MAINTAINERS = "maintainers";
 const WRITER_REPOSITORY_INFORMATION = "repoInfo";
 const WRITER_ACCOUNTS = "accounts";
+
+
+const WRITER_DESIGN_INFO = "designInfo";
+
 const WRITER_AMOUNT_OF_RESOURCES = "amountOfResources";
 const WRITER_LIST_OF_MAIN_RESOURCES = "listOfResources";
 const WRITER_AWS_API_GATEWAY = "apiGateway";
@@ -41,12 +83,12 @@ const WRITER_CUSTOM_MD_TEXT = "customs";
 export const AVAILABLE_WRITERS = [
     WRITER_REPOSITORY_NAME,
     WRITER_REPOSITORY_TAGS,
-//"":// TODO:,
-//"":// TODO:,
+    WRITER_REPOSITORY_DESCRIPTION,
+    WRITER_REPOSITORY_TABLE_OF_CONTENT,
     WRITER_REPOSITORY_MAINTAINERS,
     WRITER_REPOSITORY_INFORMATION,
     WRITER_ACCOUNTS,
-//"":// TODO:,
+    WRITER_DESIGN_INFO,
     WRITER_AMOUNT_OF_RESOURCES,
     WRITER_LIST_OF_MAIN_RESOURCES,
     WRITER_AWS_API_GATEWAY,
@@ -82,8 +124,14 @@ export function parseCloudFormationTemplate(parameters: ParserParameters): strin
                                           writeTags,
                                           {value: parameters.repositoryTags},
                                           {}),
-            //"":// TODO: Write Description of Repository,
-            //"":// TODO: Write Table Of Content,
+            "repoDescription": new WriterWrapperImpl(WRITER_REPOSITORY_DESCRIPTION,
+                                                     writeRepositoryDescription,
+                                                     {value: parameters.repositoryDescription},
+                                                     {}),
+            "tableOfContent": new WriterWrapperImpl(WRITER_REPOSITORY_TABLE_OF_CONTENT,
+                                                    writeTableOfContentMarker,
+                                                    {value: ""},
+                                                    {}),
             "maintainers": new WriterWrapperImpl(WRITER_REPOSITORY_MAINTAINERS,
                                                  writeMaintainers,
                                                  {value: parameters.repositoryMaintainers},
@@ -96,7 +144,10 @@ export function parseCloudFormationTemplate(parameters: ParserParameters): strin
                                               writeAccountInfo,
                                               {value: parameters.accountsInformation},
                                               {}),
-            //"":// TODO: Write Design of The Artifact /link to diagram/diagramPicture,
+            "designInfo": new WriterWrapperImpl(WRITER_DESIGN_INFO,
+                                                writeArtifactDesign,
+                                                {value: parameters.artifactDesign},
+                                                {}),
             "amountOfResources": new WriterWrapperImpl(WRITER_AMOUNT_OF_RESOURCES,
                                                        writeAmountOfResources,
                                                        {value: documentResourcesTree},
@@ -152,7 +203,14 @@ export function parseCloudFormationTemplate(parameters: ParserParameters): strin
         });
         console.log(`Writers filtered by those which is active. Amount ${writersThatWillBeUsed.length}`);
 
-        return createMarkdownDocumentBasedOnTheWriters(writersThatWillBeUsed);
+        let mdDocumentContent = createMarkdownDocumentBasedOnTheWriters(writersThatWillBeUsed);
+
+        if (writersThatWillBeUsed.find(item => item.Name === WRITER_REPOSITORY_TABLE_OF_CONTENT) !== undefined) {
+            const result = writeTableOfContent({value: mdDocumentContent});
+            mdDocumentContent = mdDocumentContent.replace(TABLE_OF_CONTENT_MARKER_TEXT, result);
+        }
+
+        return mdDocumentContent;
     } catch (e) {
         console.log("Error happened during parsing json and creating markdown document");
         console.log(e);

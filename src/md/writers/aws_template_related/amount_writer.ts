@@ -6,8 +6,8 @@ import {
     WriterFunc,
     WriterOptions,
     WriterParams,
-}                                                from "./common/common_md_functions";
-import { CommonResource, DocumentResourcesTree } from "../models/models";
+}                                                from "../common/common_md_functions";
+import { CommonResource, DocumentResourcesTree } from "../../models/models";
 
 type Amount = [number, string];
 

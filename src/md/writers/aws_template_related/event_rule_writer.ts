@@ -8,8 +8,8 @@ import {
     WriterFunc,
     WriterOptions,
     WriterParams,
-}                                            from "./common/common_md_functions";
-import { DocumentResourcesTree, EventsRule } from "../models/models";
+}                                            from "../common/common_md_functions";
+import { DocumentResourcesTree, EventsRule } from "../../models/models";
 
 
 function createRuleDescriptionTable(eventsRule: EventsRule): string {

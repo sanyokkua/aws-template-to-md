@@ -5,8 +5,8 @@ import {
     WriterFunc,
     WriterOptions,
     WriterParams,
-}                                          from "./common/common_md_functions";
-import { DocumentResourcesTree, SQSQueue } from "../models/models";
+}                                          from "../common/common_md_functions";
+import { DocumentResourcesTree, SQSQueue } from "../../models/models";
 
 function createSqsContent(sqsQueues: SQSQueue[]): string {
     const HEADER_LINE: string[] = [

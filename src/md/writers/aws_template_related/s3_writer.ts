@@ -6,8 +6,8 @@ import {
     WriterFunc,
     WriterOptions,
     WriterParams,
-}                                          from "./common/common_md_functions";
-import { DocumentResourcesTree, S3Bucket } from "../models/models";
+}                                          from "../common/common_md_functions";
+import { DocumentResourcesTree, S3Bucket } from "../../models/models";
 
 function createS3Content(s3Buckets: S3Bucket[]): string {
     const s3BucketsNames: string[] = s3Buckets.map(s3 => s3.name);

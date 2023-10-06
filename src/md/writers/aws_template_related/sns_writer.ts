@@ -6,8 +6,8 @@ import {
     WriterFunc,
     WriterOptions,
     WriterParams,
-}                                          from "./common/common_md_functions";
-import { DocumentResourcesTree, SNSTopic } from "../models/models";
+}                                          from "../common/common_md_functions";
+import { DocumentResourcesTree, SNSTopic } from "../../models/models";
 
 function createTopicDescription(snsTopic: SNSTopic): string {
     const HEADER_LINE: string[] = ["Protocol", "Endpoint"];
