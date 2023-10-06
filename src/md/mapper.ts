@@ -22,7 +22,7 @@ import { getMappedSNSTopic }                            from "./utils/sns_utils"
 import { getMappedSQSQueue }                            from "./utils/sqs_utils";
 import { getCommonResources }                           from "./utils/common_resource_utils";
 
-export function mapAwsResourcesToMd(resources: [ResourcesMappedByType, ResourcesMappedById]): DocumentResourcesTree {
+export function mapAwsResourcesToMdTypes(resources: [ResourcesMappedByType, ResourcesMappedById]): DocumentResourcesTree {
     const mappedApiGatewayRestApi: ApiGatewayRestApi[] = getMappedApiGatewayRestApi(resources);
     const mappedEventsEventBus: EventsEventBus[] = getMappedEventsEventBus(resources);
     const mappedEventsRule: EventsRule[] = getMappedEventsRule(resources);

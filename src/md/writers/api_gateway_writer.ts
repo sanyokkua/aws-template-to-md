@@ -1,10 +1,11 @@
 import {
-    AwsWriterFunction,
     createContentBlock,
     createMdTable,
     MdHeader,
     NEW_LINE,
+    WriterFunc,
     WriterOptions,
+    WriterParams,
 }                                                   from "./common/common_md_functions";
 import { ApiGatewayRestApi, DocumentResourcesTree } from "../models/models";
 
@@ -36,8 +37,8 @@ function createApiGatewayTextContent(apiGateways: ApiGatewayRestApi[]): string {
     return resultText.join(NEW_LINE);
 }
 
-export const writeAwsApiGateways: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
-    const apiGateways = resourcesList.mappedApiGatewayRestApi;
+export const writeAwsApiGateways: WriterFunc<DocumentResourcesTree> = (params: WriterParams<DocumentResourcesTree>, options?: WriterOptions): string => {
+    const apiGateways = params.value.mappedApiGatewayRestApi;
     if (apiGateways === undefined || apiGateways.length === 0) {
         return "";
     }

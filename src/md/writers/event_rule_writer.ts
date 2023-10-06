@@ -1,12 +1,13 @@
 import {
-    AwsWriterFunction,
     CodeSyntax,
     createContentBlock,
     createMdCodeBlock,
     createMdTable,
     MdHeader,
     NEW_LINE,
+    WriterFunc,
     WriterOptions,
+    WriterParams,
 }                                            from "./common/common_md_functions";
 import { DocumentResourcesTree, EventsRule } from "../models/models";
 
@@ -76,8 +77,8 @@ function createEventRulesContent(rules: EventsRule[]): string {
     return resultText.join(NEW_LINE);
 }
 
-export const writeEventRules: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
-    const rules = resourcesList.mappedEventsRule;
+export const writeEventRules: WriterFunc<DocumentResourcesTree> = (params: WriterParams<DocumentResourcesTree>, options?: WriterOptions): string => {
+    const rules = params.value.mappedEventsRule;
     if (rules === undefined || rules.length === 0) {
         return "";
     }

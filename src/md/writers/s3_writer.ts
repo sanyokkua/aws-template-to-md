@@ -1,10 +1,11 @@
 import {
-    AwsWriterFunction,
     createContentBlock,
     createMdList,
     MdHeader,
     MdListType,
+    WriterFunc,
     WriterOptions,
+    WriterParams,
 }                                          from "./common/common_md_functions";
 import { DocumentResourcesTree, S3Bucket } from "../models/models";
 
@@ -14,8 +15,8 @@ function createS3Content(s3Buckets: S3Bucket[]): string {
     return createMdList("S3 Buckets:", s3BucketsNames, MdListType.UNORDERED);
 }
 
-export const writeS3Buckets: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
-    const s3Buckets = resourcesList.mappedS3Bucket;
+export const writeS3Buckets: WriterFunc<DocumentResourcesTree> = (params: WriterParams<DocumentResourcesTree>, options?: WriterOptions): string => {
+    const s3Buckets = params.value.mappedS3Bucket;
     if (s3Buckets === undefined || s3Buckets.length === 0) {
         return "";
     }

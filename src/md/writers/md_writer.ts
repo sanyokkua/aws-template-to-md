@@ -1,7 +1,9 @@
-export const writeCustomText = (mdText: string): string => {
-    if (mdText === undefined || mdText.length === 0) {
+import { WriterFunc, WriterOptions, WriterParams } from "./common/common_md_functions";
+
+export const writeCustomText: WriterFunc<string> = (params: WriterParams<string>, options?: WriterOptions): string => {
+    if (params.value === undefined || params.value.length === 0) {
         return "";
     }
 
-    return mdText;
+    return params.value;
 };

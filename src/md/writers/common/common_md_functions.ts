@@ -11,7 +11,13 @@ import {
     StepFunctionsStateMachine,
 } from "../../models/models";
 
-export type WriterOptions = { [key: string]: boolean }
+export type WriterParams<T> = {
+    value: T;
+}
+export type WriterOptions = { [key: string]: any }
+
+export type WriterFunc<T> = (params: WriterParams<T>, options?: WriterOptions) => string;
+
 
 export type GenericWriter = () => string;
 

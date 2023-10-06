@@ -1,63 +1,56 @@
-import { DocumentResourcesTree }       from "./models/models";
-import { AwsWriterFunction, NEW_LINE } from "./writers/common/common_md_functions";
-import { writeAmountOfResources }      from "./writers/amount_writer";
-import { writeListOfResources }        from "./writers/resources_list_writer";
-import { writeAwsApiGateways }         from "./writers/api_gateway_writer";
-import { writeEventBuses }             from "./writers/event_bus_writer";
-import { writeEventRules }             from "./writers/event_rule_writer";
-import { writeDynamoDbTables }         from "./writers/dynamodb_writer";
-import { writeLambdaFunctions }        from "./writers/lambda_writer";
-import { writeSqsQueues }              from "./writers/sqs_writer";
-import { writeSnsTopics }              from "./writers/sns_writer";
-import { writeStepFunctions }          from "./writers/stepfunction_writer";
-import { writeS3Buckets }              from "./writers/s3_writer";
+import { DocumentResourcesTree } from "./models/models";
+import {
+    AwsWriterFunction,
+    NEW_LINE,
+    WriterFunc,
+    WriterOptions,
+    WriterParams,
+}                                from "./writers/common/common_md_functions";
 
 export interface WriterWrapper<T> {
     Name: string;
-    Writer: AwsWriterFunction;
-    Options: T;
+    WriterParams: WriterParams<T>;
+    Writer: WriterFunc<T>;
+    Options?: WriterOptions;
 
-    getMarkDownResult(resources: DocumentResourcesTree): string;
+    getMarkdownResult(): string;
 }
 
-const AmountOfResources: WriterWrapper<any> = {
-    Name: "AmountOfResources",
-    Writer: writeAmountOfResources,
-    Options: {},
-    getMarkDownResult(resources: DocumentResourcesTree): string {
-        return this.Writer(resources, this.Options);
-    },
-};
+export class WriterWrapperImpl implements WriterWrapper<any> {
+    Name: string;
+    WriterParams: WriterParams<any>;
+    Writer: WriterFunc<any>;
+    Options: WriterOptions;
 
-const ListOfResources: WriterWrapper<any> = {
-    Name: "ListOfResources",
-    Writer: writeListOfResources,
-    Options: {},
-    getMarkDownResult(resources: DocumentResourcesTree): string {
-        return this.Writer(resources, this.Options);
-    },
-};
+    constructor(Name: string, Writer: WriterFunc<any>, WriterParams: WriterParams<any>, Options: WriterOptions) {
+        this.Name = Name;
+        this.WriterParams = WriterParams;
+        this.Writer = Writer;
+        this.Options = Options;
+    }
 
-export const AVAILABLE_WRITERS_WRAPPERS: WriterWrapper<any>[] = [AmountOfResources, ListOfResources];
+    getMarkdownResult(): string {
+        return this.Writer(this.WriterParams, this.Options);
+    }
 
-export const AVAILABLE_WRITERS: AwsWriterFunction[] = [
-    writeAmountOfResources,
-    writeListOfResources,
-    writeAwsApiGateways,
-    writeEventBuses,
-    writeEventRules,
-    writeDynamoDbTables,
-    writeLambdaFunctions,
-    writeSqsQueues,
-    writeSnsTopics,
-    writeStepFunctions,
-    writeS3Buckets,
-];
+}
 
 export function createMarkdownDocument(resources: DocumentResourcesTree, writers: AwsWriterFunction[]): string {
     const result: string[] = [];
     writers.forEach(writer => {
         const writingResult = writer(resources);
+        if (writingResult !== undefined && writingResult.length > 0) {
+            result.push(writingResult);
+        }
+    });
+
+    return result.join(NEW_LINE);
+}
+
+export function createMarkdownDocumentBasedOnTheWriters(writers: WriterWrapperImpl[]): string {
+    const result: string[] = [];
+    writers.forEach(writerWrapperObj => {
+        const writingResult = writerWrapperObj.getMarkdownResult();
         if (writingResult !== undefined && writingResult.length > 0) {
             result.push(writingResult);
         }

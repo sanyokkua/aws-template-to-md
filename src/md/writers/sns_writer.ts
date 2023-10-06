@@ -1,10 +1,11 @@
 import {
-    AwsWriterFunction,
     createContentBlock,
     createMdTable,
     MdHeader,
     NEW_LINE,
+    WriterFunc,
     WriterOptions,
+    WriterParams,
 }                                          from "./common/common_md_functions";
 import { DocumentResourcesTree, SNSTopic } from "../models/models";
 
@@ -30,8 +31,8 @@ function createSnsContent(snsTopics: SNSTopic[]): string {
     return resultText.join(NEW_LINE);
 }
 
-export const writeSnsTopics: AwsWriterFunction = (resourcesList: DocumentResourcesTree, options?: WriterOptions): string => {
-    const snsTopics = resourcesList.mappedSNSTopic;
+export const writeSnsTopics: WriterFunc<DocumentResourcesTree> = (params: WriterParams<DocumentResourcesTree>, options?: WriterOptions): string => {
+    const snsTopics = params.value.mappedSNSTopic;
     if (snsTopics === undefined || snsTopics.length === 0) {
         return "";
     }

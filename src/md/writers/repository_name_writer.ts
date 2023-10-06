@@ -1,10 +1,10 @@
-import { RepositoryName }               from "./customs/models";
-import { createContentBlock, MdHeader } from "./common/common_md_functions";
+import { createContentBlock, MdHeader, WriterFunc, WriterOptions, WriterParams } from "./common/common_md_functions";
 
-export const writeRepositoryName = (tags: RepositoryName): string => {
-    if (tags === undefined || tags.name.length === 0) {
+export const writeRepositoryName: WriterFunc<string> = (params: WriterParams<string>, options?: WriterOptions): string => {
+
+    if (params.value === undefined || params.value.length === 0) {
         return "";
     }
 
-    return createContentBlock(tags.name, MdHeader.HEADER_LEVEL_1, "");
+    return createContentBlock(params.value, MdHeader.HEADER_LEVEL_1, "");
 };
