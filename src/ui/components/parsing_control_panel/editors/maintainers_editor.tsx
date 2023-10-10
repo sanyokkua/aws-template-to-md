@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Card, Col, Form, Input, List, Row } from "antd";
-import { Maintainer }                                from "../../md/writers/customs/models";
+import { Maintainer }                                from "../../../../md/writers/customs/models";
 
 type MaintainersEditorProps = {
     maintainersList: Maintainer[];
@@ -53,10 +53,11 @@ const MaintainersEditor: React.FC<MaintainersEditorProps> = (props: MaintainersE
                 <Input/>
             </Form.Item>
             <Form.Item>
-                <Button type="primary" htmlType="submit">Add</Button>
+                <Button type="primary" htmlType="submit">Submit Data</Button>
             </Form.Item>
         </Form>
 
+        <Row><h3>Confirmed Values:</h3></Row>
         <Row>
             <Col span={24}>
                 <List itemLayout="horizontal" dataSource={props.maintainersList}

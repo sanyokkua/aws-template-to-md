@@ -1,13 +1,13 @@
 import React from "react";
 
 import { Button, Card, Col, Form, Input, Row } from "antd";
-import { ArtifactDesign }                      from "../../md/writers/customs/models";
+import { ArtifactDesign }                      from "../../../../md/writers/customs/models";
 
-type ArtifactDesignInformationProps = {
+type ArtifactDesignEditorProps = {
     designInfo: ArtifactDesign;
     onValuesChanged: (designInfo: ArtifactDesign) => void;
 }
-const ArtifactDesignInformationEditor: React.FC<ArtifactDesignInformationProps> = (props: ArtifactDesignInformationProps) => {
+const ArtifactDesignEditor: React.FC<ArtifactDesignEditorProps> = (props: ArtifactDesignEditorProps) => {
     const [form] = Form.useForm();
 
     const onAddButtonClicked = () => {
@@ -34,7 +34,7 @@ const ArtifactDesignInformationEditor: React.FC<ArtifactDesignInformationProps> 
                 <Input/>
             </Form.Item>
             <Form.Item>
-                <Button type="primary" htmlType="submit">Add</Button>
+                <Button type="primary" htmlType="submit">Submit Data</Button>
             </Form.Item>
         </Form>
         <Row>
@@ -56,4 +56,4 @@ const ArtifactDesignInformationEditor: React.FC<ArtifactDesignInformationProps> 
     </Card>;
 };
 
-export default ArtifactDesignInformationEditor;
+export default ArtifactDesignEditor;

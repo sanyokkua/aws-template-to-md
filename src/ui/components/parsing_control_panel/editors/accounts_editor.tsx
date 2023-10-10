@@ -1,16 +1,17 @@
 import React from "react";
 
 import { Button, Card, Col, Form, Input, List, Row } from "antd";
-import { AccountInfo }                               from "../../md/writers/customs/models";
+import { Account }                                   from "../../../../md/writers/customs/models";
+
 
 type AccountsEditorProps = {
-    accountList: AccountInfo[];
-    onValuesChanged: (accounts: AccountInfo[]) => void;
+    accountList: Account[];
+    onValuesChanged: (accounts: Account[]) => void;
 }
 const AccountsEditor: React.FC<AccountsEditorProps> = (props: AccountsEditorProps) => {
     const [form] = Form.useForm();
 
-    const onRemoveItem = (item: AccountInfo) => {
+    const onRemoveItem = (item: Account) => {
         const currentArray = props.accountList.slice();
         const result = currentArray
             .filter(curItem => {
@@ -57,10 +58,11 @@ const AccountsEditor: React.FC<AccountsEditorProps> = (props: AccountsEditorProp
                 <Input/>
             </Form.Item>
             <Form.Item>
-                <Button type="primary" htmlType="submit">Add</Button>
+                <Button type="primary" htmlType="submit">Submit Data</Button>
             </Form.Item>
         </Form>
 
+        <Row><h3>Confirmed Values:</h3></Row>
         <Row>
             <Col span={24}>
                 <List itemLayout="horizontal" dataSource={props.accountList}

@@ -1,4 +1,4 @@
-import { AccountInfo } from "./customs/models";
+import { Account } from "./customs/models";
 import {
     createContentBlock,
     createMdTable,
@@ -6,9 +6,9 @@ import {
     WriterFunc,
     WriterOptions,
     WriterParams,
-}                      from "./common/common_md_functions";
+}                  from "./common/common_md_functions";
 
-export const writeAccountInfo: WriterFunc<AccountInfo[]> = (params: WriterParams<AccountInfo[]>, options?: WriterOptions): string => {
+export const writeAccountInfo: WriterFunc<Account[]> = (params: WriterParams<Account[]>, options?: WriterOptions): string => {
     if (params.value === undefined || params.value.length === 0) {
         return "";
     }

@@ -28,7 +28,6 @@ function getEnvVarsAsCommaSeparatedListString(lambda: LambdaFunction, enableEnvV
 
             envVarsJsonString = envVarNames.sort().join(", ");
         } catch (e) {
-            console.log(e);
             envVarsJsonString = lambda.envVars;
         }
     }

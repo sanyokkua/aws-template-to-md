@@ -1,14 +1,12 @@
 import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
-import { CommonResource, StepFunctionsStateMachine }  from "../models/models";
-import { AWS_StepFunctions_StateMachine }             from "../../aws/constants";
+import { CommonResource }                             from "../models/models";
 
 export function getCommonResources(resources: [ResourcesMappedByType, ResourcesMappedById]): CommonResource[] {
     const resourcesByType = resources[0];
     const resourcesById = resources[1];
-    const result: StepFunctionsStateMachine[] = [];
-    const stepFunctions = resourcesByType[AWS_StepFunctions_StateMachine];
+    const result: CommonResource[] = [];
 
-    if (stepFunctions === undefined || stepFunctions.length === 0) {
+    if (resourcesByType === undefined) {
         return result;
     }
 

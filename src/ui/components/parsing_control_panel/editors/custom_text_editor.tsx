@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Card } from "antd";
-import MdEditor from "./md_editor";
+import MdEditor from "../../common/md_editor";
 
 type CustomTextEditorProps = {
     customText: string;

@@ -80,7 +80,7 @@ const WRITER_AWS_STEP_FUNCTION = "stepFunctions";
 const WRITER_AWS_S3 = "s3";
 const WRITER_CUSTOM_MD_TEXT = "customs";
 
-export const AVAILABLE_WRITERS = [
+export const AVAILABLE_WRITERS: string[] = [
     WRITER_REPOSITORY_NAME,
     WRITER_REPOSITORY_TAGS,
     WRITER_REPOSITORY_DESCRIPTION,
@@ -104,116 +104,110 @@ export const AVAILABLE_WRITERS = [
 ];
 
 export function parseCloudFormationTemplate(parameters: ParserParameters): string {
-    try {
-        const parsedCloudFormationTemplate: [ResourcesMappedByType, ResourcesMappedById] = parseCloudForgeTemplate(
-            parameters.templateJsonValue,
-            parameters.templateResourceNamePrefixToRemove,
-            parameters.templateResourceNameSuffixToRemove,
-        );
-        console.log("Cloud Formation JSON parsed");
+    const parsedCloudFormationTemplate: [ResourcesMappedByType, ResourcesMappedById] = parseCloudForgeTemplate(
+        parameters.templateJsonValue,
+        parameters.parserConfig.templateResourceNamePrefixToRemove,
+        parameters.parserConfig.templateResourceNameSuffixToRemove,
+    );
+    console.log("Cloud Formation JSON parsed");
 
-        const documentResourcesTree: DocumentResourcesTree = mapAwsResourcesToMdTypes(parsedCloudFormationTemplate);
-        console.log("Parsed Cloud Formation JSON is mapped to DocumentResourcesTree");
+    const documentResourcesTree: DocumentResourcesTree = mapAwsResourcesToMdTypes(parsedCloudFormationTemplate);
+    console.log("Parsed Cloud Formation JSON is mapped to DocumentResourcesTree");
 
-        const ALL_AVAILABLE_WRITERS: { [key: string]: WriterWrapperImpl } = {
-            "repositoryName": new WriterWrapperImpl(WRITER_REPOSITORY_NAME,
-                                                    writeRepositoryName,
-                                                    {value: parameters.repositoryName},
-                                                    {}),
-            "tags": new WriterWrapperImpl(WRITER_REPOSITORY_TAGS,
-                                          writeTags,
-                                          {value: parameters.repositoryTags},
-                                          {}),
-            "repoDescription": new WriterWrapperImpl(WRITER_REPOSITORY_DESCRIPTION,
-                                                     writeRepositoryDescription,
-                                                     {value: parameters.repositoryDescription},
-                                                     {}),
-            "tableOfContent": new WriterWrapperImpl(WRITER_REPOSITORY_TABLE_OF_CONTENT,
-                                                    writeTableOfContentMarker,
-                                                    {value: ""},
-                                                    {}),
-            "maintainers": new WriterWrapperImpl(WRITER_REPOSITORY_MAINTAINERS,
-                                                 writeMaintainers,
-                                                 {value: parameters.repositoryMaintainers},
+    const ALL_AVAILABLE_WRITERS: { [key: string]: WriterWrapperImpl } = {
+        "repositoryName": new WriterWrapperImpl(WRITER_REPOSITORY_NAME,
+                                                writeRepositoryName,
+                                                {value: parameters.repositoryInformation.name},
+                                                {}),
+        "tags": new WriterWrapperImpl(WRITER_REPOSITORY_TAGS,
+                                      writeTags,
+                                      {value: parameters.repositoryTags},
+                                      {}),
+        "repoDescription": new WriterWrapperImpl(WRITER_REPOSITORY_DESCRIPTION,
+                                                 writeRepositoryDescription,
+                                                 {value: parameters.repositoryInformation.description},
                                                  {}),
-            "repoInfo": new WriterWrapperImpl(WRITER_REPOSITORY_INFORMATION,
-                                              writeRepositoryCommonInfo,
-                                              {value: parameters.repositoryInformation},
-                                              {}),
-            "accounts": new WriterWrapperImpl(WRITER_ACCOUNTS,
-                                              writeAccountInfo,
-                                              {value: parameters.accountsInformation},
-                                              {}),
-            "designInfo": new WriterWrapperImpl(WRITER_DESIGN_INFO,
-                                                writeArtifactDesign,
-                                                {value: parameters.artifactDesign},
+        "tableOfContent": new WriterWrapperImpl(WRITER_REPOSITORY_TABLE_OF_CONTENT,
+                                                writeTableOfContentMarker,
+                                                {value: ""},
                                                 {}),
-            "amountOfResources": new WriterWrapperImpl(WRITER_AMOUNT_OF_RESOURCES,
-                                                       writeAmountOfResources,
-                                                       {value: documentResourcesTree},
-                                                       {}),
-            "listOfResources": new WriterWrapperImpl(WRITER_LIST_OF_MAIN_RESOURCES,
-                                                     writeListOfResources,
-                                                     {value: documentResourcesTree},
-                                                     {}),
-            "apiGateway": new WriterWrapperImpl(WRITER_AWS_API_GATEWAY,
-                                                writeAwsApiGateways,
-                                                {value: documentResourcesTree},
-                                                {}),
-            "eventBus": new WriterWrapperImpl(WRITER_AWS_EVENT_BUS,
-                                              writeEventBuses,
-                                              {value: documentResourcesTree},
-                                              {}),
-            "eventRules": new WriterWrapperImpl(WRITER_AWS_EVENT_RULE,
-                                                writeEventRules,
-                                                {value: documentResourcesTree},
-                                                {}),
-            "dynamodb": new WriterWrapperImpl(WRITER_AWS_DYNAMO_DB,
-                                              writeDynamoDbTables,
-                                              {value: documentResourcesTree},
-                                              {}),
-            "lambda": new WriterWrapperImpl(WRITER_AWS_LAMBDA,
-                                            writeLambdaFunctions,
-                                            {value: documentResourcesTree},
-                                            {enableEnvVarValues: parameters.enableLambdaEnvVarValues}),
-            "sqs": new WriterWrapperImpl(WRITER_AWS_SQS, writeSqsQueues, {value: documentResourcesTree}, {}),
-            "sns": new WriterWrapperImpl(WRITER_AWS_SNS, writeSnsTopics, {value: documentResourcesTree}, {}),
-            "stepFunctions": new WriterWrapperImpl(WRITER_AWS_STEP_FUNCTION,
-                                                   writeStepFunctions,
-                                                   {value: documentResourcesTree},
-                                                   {
-                                                       enableStepFunctionDefinition: parameters.enableStepFunctionDefinition,
-                                                       enableStepFunctionDiagramLinkTemplate: parameters.enableStepFunctionDiagramLinkTemplate,
-                                                   }),
-            "s3": new WriterWrapperImpl(WRITER_AWS_S3, writeS3Buckets, {value: documentResourcesTree}, {}),
-            "customs": new WriterWrapperImpl(WRITER_CUSTOM_MD_TEXT,
-                                             writeCustomText,
-                                             {value: parameters.additionalMarkdownContent},
+        "maintainers": new WriterWrapperImpl(WRITER_REPOSITORY_MAINTAINERS,
+                                             writeMaintainers,
+                                             {value: parameters.repositoryMaintainers},
                                              {}),
-        };
-        console.log("Writers based on the passed params are created");
+        "repoInfo": new WriterWrapperImpl(WRITER_REPOSITORY_INFORMATION,
+                                          writeRepositoryCommonInfo,
+                                          {value: parameters.repositoryInformation},
+                                          {}),
+        "accounts": new WriterWrapperImpl(WRITER_ACCOUNTS,
+                                          writeAccountInfo,
+                                          {value: parameters.accountsInformation},
+                                          {}),
+        "designInfo": new WriterWrapperImpl(WRITER_DESIGN_INFO,
+                                            writeArtifactDesign,
+                                            {value: parameters.artifactDesign},
+                                            {}),
+        "amountOfResources": new WriterWrapperImpl(WRITER_AMOUNT_OF_RESOURCES,
+                                                   writeAmountOfResources,
+                                                   {value: documentResourcesTree},
+                                                   {}),
+        "listOfResources": new WriterWrapperImpl(WRITER_LIST_OF_MAIN_RESOURCES,
+                                                 writeListOfResources,
+                                                 {value: documentResourcesTree},
+                                                 {}),
+        "apiGateway": new WriterWrapperImpl(WRITER_AWS_API_GATEWAY,
+                                            writeAwsApiGateways,
+                                            {value: documentResourcesTree},
+                                            {}),
+        "eventBus": new WriterWrapperImpl(WRITER_AWS_EVENT_BUS,
+                                          writeEventBuses,
+                                          {value: documentResourcesTree},
+                                          {}),
+        "eventRules": new WriterWrapperImpl(WRITER_AWS_EVENT_RULE,
+                                            writeEventRules,
+                                            {value: documentResourcesTree},
+                                            {}),
+        "dynamodb": new WriterWrapperImpl(WRITER_AWS_DYNAMO_DB,
+                                          writeDynamoDbTables,
+                                          {value: documentResourcesTree},
+                                          {}),
+        "lambda": new WriterWrapperImpl(WRITER_AWS_LAMBDA,
+                                        writeLambdaFunctions,
+                                        {value: documentResourcesTree},
+                                        {enableEnvVarValues: parameters.parserConfig.enableLambdaEnvVarValues}),
+        "sqs": new WriterWrapperImpl(WRITER_AWS_SQS, writeSqsQueues, {value: documentResourcesTree}, {}),
+        "sns": new WriterWrapperImpl(WRITER_AWS_SNS, writeSnsTopics, {value: documentResourcesTree}, {}),
+        "stepFunctions": new WriterWrapperImpl(WRITER_AWS_STEP_FUNCTION,
+                                               writeStepFunctions,
+                                               {value: documentResourcesTree},
+                                               {
+                                                   enableStepFunctionDefinition: parameters.parserConfig.enableStepFunctionDefinition,
+                                                   enableStepFunctionDiagramLinkTemplate: parameters.otherAppConfig.enableArchitectureDiagramImgLinkTemplate,
+                                               }),
+        "s3": new WriterWrapperImpl(WRITER_AWS_S3, writeS3Buckets, {value: documentResourcesTree}, {}),
+        "customs": new WriterWrapperImpl(WRITER_CUSTOM_MD_TEXT,
+                                         writeCustomText,
+                                         {value: parameters.additionalMarkdownContent},
+                                         {}),
+    };
+    console.log("Writers based on the passed params are created");
 
 
-        const writersThatWillBeUsed: WriterWrapperImpl[] = [];
-        parameters.selectedWritersNames.forEach(name => {
-            const writer = ALL_AVAILABLE_WRITERS[name];
-            if (writer !== undefined) {
-                writersThatWillBeUsed.push(writer);
-            }
-        });
-        console.log(`Writers filtered by those which is active. Amount ${writersThatWillBeUsed.length}`);
-
-        let mdDocumentContent = createMarkdownDocumentBasedOnTheWriters(writersThatWillBeUsed);
-
-        if (writersThatWillBeUsed.find(item => item.Name === WRITER_REPOSITORY_TABLE_OF_CONTENT) !== undefined) {
-            const result = writeTableOfContent({value: mdDocumentContent});
-            mdDocumentContent = mdDocumentContent.replace(TABLE_OF_CONTENT_MARKER_TEXT, result);
+    const writersThatWillBeUsed: WriterWrapperImpl[] = [];
+    parameters.otherAppConfig.selectedWriters.forEach(name => {
+        const writer = ALL_AVAILABLE_WRITERS[name];
+        if (writer !== undefined) {
+            writersThatWillBeUsed.push(writer);
         }
+    });
+    console.log(`Writers filtered by those which is active. Amount ${writersThatWillBeUsed.length}`);
 
-        return mdDocumentContent;
-    } catch (e) {
-        console.log("Error happened during parsing json and creating markdown document");
-        console.log(e);
+    let mdDocumentContent = createMarkdownDocumentBasedOnTheWriters(writersThatWillBeUsed);
+
+    if (writersThatWillBeUsed.find(item => item.Name === WRITER_REPOSITORY_TABLE_OF_CONTENT) !== undefined) {
+        const result = writeTableOfContent({value: mdDocumentContent});
+        mdDocumentContent = mdDocumentContent.replace(TABLE_OF_CONTENT_MARKER_TEXT, result);
     }
-    return "";
+
+    return mdDocumentContent;
 }

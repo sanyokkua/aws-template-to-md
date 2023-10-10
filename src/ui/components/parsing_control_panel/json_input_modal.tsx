@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal }           from "antd";
-import JsonEditor          from "./json_editor";
+import JsonEditor          from "../common/json_editor";
 
 type JsonInputModalProps = {
     isOpen: boolean;

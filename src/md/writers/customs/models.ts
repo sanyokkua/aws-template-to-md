@@ -1,23 +1,13 @@
-export type Tag = {
-    text: string;
-    imgLink: string;
-}
 export type Maintainer = {
     name: string;
     link: string;
     email: string;
-}
-export type AccountInfo = {
-    organizationName: string;
-    description: string;
-    accountId: string;
 }
 
 export type ArtifactDesign = {
     linkToTheSolutionDiagram: string;
     linkToTheDiagramImage: string;
 }
-
 
 export type RepositoryTag = {
     text: string;
@@ -29,7 +19,9 @@ export type RepositoryMaintainer = {
     email: string;
 }
 export type RepositoryInfo = {
-    programmingLang: string;
+    name: string;
+    description: string;
+    mainProgrammingLanguage: string;
     deploymentDestination: string;
     deploymentTechnology: string;
     linkToCloudForge: string;
@@ -40,21 +32,27 @@ export type Account = {
     accountId: string;
 }
 
-export type ParserParameters = {
-    templateJsonValue: string;
+export type ParserConfig = {
     templateResourceNamePrefixToRemove: string;
     templateResourceNameSuffixToRemove: string;
-    enableArchitectureDiagramImgLinkTemplate: boolean;
     enableStepFunctionDefinition: boolean;
-    enableStepFunctionDiagramLinkTemplate: boolean;
     enableLambdaEnvVarValues: boolean;
-    repositoryName: string;
-    repositoryDescription: string;
+}
+
+export type OtherAppConfig = {
+    enableArchitectureDiagramImgLinkTemplate: boolean;
+    enableStepFunctionDiagramLinkTemplate: boolean;
+    selectedWriters: string[];
+}
+
+export type ParserParameters = {
+    templateJsonValue: string;
+    parserConfig: ParserConfig;
     repositoryTags: RepositoryTag[];
     repositoryInformation: RepositoryInfo;
     repositoryMaintainers: RepositoryMaintainer[];
     accountsInformation: Account[];
     artifactDesign: ArtifactDesign,
     additionalMarkdownContent: string;
-    selectedWritersNames: string[];
+    otherAppConfig: OtherAppConfig;
 }

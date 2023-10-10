@@ -17,12 +17,19 @@ export const writeRepositoryCommonInfo: WriterFunc<RepositoryInfo> = (params: Wr
         return "";
     }
 
-    const programmingLang = `Main programming language \-${createStyledText(params.value.programmingLang,
-                                                                            MdStyle.BOLD)}`;
-    const deploymentDestination = `Deploys to ${createStyledText(params.value.deploymentDestination, MdStyle.BOLD)}`;
-    const deploymentTechnology = `Uses \-${createStyledText(params.value.deploymentTechnology,
-                                                            MdStyle.BOLD)} as deployment technology`;
-    const linkToCloudForge = `${createLink("Cloud Forge page", params.value.linkToCloudForge)}`;
+    const mainProgrammingLanguage = params.value.mainProgrammingLanguage;
+    const destination = params.value.deploymentDestination;
+    const technology = params.value.deploymentTechnology;
+    const cloudForge = params.value.linkToCloudForge;
+
+    if (mainProgrammingLanguage.length === 0 || destination.length === 0 || technology.length === 0 || cloudForge.length === 0) {
+        return "";
+    }
+
+    const programmingLang = `Main programming language \- ${createStyledText(mainProgrammingLanguage, MdStyle.BOLD)}`;
+    const deploymentDestination = `Deploys to ${createStyledText(destination, MdStyle.BOLD)}`;
+    const deploymentTechnology = `Uses \- ${createStyledText(technology, MdStyle.BOLD)} as deployment technology`;
+    const linkToCloudForge = `${createLink("Cloud Forge page", cloudForge)}`;
 
     const list = [programmingLang, deploymentDestination, deploymentTechnology, linkToCloudForge];
     const content = createMdList("", list, MdListType.UNORDERED);

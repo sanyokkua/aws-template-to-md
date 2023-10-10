@@ -1,5 +1,4 @@
 import {
-    AllowedResource,
     createContentBlock,
     createMdTable,
     MdHeader,
@@ -13,18 +12,6 @@ type Amount = [number, string];
 
 function createAmountMapping(resourcesList: DocumentResourcesTree) {
     const amounts: Amount[] = [];
-    const resources: AllowedResource[][] = [
-        resourcesList.mappedApiGatewayRestApi,
-        resourcesList.mappedEventsEventBus,
-        resourcesList.mappedEventsRule,
-        resourcesList.mappedDynamoDbTable,
-        resourcesList.mappedStepFunctionsStateMachine,
-        resourcesList.mappedLambdaFunction,
-        resourcesList.mappedS3Bucket,
-        resourcesList.mappedSNSTopic,
-        resourcesList.mappedSQSQueue,
-    ];
-
     const resourcesMapped: { [key: string]: CommonResource[] } = {};
 
     resourcesList.mappedAllResources.forEach(value => {
