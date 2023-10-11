@@ -1,6 +1,5 @@
 import React, { useState }                   from "react";
-import { Button, Col, Row }                  from "antd";
-import JsonInputModal                        from "./json_input_modal";
+import { Button }                            from "antd";
 import {
     Account,
     ArtifactDesign,
@@ -23,32 +22,27 @@ type ParsingControlPanelProps = {
 
 const ParsingControlPanel: React.FC<ParsingControlPanelProps> = (props: ParsingControlPanelProps) => {
     // Component Controls
-    const [showTemplateJsonSwitch, setShowTemplateJsonSwitch] = useState<boolean>(false);
-    const [showOptionsSwitch, setShowOptionsSwitch] = useState<boolean>(true);
-    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+    const [showTemplateJsonSwitch, setShowTemplateJsonSwitch] = useState<boolean>(true);
+    const [showParsingConfigSwitch, setShowParsingConfigSwitch] = useState<boolean>(true);
 
     // Component Result Values
     const [jsonTemplateValue, setJsonTemplateValue] = useState<string>(props.params.templateJsonValue);
-    const [tags, setTags] = useState<RepositoryTag[]>(props.params.repositoryTags);
-    const [maintainers, setMaintainers] = useState<Maintainer[]>(props.params.repositoryMaintainers);
+    const [repositoryTags, setRepositoryTags] = useState<RepositoryTag[]>(props.params.repositoryTags);
+    const [repositoryMaintainers, setRepositoryMaintainers] = useState<Maintainer[]>(props.params.repositoryMaintainers);
     const [repositoryInfo, setRepositoryInfo] = useState<RepositoryInfo>(props.params.repositoryInformation);
-    const [accountInfo, setAccountInfo] = useState<Account[]>(props.params.accountsInformation);
+    const [accounts, setAccounts] = useState<Account[]>(props.params.accountsInformation);
     const [designInfo, setDesignInfo] = useState<ArtifactDesign>(props.params.artifactDesign);
     const [customMdText, setCustomMdText] = useState<string>(props.params.additionalMarkdownContent);
     const [parserConfig, setParserConfig] = useState<ParserConfig>(props.params.parserConfig);
     const [otherMarkdownConfig, setOtherMarkdownConfig] = useState<OtherAppConfig>(props.params.otherAppConfig);
 
-
-    const onShowOptionsSwitchChanged = (checked: boolean) => setShowOptionsSwitch(checked);
-    const onShowJsonSwitchChanged = (checked: boolean) => setShowTemplateJsonSwitch(checked);
-    const onSetCloudFormButtonClicked = () => setModalIsOpen(true);
     const onParseButtonClicked = () => {
         props.onParseButtonClicked({
                                        templateJsonValue: jsonTemplateValue,
-                                       repositoryTags: tags,
+                                       repositoryTags: repositoryTags,
                                        repositoryInformation: repositoryInfo,
-                                       repositoryMaintainers: maintainers,
-                                       accountsInformation: accountInfo,
+                                       repositoryMaintainers: repositoryMaintainers,
+                                       accountsInformation: accounts,
                                        artifactDesign: designInfo,
                                        additionalMarkdownContent: customMdText,
                                        parserConfig: parserConfig,
@@ -56,51 +50,38 @@ const ParsingControlPanel: React.FC<ParsingControlPanelProps> = (props: ParsingC
                                    });
     };
 
-    function handleModalData(data: string) {
-        setJsonTemplateValue(data);
-        setModalIsOpen(false);
-    }
+    return <>
+        <ParsingControlPanelHeaderLine
+            hideControlsPanel={showParsingConfigSwitch}
+            hideJsonEditor={showTemplateJsonSwitch}
+            onSetJsonTemplateBtnClicked={() => {
+            }}
+            onHideControlSwitchClicked={(checked: boolean) => setShowParsingConfigSwitch(checked)}
+            onHideJsonSwitchClicked={(checked: boolean) => setShowTemplateJsonSwitch(checked)}/>
 
-    return <Row>
-        <Col span={24}>
-            <ParsingControlPanelHeaderLine hideOptions={showOptionsSwitch}
-                                           hideJson={showTemplateJsonSwitch}
-                                           onSetJsonTemplateBtnClicked={onSetCloudFormButtonClicked}
-                                           onHideOptionsSwitchClicked={onShowOptionsSwitchChanged}
-                                           onHideJsonSwitchClicked={onShowJsonSwitchChanged}/>
+        <ParsingControlPanelJsonTemplateEditor
+            showElement={showTemplateJsonSwitch}
+            jsonTemplate={jsonTemplateValue}
+            onChange={(data) => setJsonTemplateValue(data)}/>
 
-            <ParsingControlPanelJsonTemplateEditor showElement={showTemplateJsonSwitch}
-                                                   jsonTemplate={jsonTemplateValue}
-                                                   onChange={(data) => setJsonTemplateValue(data)}/>
+        <br/>
 
-            <EditorSelector showElement={showOptionsSwitch}
-                            listOfRepositoryTags={tags}
-                            listOfMaintainers={maintainers}
-                            repositoryInfo={repositoryInfo}
-                            listOfAccounts={accountInfo}
-                            artifactDesign={designInfo}
-                            customMdText={customMdText}
-                            parserConfig={parserConfig}
-                            otherAppConfig={otherMarkdownConfig}
-                            onSetListOfRepositoryTags={setTags}
-                            onSetListOfMaintainers={setMaintainers}
-                            onSetRepositoryInfo={setRepositoryInfo}
-                            onSetListOfAccounts={setAccountInfo}
-                            onSetArtifactDesign={setDesignInfo}
-                            onSetCustomMdText={setCustomMdText}
-                            onSetParserConfig={setParserConfig}
-                            onSetOtherAppConfig={setOtherMarkdownConfig}/>
+        <EditorSelector
+            showElement={showParsingConfigSwitch}
+            repositoryTags={{data: repositoryTags, onDataChanged: setRepositoryTags}}
+            maintainers={{data: repositoryMaintainers, onDataChanged: setRepositoryMaintainers}}
+            repositoryInfo={{data: repositoryInfo, onDataChanged: setRepositoryInfo}}
+            accounts={{data: accounts, onDataChanged: setAccounts}}
+            artifactDesign={{data: designInfo, onDataChanged: setDesignInfo}}
+            parserConfig={{data: parserConfig, onDataChanged: setParserConfig}}
+            customMdText={{data: customMdText, onDataChanged: setCustomMdText}}
+            otherAppConfig={{data: otherMarkdownConfig, onDataChanged: setOtherMarkdownConfig}}
+        />
 
-            <Row>
-                <Col span={24}>
-                    <Button type="primary" onClick={() => onParseButtonClicked()}>Parse</Button>
-                </Col>
-            </Row>
+        <br/>
 
-            <JsonInputModal isOpen={modalIsOpen} onConfirm={(data) => handleModalData(data)}
-                            onCancel={() => setModalIsOpen(false)}/>
-        </Col>
-    </Row>;
+        <Button type="primary" onClick={() => onParseButtonClicked()}>Parse</Button>
+    </>;
 };
 
 export default ParsingControlPanel;

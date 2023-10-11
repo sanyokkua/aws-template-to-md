@@ -1,5 +1,5 @@
-import React, { useState }     from "react";
-import { Col, Row, Segmented } from "antd";
+import React, { useState } from "react";
+import { Segmented }       from "antd";
 
 import MaintainersEditor    from "../editors/maintainers_editor";
 import RepositoryInfoEditor from "../editors/repository_info_editor";
@@ -9,18 +9,18 @@ import CustomTextEditor     from "../editors/custom_text_editor";
 import {
     Account,
     ArtifactDesign,
+    EditorInput,
     Maintainer,
     OtherAppConfig,
     ParserConfig,
     RepositoryInfo,
     RepositoryTag,
 }                           from "../../../../md/writers/customs/models";
-import RepositoryTagsEditor from "../editors/options_tag_editor";
+import RepositoryTagsEditor from "../editors/repository_tag_editor";
 import ParserConfigEditor   from "../editors/parser_config_editor";
 import OtherAppConfigEditor from "../editors/other_app_config_editor";
 
 
-const HIDE: string = "HIDE";
 const PARSER: string = "ParserConfig";
 const REPOSITORY: string = "Repository";
 const RepositoryTagS: string = "RepositoryTags";
@@ -31,7 +31,6 @@ const CUSTOM_MD: string = "CustomMD";
 const OTHER_APP_CONFIG: string = "OtherAppConfig";
 
 const EDITORS: string[] = [
-    HIDE,
     PARSER,
     REPOSITORY,
     RepositoryTagS,
@@ -45,45 +44,27 @@ const EDITORS: string[] = [
 export type EditorSelectorProps = {
     showElement: boolean;
 
-    listOfRepositoryTags: RepositoryTag[];
-    listOfMaintainers: Maintainer[];
-    repositoryInfo: RepositoryInfo;
-    listOfAccounts: Account[];
-    artifactDesign: ArtifactDesign;
-    parserConfig: ParserConfig;
-    customMdText: string;
-    otherAppConfig: OtherAppConfig;
-
-    onSetListOfRepositoryTags: (RepositoryTags: RepositoryTag[]) => void;
-    onSetListOfMaintainers: (maintainers: Maintainer[]) => void;
-    onSetRepositoryInfo: (repositoryInfo: RepositoryInfo) => void;
-    onSetListOfAccounts: (Account: Account[]) => void;
-    onSetArtifactDesign: (designInfo: ArtifactDesign) => void;
-    onSetCustomMdText: (customMdText: string) => void;
-    onSetParserConfig: (parserConfig: ParserConfig) => void;
-    onSetOtherAppConfig: (otherMarkdownConfig: OtherAppConfig) => void;
+    repositoryTags: EditorInput<RepositoryTag[]>;
+    maintainers: EditorInput<Maintainer[]>
+    repositoryInfo: EditorInput<RepositoryInfo>;
+    accounts: EditorInput<Account[]>;
+    artifactDesign: EditorInput<ArtifactDesign>;
+    parserConfig: EditorInput<ParserConfig>;
+    customMdText: EditorInput<string>;
+    otherAppConfig: EditorInput<OtherAppConfig>;
 }
 
 const EditorSelector: React.FC<EditorSelectorProps> = (props: EditorSelectorProps) => {
     const [selectedEditor, setSelectedEditor] = useState<string>(EDITORS[0]);
 
-    const optionsRepositoryTagEditor =
-        <RepositoryTagsEditor repositoryTags={props.listOfRepositoryTags}
-                              onValuesChanged={props.onSetListOfRepositoryTags}/>;
-    const maintainersEditor =
-        <MaintainersEditor maintainersList={props.listOfMaintainers} onValuesChanged={props.onSetListOfMaintainers}/>;
-    const repositoryInfoEditor =
-        <RepositoryInfoEditor repoInfo={props.repositoryInfo} onValuesChanged={props.onSetRepositoryInfo}/>;
-    const accountsEditor =
-        <AccountsEditor accountList={props.listOfAccounts} onValuesChanged={props.onSetListOfAccounts}/>;
-    const artifactDesignInformationEditor =
-        <ArtifactDesignEditor designInfo={props.artifactDesign} onValuesChanged={props.onSetArtifactDesign}/>;
-    const parserConfigEditor =
-        <ParserConfigEditor config={props.parserConfig} onValuesChanged={props.onSetParserConfig}/>;
-    const customTextEditor =
-        <CustomTextEditor customText={props.customMdText} onValuesChanged={props.onSetCustomMdText}/>;
-    const otherAppConfigEditor =
-        <OtherAppConfigEditor config={props.otherAppConfig} onValuesChanged={props.onSetOtherAppConfig}/>;
+    const optionsRepositoryTagEditor = <RepositoryTagsEditor editorInput={props.repositoryTags}/>;
+    const maintainersEditor = <MaintainersEditor editorInput={props.maintainers}/>;
+    const repositoryInfoEditor = <RepositoryInfoEditor editorInput={props.repositoryInfo}/>;
+    const accountsEditor = <AccountsEditor editorInput={props.accounts}/>;
+    const artifactDesignInformationEditor = <ArtifactDesignEditor editorInput={props.artifactDesign}/>;
+    const parserConfigEditor = <ParserConfigEditor editorInput={props.parserConfig}/>;
+    const customTextEditor = <CustomTextEditor editorInput={props.customMdText}/>;
+    const otherAppConfigEditor = <OtherAppConfigEditor editorInput={props.otherAppConfig}/>;
 
     const editorsMap: Map<string, React.JSX.Element> = new Map();
     editorsMap.set(RepositoryTagS, optionsRepositoryTagEditor);
@@ -97,14 +78,13 @@ const EditorSelector: React.FC<EditorSelectorProps> = (props: EditorSelectorProp
 
     const currentEditor = editorsMap.get(selectedEditor);
 
-    return <div>
-        {props.showElement && <Row>
-            <Col span={24}>
-                <Segmented options={EDITORS} onChange={(value) => setSelectedEditor(value.toString())}/>
-                {currentEditor !== undefined ? currentEditor : <div></div>}
-            </Col>
-        </Row>}
-    </div>;
+    return <>
+        {props.showElement && <>
+            <Segmented options={EDITORS} onChange={(value) => setSelectedEditor(value.toString())}/>
+            <br/>
+            {currentEditor}
+        </>}
+    </>;
 };
 
 export default EditorSelector;

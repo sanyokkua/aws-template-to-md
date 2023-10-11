@@ -1,19 +1,18 @@
 import React from "react";
 
 import { Button, Card, Col, Form, Input, List, Row } from "antd";
-import { RepositoryTag }                             from "../../../../md/writers/customs/models";
+import { EditorInput, RepositoryTag }                from "../../../../md/writers/customs/models";
 
 type RepositoryTagsEditorProps = {
-    repositoryTags: RepositoryTag[];
-    onValuesChanged: (repositoryTags: RepositoryTag[]) => void;
+    editorInput: EditorInput<RepositoryTag[]>;
 }
 const RepositoryTagsEditor: React.FC<RepositoryTagsEditorProps> = (props: RepositoryTagsEditorProps) => {
     const [form] = Form.useForm();
 
     const onRemoveItem = (item: RepositoryTag) => {
-        const currentArray = props.repositoryTags.slice();
+        const currentArray = props.editorInput.data.slice();
         const result = currentArray.filter(curItem => !(curItem.text === item.text && curItem.imgLink === item.imgLink));
-        props.onValuesChanged(result);
+        props.editorInput.onDataChanged(result);
     };
 
     const onAddButtonClicked = () => {
@@ -24,12 +23,12 @@ const RepositoryTagsEditor: React.FC<RepositoryTagsEditorProps> = (props: Reposi
         const isLinkFieldIsNotEmpty = link !== undefined && link.length > 0;
 
         if (isTextFieldNotEmpty && isLinkFieldIsNotEmpty) {
-            const currentArray = props.repositoryTags.slice();
+            const currentArray = props.editorInput.data.slice();
             const found = currentArray.find(curItem => (curItem.text === text && curItem.imgLink === link));
 
             if (!found) {
                 currentArray.push({text: text, imgLink: link});
-                props.onValuesChanged(currentArray);
+                props.editorInput.onDataChanged(currentArray);
             }
         }
     };
@@ -50,7 +49,7 @@ const RepositoryTagsEditor: React.FC<RepositoryTagsEditorProps> = (props: Reposi
         <Row><h3>Confirmed Values:</h3></Row>
         <Row>
             <Col span={24}>
-                <List itemLayout="horizontal" dataSource={props.repositoryTags}
+                <List itemLayout="horizontal" dataSource={props.editorInput.data}
                       renderItem={(item) => (
                           <List.Item actions={[<a key="remove" onClick={() => onRemoveItem(item)}>remove</a>]}>
                               {item.text}, {item.imgLink}

@@ -1,10 +1,9 @@
 import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
-import {
-    ApiGatewayRestApi,
-}                                                     from "../models/models";
+import { ApiGatewayRestApi }                          from "../models/models";
 import {
     AWS_ApiGateway_Authorizer,
     AWS_ApiGateway_Method,
+    AWS_ApiGateway_Resource,
     AWS_ApiGateway_RestApi,
     AWS_ApiGateway_Stage,
 }                                                     from "../../aws/constants";
@@ -16,9 +15,8 @@ import {
     AwsApiGatewayRestApi,
     AwsApiGatewayStage,
 }                                                     from "../../aws/models/apigateway/api";
-import {
-    fnJoin,
-}                                                     from "../writers/common/common_parser_utils";
+import { fnGetAtt, fnJoin }                           from "../writers/common/common_parser_utils";
+import { Resource }                                   from "../../aws/models/common";
 
 export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, ResourcesMappedById]): ApiGatewayRestApi[] {
     const resourcesByType = resources[0];
@@ -72,19 +70,50 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
                                                           }) : [];
 
         const endpoints = methods.map(method => {
-            const resourceId = method.Properties.ResourceId.Ref;
+            let resourceId: string = "";
+
+            if ("Ref" in method.Properties.ResourceId && method.Properties.ResourceId.Ref !== undefined) {
+                resourceId = method.Properties.ResourceId.Ref;
+            } else if ("Fn::GetAtt" in method.Properties.ResourceId && method.Properties.ResourceId["Fn::GetAtt"] != undefined) {
+                const foundId = fnGetAtt(method.Properties.ResourceId, resourcesById)?.ID;
+                resourceId = foundId !== undefined ? foundId : "";
+            }
+
             const resources: AwsApiGatewayResource[] = [];
-            let lastResource = resourcesById[resourceId] as AwsApiGatewayResource;
-            resources.push(lastResource);
+
+            const foundResourceFromMapping: Resource = resourcesById[resourceId];
+            let lastResource = foundResourceFromMapping.Type === AWS_ApiGateway_Resource ?
+                               foundResourceFromMapping as AwsApiGatewayResource : undefined;
+
+            if (lastResource !== undefined) {
+                resources.push(lastResource);
+            }
 
             while (true) {
-                const parentIdNode = lastResource.Properties.ParentId;
-                if (parentIdNode.Ref !== undefined && parentIdNode.Ref.length > 0) {
-                    lastResource = resourcesById[parentIdNode.Ref] as AwsApiGatewayResource;
-                    resources.push(lastResource);
-                    continue;
+                const parentIdNode = lastResource?.Properties?.ParentId;
+
+                let resId: string = "";
+                if (parentIdNode !== undefined) {
+
+                    if ("Ref" in parentIdNode && parentIdNode.Ref !== undefined) {
+                        resId = parentIdNode.Ref;
+                    } else if ("Fn::GetAtt" in parentIdNode && parentIdNode["Fn::GetAtt"] != undefined) {
+                        const foundId = fnGetAtt(parentIdNode, resourcesById)?.ID;
+                        resId = foundId !== undefined ? foundId : "";
+                    }
+
+                    if (resId.length > 0) {
+                        lastResource = resourcesByType[AWS_ApiGateway_Resource]
+                            .map(res => res as AwsApiGatewayResource)
+                            .find(res => res.ID === resId);
+
+                        if (lastResource !== undefined) {
+                            resources.push(lastResource);
+                        }
+                    }
+                } else {
+                    break;
                 }
-                break;
             }
 
             resources.reverse();

@@ -39,6 +39,7 @@ export interface AwsApiGatewayMethod extends CommonResourceInfo {
     "Properties": {
         "HttpMethod": string,
         "ResourceId": {
+            "Fn::GetAtt": string[]
             "Ref": string
         },
         "RestApiId": {

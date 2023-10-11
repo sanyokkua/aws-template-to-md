@@ -56,3 +56,8 @@ export type ParserParameters = {
     additionalMarkdownContent: string;
     otherAppConfig: OtherAppConfig;
 }
+
+export type EditorInput<T> = {
+    data: T;
+    onDataChanged: (data: T) => void;
+}

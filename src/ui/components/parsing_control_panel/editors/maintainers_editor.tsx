@@ -1,23 +1,22 @@
 import React from "react";
 
 import { Button, Card, Col, Form, Input, List, Row } from "antd";
-import { Maintainer }                                from "../../../../md/writers/customs/models";
+import { EditorInput, Maintainer }                   from "../../../../md/writers/customs/models";
 
 type MaintainersEditorProps = {
-    maintainersList: Maintainer[];
-    onValuesChanged: (maintainers: Maintainer[]) => void;
+    editorInput: EditorInput<Maintainer[]>;
 }
 const MaintainersEditor: React.FC<MaintainersEditorProps> = (props: MaintainersEditorProps) => {
     const [form] = Form.useForm();
 
     const onRemoveItem = (item: Maintainer) => {
-        const currentArray = props.maintainersList.slice();
+        const currentArray = props.editorInput.data.slice();
         const result = currentArray
             .filter(curItem => {
                 const isThisItem = curItem.name === item.name && curItem.link === item.link && curItem.email === item.email;
                 return !isThisItem;
             });
-        props.onValuesChanged(result);
+        props.editorInput.onDataChanged(result);
     };
 
     const onAddButtonClicked = () => {
@@ -30,13 +29,13 @@ const MaintainersEditor: React.FC<MaintainersEditorProps> = (props: MaintainersE
         const isEmailFieldIsNotEmpty = email !== undefined && email.length > 0;
 
         if (isTextFieldNotEmpty && isLinkFieldIsNotEmpty && isEmailFieldIsNotEmpty) {
-            const currentArray = props.maintainersList.slice();
+            const currentArray = props.editorInput.data.slice();
             const found = currentArray
                 .find(curItem => (curItem.name === name && curItem.link === link && curItem.email === email));
 
             if (!found) {
                 currentArray.push({name: name, link: link, email: email});
-                props.onValuesChanged(currentArray);
+                props.editorInput.onDataChanged(currentArray);
             }
         }
     };
@@ -60,7 +59,7 @@ const MaintainersEditor: React.FC<MaintainersEditorProps> = (props: MaintainersE
         <Row><h3>Confirmed Values:</h3></Row>
         <Row>
             <Col span={24}>
-                <List itemLayout="horizontal" dataSource={props.maintainersList}
+                <List itemLayout="horizontal" dataSource={props.editorInput.data}
                       renderItem={(item) => (
                           <List.Item actions={[<a key="remove" onClick={() => onRemoveItem(item)}>remove</a>]}>
                               {item.name}, {item.link}, {item.email}

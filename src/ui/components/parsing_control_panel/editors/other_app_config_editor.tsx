@@ -1,6 +1,6 @@
 import React                                                          from "react";
 import { Button, Card, Form, List, Row, Select, SelectProps, Switch } from "antd";
-import { OtherAppConfig }                                             from "../../../../md/writers/customs/models";
+import { EditorInput, OtherAppConfig }                                from "../../../../md/writers/customs/models";
 import { AVAILABLE_WRITERS }                                          from "../../../../md/document_parser";
 
 const DEFAULT_WRITERS: string[] = AVAILABLE_WRITERS.slice();
@@ -12,8 +12,7 @@ const DEFAULT_OPTIONS: SelectProps["options"] = DEFAULT_WRITERS.map(name => {
 });
 
 export type OtherAppConfigEditorProps = {
-    config: OtherAppConfig;
-    onValuesChanged: (config: OtherAppConfig) => void;
+    editorInput: EditorInput<OtherAppConfig>;
 }
 
 const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherAppConfigEditorProps) => {
@@ -32,11 +31,11 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
                     return w.value;
                 }
             });
-            props.onValuesChanged({
-                                      enableArchitectureDiagramImgLinkTemplate: showStepFunctionDiagram,
-                                      enableStepFunctionDiagramLinkTemplate: showArchitectureDiagramLinkTemplate,
-                                      selectedWriters: selectedWriters,
-                                  });
+            props.editorInput.onDataChanged({
+                                                enableArchitectureDiagramImgLinkTemplate: showStepFunctionDiagram,
+                                                enableStepFunctionDiagramLinkTemplate: showArchitectureDiagramLinkTemplate,
+                                                selectedWriters: selectedWriters,
+                                            });
         }
     };
     return <Card style={{width: "100%"}} title={"Other Markdown Configurations"}>
@@ -45,13 +44,13 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
             <Form.Item label="Show Step Function Diagram Link Template"
                        name="showStepFunctionDiagram"
                        valuePropName="checked"
-                       initialValue={props.config.enableStepFunctionDiagramLinkTemplate}>
+                       initialValue={props.editorInput.data.enableStepFunctionDiagramLinkTemplate}>
                 <Switch/>
             </Form.Item>
             <Form.Item label="Show Architecture Diagram Link Template"
                        name="showArchitectureDiagramLinkTemplate"
                        valuePropName="checked"
-                       initialValue={props.config.enableArchitectureDiagramImgLinkTemplate}>
+                       initialValue={props.editorInput.data.enableArchitectureDiagramImgLinkTemplate}>
                 <Switch/>
             </Form.Item>
 
@@ -74,18 +73,18 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
         <Row>
             <Switch checkedChildren="Step Function Diagram Image Link Will Be Added"
                     unCheckedChildren="Step Function Diagram Image Link Will Be Added"
-                    checked={props.config.enableStepFunctionDiagramLinkTemplate}
+                    checked={props.editorInput.data.enableStepFunctionDiagramLinkTemplate}
                     disabled={true}/>
             <Switch checkedChildren="Architecture Diagram Image Link Will Be Added"
                     unCheckedChildren="Architecture Diagram Image Link Will Be Added"
-                    checked={props.config.enableArchitectureDiagramImgLinkTemplate}
+                    checked={props.editorInput.data.enableArchitectureDiagramImgLinkTemplate}
                     disabled={true}/>
         </Row>
         <Row>
             <List
                 header={<h4>Selected Writers</h4>}
                 bordered
-                dataSource={props.config.selectedWriters}
+                dataSource={props.editorInput.data.selectedWriters}
                 renderItem={(item) => (
                     <List.Item key={item}>
                         - {item}

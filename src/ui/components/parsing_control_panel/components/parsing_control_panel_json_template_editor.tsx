@@ -1,7 +1,6 @@
-import React        from "react";
-import { Col, Row } from "antd";
-import CodeMirror   from "@uiw/react-codemirror";
-import { langs }    from "@uiw/codemirror-extensions-langs";
+import React      from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { langs }  from "@uiw/codemirror-extensions-langs";
 
 
 export type ParsingControlPanelJsonTemplateEditorProps = {
@@ -11,25 +10,21 @@ export type ParsingControlPanelJsonTemplateEditorProps = {
 }
 
 const ParsingControlPanelJsonTemplateEditor: React.FC<ParsingControlPanelJsonTemplateEditorProps> = (props: ParsingControlPanelJsonTemplateEditorProps) => {
-    return <div>
-        {props.showElement && <Row>
-            <Col span={24}>
-                <CodeMirror
-                    value={props.jsonTemplate}
-                    height="300px"
-                    basicSetup={{
-                        foldGutter: true,
-                        dropCursor: false,
-                        allowMultipleSelections: false,
-                        indentOnInput: true,
-                        autocompletion: true,
-                    }}
-                    extensions={[langs.json()]}
-                    onChange={(data) => props.onChange(data)}
-                />
-            </Col>
-        </Row>}
-    </div>;
+    return <>
+        {props.showElement && <CodeMirror
+            value={props.jsonTemplate}
+            height="300px"
+            basicSetup={{
+                foldGutter: true,
+                dropCursor: false,
+                allowMultipleSelections: false,
+                indentOnInput: true,
+                autocompletion: true,
+            }}
+            extensions={[langs.json()]}
+            onChange={(data) => props.onChange(data)}
+        />}
+    </>;
 };
 
 export default ParsingControlPanelJsonTemplateEditor;

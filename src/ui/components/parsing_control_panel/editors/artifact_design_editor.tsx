@@ -1,11 +1,10 @@
 import React from "react";
 
 import { Button, Card, Col, Form, Input, Row } from "antd";
-import { ArtifactDesign }                      from "../../../../md/writers/customs/models";
+import { ArtifactDesign, EditorInput }         from "../../../../md/writers/customs/models";
 
 type ArtifactDesignEditorProps = {
-    designInfo: ArtifactDesign;
-    onValuesChanged: (designInfo: ArtifactDesign) => void;
+    editorInput: EditorInput<ArtifactDesign>;
 }
 const ArtifactDesignEditor: React.FC<ArtifactDesignEditorProps> = (props: ArtifactDesignEditorProps) => {
     const [form] = Form.useForm();
@@ -18,10 +17,10 @@ const ArtifactDesignEditor: React.FC<ArtifactDesignEditorProps> = (props: Artifa
         const isLinkToTheDiagramImageIsNotEmpty = linkToTheDiagramImage !== undefined && linkToTheDiagramImage.length > 0;
 
         if (isLinkToSolutionIsNotEmpty && isLinkToTheDiagramImageIsNotEmpty) {
-            props.onValuesChanged({
-                                      linkToTheSolutionDiagram: linkToTheSolutionDiagram,
-                                      linkToTheDiagramImage: linkToTheDiagramImage,
-                                  });
+            props.editorInput.onDataChanged({
+                                                linkToTheSolutionDiagram: linkToTheSolutionDiagram,
+                                                linkToTheDiagramImage: linkToTheDiagramImage,
+                                            });
         }
     };
 
@@ -42,7 +41,7 @@ const ArtifactDesignEditor: React.FC<ArtifactDesignEditorProps> = (props: Artifa
                 Link to the solution diagram:
             </Col>
             <Col span={12}>
-                {props.designInfo.linkToTheSolutionDiagram}
+                {props.editorInput.data.linkToTheSolutionDiagram}
             </Col>
         </Row>
         <Row>
@@ -50,7 +49,7 @@ const ArtifactDesignEditor: React.FC<ArtifactDesignEditorProps> = (props: Artifa
                 Link to the diagram image
             </Col>
             <Col span={12}>
-                {props.designInfo.linkToTheDiagramImage}
+                {props.editorInput.data.linkToTheDiagramImage}
             </Col>
         </Row>
     </Card>;

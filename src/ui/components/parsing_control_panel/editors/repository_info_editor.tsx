@@ -1,13 +1,12 @@
 import React from "react";
 
 import { Button, Card, Form, Input, Row } from "antd";
-import { RepositoryInfo }                 from "../../../../md/writers/customs/models";
+import { EditorInput, RepositoryInfo }    from "../../../../md/writers/customs/models";
 import TextArea                           from "antd/es/input/TextArea";
 import TextView                           from "../../common/text_view";
 
 type RepositoryInfoEditorProps = {
-    repoInfo: RepositoryInfo;
-    onValuesChanged: (repositoryInformation: RepositoryInfo) => void;
+    editorInput: EditorInput<RepositoryInfo>;
 }
 const RepositoryInfoEditor: React.FC<RepositoryInfoEditorProps> = (props: RepositoryInfoEditorProps) => {
     const [form] = Form.useForm();
@@ -36,14 +35,14 @@ const RepositoryInfoEditor: React.FC<RepositoryInfoEditorProps> = (props: Reposi
             isLinkToCloudForgeNotEmpty;
 
         if (isDataValid) {
-            props.onValuesChanged({
-                                      name: repoName,
-                                      description: description,
-                                      mainProgrammingLanguage: programmingLang,
-                                      deploymentDestination: deploymentDestination,
-                                      deploymentTechnology: deploymentTechnology,
-                                      linkToCloudForge: linkToCloudForge,
-                                  });
+            props.editorInput.onDataChanged({
+                                                name: repoName,
+                                                description: description,
+                                                mainProgrammingLanguage: programmingLang,
+                                                deploymentDestination: deploymentDestination,
+                                                deploymentTechnology: deploymentTechnology,
+                                                linkToCloudForge: linkToCloudForge,
+                                            });
         }
     };
 
@@ -74,12 +73,12 @@ const RepositoryInfoEditor: React.FC<RepositoryInfoEditorProps> = (props: Reposi
         </Form>
 
         <Row><h3>Confirmed Values:</h3></Row>
-        <TextView name={"Name"} value={props.repoInfo.name}/>
-        <TextView name={"Description"} value={props.repoInfo.description} isTextArea={true}/>
-        <TextView name={"Programming Language"} value={props.repoInfo.mainProgrammingLanguage}/>
-        <TextView name={"Deployment Destination"} value={props.repoInfo.deploymentDestination}/>
-        <TextView name={"Deployment Technology"} value={props.repoInfo.deploymentTechnology}/>
-        <TextView name={"Link To CloudForge"} value={props.repoInfo.linkToCloudForge}/>
+        <TextView name={"Name"} value={props.editorInput.data.name}/>
+        <TextView name={"Description"} value={props.editorInput.data.description} isTextArea={true}/>
+        <TextView name={"Programming Language"} value={props.editorInput.data.mainProgrammingLanguage}/>
+        <TextView name={"Deployment Destination"} value={props.editorInput.data.deploymentDestination}/>
+        <TextView name={"Deployment Technology"} value={props.editorInput.data.deploymentTechnology}/>
+        <TextView name={"Link To CloudForge"} value={props.editorInput.data.linkToCloudForge}/>
     </Card>;
 };
 

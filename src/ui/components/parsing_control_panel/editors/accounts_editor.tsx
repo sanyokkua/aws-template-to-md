@@ -1,18 +1,17 @@
 import React from "react";
 
 import { Button, Card, Col, Form, Input, List, Row } from "antd";
-import { Account }                                   from "../../../../md/writers/customs/models";
+import { Account, EditorInput }                      from "../../../../md/writers/customs/models";
 
 
 type AccountsEditorProps = {
-    accountList: Account[];
-    onValuesChanged: (accounts: Account[]) => void;
+    editorInput: EditorInput<Account[]>;
 }
 const AccountsEditor: React.FC<AccountsEditorProps> = (props: AccountsEditorProps) => {
     const [form] = Form.useForm();
 
     const onRemoveItem = (item: Account) => {
-        const currentArray = props.accountList.slice();
+        const currentArray = props.editorInput.data.slice();
         const result = currentArray
             .filter(curItem => {
                 const isThisItem = curItem.organizationName === item.organizationName &&
@@ -20,7 +19,7 @@ const AccountsEditor: React.FC<AccountsEditorProps> = (props: AccountsEditorProp
                     curItem.accountId === item.accountId;
                 return !isThisItem;
             });
-        props.onValuesChanged(result);
+        props.editorInput.onDataChanged(result);
     };
 
     const onAddButtonClicked = () => {
@@ -33,7 +32,7 @@ const AccountsEditor: React.FC<AccountsEditorProps> = (props: AccountsEditorProp
         const isAccountIdFieldIsNotEmpty = accountId !== undefined && accountId.length > 0;
 
         if (isNameFieldNotEmpty && isDescriptionFieldIsNotEmpty && isAccountIdFieldIsNotEmpty) {
-            const currentArray = props.accountList.slice();
+            const currentArray = props.editorInput.data.slice();
             const found = currentArray
                 .find(curItem => (curItem.organizationName === orgName &&
                     curItem.description === orgDesc &&
@@ -41,7 +40,7 @@ const AccountsEditor: React.FC<AccountsEditorProps> = (props: AccountsEditorProp
 
             if (!found) {
                 currentArray.push({organizationName: orgName, description: orgDesc, accountId: accountId});
-                props.onValuesChanged(currentArray);
+                props.editorInput.onDataChanged(currentArray);
             }
         }
     };
@@ -65,7 +64,7 @@ const AccountsEditor: React.FC<AccountsEditorProps> = (props: AccountsEditorProp
         <Row><h3>Confirmed Values:</h3></Row>
         <Row>
             <Col span={24}>
-                <List itemLayout="horizontal" dataSource={props.accountList}
+                <List itemLayout="horizontal" dataSource={props.editorInput.data}
                       renderItem={(item) => (
                           <List.Item actions={[<a key="remove" onClick={() => onRemoveItem(item)}>remove</a>]}>
                               {item.organizationName}, {item.description}, {item.accountId}
