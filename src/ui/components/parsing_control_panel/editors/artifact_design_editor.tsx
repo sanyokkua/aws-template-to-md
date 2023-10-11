@@ -2,6 +2,7 @@ import React from "react";
 
 import { Button, Card, Col, Form, Input, Row } from "antd";
 import { ArtifactDesign, EditorInput }         from "../../../../md/writers/customs/models";
+import { getCurrentOrDefault }                 from "../../../../utils/utils";
 
 type ArtifactDesignEditorProps = {
     editorInput: EditorInput<ArtifactDesign>;
@@ -13,15 +14,14 @@ const ArtifactDesignEditor: React.FC<ArtifactDesignEditorProps> = (props: Artifa
         const linkToTheSolutionDiagram = form.getFieldValue("linkToTheSolutionDiagram");
         const linkToTheDiagramImage = form.getFieldValue("linkToTheDiagramImage");
 
-        const isLinkToSolutionIsNotEmpty = linkToTheSolutionDiagram !== undefined && linkToTheSolutionDiagram.length > 0;
-        const isLinkToTheDiagramImageIsNotEmpty = linkToTheDiagramImage !== undefined && linkToTheDiagramImage.length > 0;
+        const formLinkToTheSolutionDiagram: string = getCurrentOrDefault<string>(linkToTheSolutionDiagram, "");
+        const formLinkToTheDiagramImage: string = getCurrentOrDefault<string>(linkToTheDiagramImage, "");
 
-        if (isLinkToSolutionIsNotEmpty && isLinkToTheDiagramImageIsNotEmpty) {
-            props.editorInput.onDataChanged({
-                                                linkToTheSolutionDiagram: linkToTheSolutionDiagram,
-                                                linkToTheDiagramImage: linkToTheDiagramImage,
-                                            });
-        }
+        props.editorInput.onDataChanged({
+                                            linkToTheSolutionDiagram: formLinkToTheSolutionDiagram,
+                                            linkToTheDiagramImage: formLinkToTheDiagramImage,
+                                        });
+
     };
 
     return <Card style={{width: "100%"}} title={"Add Repository Information"}>

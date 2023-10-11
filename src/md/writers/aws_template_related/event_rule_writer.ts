@@ -20,17 +20,18 @@ function createRuleDescriptionTable(eventsRule: EventsRule): string {
 }
 
 function extractRulePatternAsCodeBlock(eventsRule: EventsRule): string {
-    let pattern = eventsRule.pattern;
+    if (eventsRule.pattern === undefined || eventsRule.pattern.length === 0) {
+        return "";
+    }
+    let pattern = "";
 
-    if (pattern !== undefined && pattern.length > 0) {
-        try {
-            const parsedPattern = JSON.parse(pattern);
-            const stringify = JSON.stringify(parsedPattern, null, 2);
-            pattern = createMdCodeBlock(stringify, CodeSyntax.JSON);
-        } catch (e) {
-            console.log(e);
-            pattern = eventsRule.pattern;
-        }
+    try {
+        const parsedPattern = JSON.parse(eventsRule.pattern);
+        const stringify = JSON.stringify(parsedPattern, null, 2);
+        pattern = createMdCodeBlock(stringify, CodeSyntax.JSON);
+    } catch (e) {
+        console.log(e);
+        pattern = eventsRule.pattern;
     }
 
     return pattern;
@@ -52,22 +53,43 @@ function createRuleTargetsTable(eventsRule: EventsRule) {
     return createMdTable(RULE_TARGET_HEADER_LINE, ruleTargetTableValues);
 }
 
+function createRuleScheduledExpression(eventsRule: EventsRule) {
+    if (eventsRule.scheduleExpression === undefined || eventsRule.scheduleExpression.length === 0) {
+        return "";
+    }
+    return createMdCodeBlock(eventsRule.scheduleExpression, CodeSyntax.NONE);
+}
+
 function createRuleDescription(eventsRule: EventsRule) {
     const resultString: string[] = [];
 
     const ruleDescriptionTable: string = createRuleDescriptionTable(eventsRule);
     const rulePatternCodeBlock: string = extractRulePatternAsCodeBlock(eventsRule);
     const ruleTargetsTable: string = createRuleTargetsTable(eventsRule);
+    const ruleScheduledExpression: string = createRuleScheduledExpression(eventsRule);
 
     resultString.push(ruleDescriptionTable);
-    resultString.push(createContentBlock("Rule Pattern", MdHeader.HEADER_LEVEL_4, rulePatternCodeBlock));
-    resultString.push(createContentBlock("Rule Targets", MdHeader.HEADER_LEVEL_4, ruleTargetsTable));
-
+    if (rulePatternCodeBlock.length > 0) {
+        resultString.push(createContentBlock("Rule Pattern", MdHeader.HEADER_LEVEL_4, rulePatternCodeBlock));
+    }
+    if (ruleTargetsTable.length > 0) {
+        resultString.push(createContentBlock("Rule Targets", MdHeader.HEADER_LEVEL_4, ruleTargetsTable));
+    }
+    if (ruleScheduledExpression.length > 0) {
+        resultString.push(createContentBlock("Rule ScheduleExpression",
+                                             MdHeader.HEADER_LEVEL_4,
+                                             ruleScheduledExpression));
+    }
     return resultString.join(NEW_LINE);
 }
 
 function createEventRulesContent(rules: EventsRule[]): string {
     const resultText: string[] = [];
+
+    const header = ["Rule Name", "Rule State"];
+    const data: string[][] = rules.map(rule => [rule.name, rule.state]);
+
+    resultText.push(createContentBlock("Rules List", MdHeader.HEADER_LEVEL_3, createMdTable(header, data)));
 
     rules.forEach(rule => {
         const content = createRuleDescription(rule);

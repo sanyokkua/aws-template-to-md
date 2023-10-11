@@ -35,3 +35,13 @@ export const Custom_ApplyTagsToResource: string = "Custom::ApplyTagsToResource";
 export const Custom_LogRetention: string = "Custom::LogRetention";
 export const Custom_ResourceDNS: string = "Custom::ResourceDNS";
 export const Custom_S3BucketNotifications: string = "Custom::S3BucketNotifications";
+
+// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html
+export const AWS_PSEUDO_PARAMS_MAPPING: { [key: string]: string } = {
+    "AWS::AccountId": "123456789012",
+    "AWS::NoValue": "",
+    "AWS::Partition": "aws",
+    "AWS::Region": "us-east-1",
+    "AWS::StackId": "STACK_ID_MOCK",
+    "AWS::URLSuffix": "amazonaws.com",
+};

@@ -17,6 +17,7 @@ import {
 }                                                     from "../../aws/models/apigateway/api";
 import { fnGetAtt, fnJoin }                           from "../writers/common/common_parser_utils";
 import { Resource }                                   from "../../aws/models/common";
+import { createStyledText, MdStyle }                  from "../writers/common/common_md_functions";
 
 export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, ResourcesMappedById]): ApiGatewayRestApi[] {
     const resourcesByType = resources[0];
@@ -132,9 +133,43 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
                 model = JSON.stringify(methodModel.Properties.Schema);
             }
 
-            const destination = method.Properties.Integration.Uri !== undefined ?
-                                fnJoin(method.Properties.Integration.Uri["Fn::Join"], resourcesById) :
-                                "";
+            // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apitgateway-method-integration.html#cfn-apigateway-method-integration-uri
+            // Integration - AWS/AWS_PROXY = arn:aws:apigateway:{region}:{subdomain.service|service}:path|action/{service_api}
+            // Integration - HTTP/HTTP_PROXY = https://
+            // Integration - VPC_LINK = Network Load Balancer DNS name
+
+            let destination = method.Properties.Integration.Uri !== undefined ?
+                              fnJoin(method.Properties.Integration.Uri["Fn::Join"], resourcesById) :
+                              "";
+
+            if (method.Properties.Integration.Type === "AWS" || method.Properties.Integration.Type === "AWS_PROXY") {
+                const partsOfDest = destination.split(":");
+                // arn 0 aws 1 apigateway 2 {region} 3 {subdomain.service|service} 4 path|action/{service_api} 5
+                // arn : aws : apigateway : {region} : {subdomain.service|service} : path|action/{service_api}
+                // arn : aws : apigateway : us-east-1: lambda                      : path/2015-03-31/functions/arn:aws:lambda:us-east-1:736352:function:some-lambda-name-environment/invocations
+
+                if (partsOfDest.length > 5) {
+                    const dest = destination.split("/");
+
+                    const targetService: string = partsOfDest[4];
+
+                    let targetAction: string = dest[dest.length - 2];
+                    let actionHasArn: boolean = targetAction.includes("arn:");
+                    if (actionHasArn) {
+                        const targetParts = targetAction.split(":");
+                        targetAction = targetParts[targetParts.length - 1];
+                    }
+                    const targetApi: string = dest[dest.length - 1];
+
+                    if (targetService.toLowerCase() === "lambda") {
+                        destination = `Lambda ${createStyledText(targetAction, MdStyle.BOLD)}`;
+                    } else if (targetService.toLowerCase() === "events") {
+                        destination = `AWS EventBus, ${createStyledText(targetApi, MdStyle.BOLD)}`;
+                    } else {
+                        destination = `AWS Service: ${targetService}, Service Action: ${targetAction}, Service API: ${targetApi}`;
+                    }
+                }
+            }
 
             return {
                 url: url,

@@ -1,5 +1,6 @@
 import { FnGetAtt, FnJoinType, Resource } from "../../../aws/models/common";
 import { ResourcesMappedById }            from "../../../aws/parser";
+import { AWS_PSEUDO_PARAMS_MAPPING }      from "../../../aws/constants";
 
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-join.html
 // { "Fn::Join" : [ "delimiter", [ comma-delimited list of values ] ] } TODO: Update with specification
@@ -14,7 +15,14 @@ export function fnJoin(fnJoinNode: FnJoinType, resources: ResourcesMappedById): 
                     stringsToJoin.push(innerValue);
                 } else {
                     if ("Ref" in innerValue) {
-                        stringsToJoin.push(innerValue.Ref);
+                        if (innerValue.Ref in AWS_PSEUDO_PARAMS_MAPPING) {
+                            const pseudoValue: string = AWS_PSEUDO_PARAMS_MAPPING[innerValue.Ref];
+                            if (pseudoValue.length > 0) {
+                                stringsToJoin.push(pseudoValue);
+                            }
+                        } else {
+                            stringsToJoin.push(innerValue.Ref);
+                        }
                     } else if ("Fn::GetAtt" in innerValue) {
                         const resource = fnGetAtt(innerValue, resources);
                         if (resource) {

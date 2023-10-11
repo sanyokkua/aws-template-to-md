@@ -90,25 +90,13 @@ import {
 import {
     AwsStepFunctionsStateMachine,
 }                                       from "./models/stepfunction/stepfunction";
+import {
+    removePrefix,
+    removeSuffix,
+}                                       from "../utils/utils";
 
 export type ResourcesMappedByType = { [key: string]: Resource[] };
 export type ResourcesMappedById = { [key: string]: Resource };
-
-function removePrefix(originalValue: string, prefix: string): string {
-    if (originalValue.startsWith(prefix)) {
-        return originalValue.slice(prefix.length);
-    } else {
-        return originalValue;
-    }
-}
-
-function removeSuffix(originalValue: string, suffix: string): string {
-    if (originalValue.endsWith(suffix)) {
-        return originalValue.slice(0, -suffix.length);
-    } else {
-        return originalValue;
-    }
-}
 
 function getNameOrId(name: string | undefined | null, id: string, prefix: string | undefined, suffix: string | undefined) {
     if (name === undefined || name === null || name.length === 0) {

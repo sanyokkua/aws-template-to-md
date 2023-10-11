@@ -4,6 +4,7 @@ import { Button, Card, Form, Input, Row } from "antd";
 import { EditorInput, RepositoryInfo }    from "../../../../md/writers/customs/models";
 import TextArea                           from "antd/es/input/TextArea";
 import TextView                           from "../../common/text_view";
+import { getCurrentOrDefault }            from "../../../../utils/utils";
 
 type RepositoryInfoEditorProps = {
     editorInput: EditorInput<RepositoryInfo>;
@@ -14,36 +15,29 @@ const RepositoryInfoEditor: React.FC<RepositoryInfoEditorProps> = (props: Reposi
     const onAddButtonClicked = () => {
         const repoName = form.getFieldValue("repoName");
         const description = form.getFieldValue("description");
-
         const programmingLang = form.getFieldValue("programmingLang");
         const deploymentDestination = form.getFieldValue("deploymentDestination");
         const deploymentTechnology = form.getFieldValue("deploymentTechnology");
         const linkToCloudForge = form.getFieldValue("linkToCloudForge");
 
-        const isRepoNameNotEmpty = repoName !== undefined && repoName.length > 0;
-        const isDescriptionNotEmpty = description !== undefined && description.length > 0;
-        const isProgrammingLangNotEmpty = programmingLang !== undefined && programmingLang.length > 0;
-        const isDeploymentDestinationNotEmpty = deploymentDestination !== undefined && deploymentDestination.length > 0;
-        const isDeploymentTechnologyNotEmpty = deploymentTechnology !== undefined && deploymentTechnology.length > 0;
-        const isLinkToCloudForgeNotEmpty = linkToCloudForge !== undefined && linkToCloudForge.length > 0;
+        const repoNameValue = getCurrentOrDefault(repoName, props.editorInput.data.name);
+        const descriptionValue = getCurrentOrDefault(description, props.editorInput.data.description);
+        const programmingLangValue = getCurrentOrDefault(programmingLang,
+                                                         props.editorInput.data.mainProgrammingLanguage);
+        const deploymentDestinationValue = getCurrentOrDefault(deploymentDestination,
+                                                               props.editorInput.data.deploymentDestination);
+        const deploymentTechnologyValue = getCurrentOrDefault(deploymentTechnology,
+                                                              props.editorInput.data.deploymentTechnology);
+        const linkToCloudForgeValue = getCurrentOrDefault(linkToCloudForge, props.editorInput.data.linkToCloudForge);
 
-        const isDataValid = isRepoNameNotEmpty &&
-            isDescriptionNotEmpty &&
-            isProgrammingLangNotEmpty &&
-            isDeploymentDestinationNotEmpty &&
-            isDeploymentTechnologyNotEmpty &&
-            isLinkToCloudForgeNotEmpty;
-
-        if (isDataValid) {
-            props.editorInput.onDataChanged({
-                                                name: repoName,
-                                                description: description,
-                                                mainProgrammingLanguage: programmingLang,
-                                                deploymentDestination: deploymentDestination,
-                                                deploymentTechnology: deploymentTechnology,
-                                                linkToCloudForge: linkToCloudForge,
-                                            });
-        }
+        props.editorInput.onDataChanged({
+                                            name: repoNameValue,
+                                            description: descriptionValue,
+                                            mainProgrammingLanguage: programmingLangValue,
+                                            deploymentDestination: deploymentDestinationValue,
+                                            deploymentTechnology: deploymentTechnologyValue,
+                                            linkToCloudForge: linkToCloudForgeValue,
+                                        });
     };
 
     return <Card style={{width: "100%"}} title={"Add Repository Information"}>

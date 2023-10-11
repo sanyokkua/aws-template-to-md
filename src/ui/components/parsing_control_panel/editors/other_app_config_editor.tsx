@@ -2,6 +2,7 @@ import React                                                          from "reac
 import { Button, Card, Form, List, Row, Select, SelectProps, Switch } from "antd";
 import { EditorInput, OtherAppConfig }                                from "../../../../md/writers/customs/models";
 import { AVAILABLE_WRITERS }                                          from "../../../../md/document_parser";
+import { getCurrentOrDefault }                                        from "../../../../utils/utils";
 
 const DEFAULT_WRITERS: string[] = AVAILABLE_WRITERS.slice();
 const DEFAULT_OPTIONS: SelectProps["options"] = DEFAULT_WRITERS.map(name => {
@@ -23,20 +24,26 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
         const showArchitectureDiagramLinkTemplate = form.getFieldValue("showArchitectureDiagramLinkTemplate");
         const writers = form.getFieldValue("selectWriters");
 
-        if (showStepFunctionDiagram !== undefined && showArchitectureDiagramLinkTemplate !== undefined && writers != undefined) {
-            const selectedWriters = writers.map((w: string | { label: string, value: string }) => {
-                if (typeof w == "string") {
-                    return w;
-                } else {
-                    return w.value;
-                }
-            });
-            props.editorInput.onDataChanged({
-                                                enableArchitectureDiagramImgLinkTemplate: showStepFunctionDiagram,
-                                                enableStepFunctionDiagramLinkTemplate: showArchitectureDiagramLinkTemplate,
-                                                selectedWriters: selectedWriters,
-                                            });
-        }
+        const showStepFunctionDiagramValue = getCurrentOrDefault<boolean>(showStepFunctionDiagram,
+                                                                          props.editorInput.data.enableStepFunctionDiagramLinkTemplate);
+        const showArchitectureDiagramLinkTemplateValue = getCurrentOrDefault<boolean>(
+            showArchitectureDiagramLinkTemplate,
+            props.editorInput.data.enableArchitectureDiagramImgLinkTemplate);
+        const writersValue = getCurrentOrDefault(writers, props.editorInput.data.selectedWriters);
+
+        const selectedWriters = writersValue.map((w: string | { label: string, value: string }) => {
+            if (typeof w == "string") {
+                return w;
+            } else {
+                return w.value;
+            }
+        });
+
+        props.editorInput.onDataChanged({
+                                            enableArchitectureDiagramImgLinkTemplate: showArchitectureDiagramLinkTemplateValue,
+                                            enableStepFunctionDiagramLinkTemplate: showStepFunctionDiagramValue,
+                                            selectedWriters: selectedWriters,
+                                        });
     };
     return <Card style={{width: "100%"}} title={"Other Markdown Configurations"}>
         <Form form={form} name="RepositoryTag-form" onFinish={() => onFormSubmit()} style={{maxWidth: 600}}>

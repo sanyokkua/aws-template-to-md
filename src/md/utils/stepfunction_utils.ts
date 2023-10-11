@@ -9,11 +9,9 @@ function replaceIdsInDefinition(definition: string, resourcesById: ResourcesMapp
         return "";
     }
     for (let resourcesByIdKey in resourcesById) {
-        if (definition.indexOf(resourcesByIdKey) >= 0) {
+        if (definition.includes(resourcesByIdKey)) {
             const name: string = resourcesById[resourcesByIdKey].Name;
             definition = definition.replace(resourcesByIdKey, name);
-        } else {
-            console.log(`Not found - ${resourcesByIdKey}`);
         }
     }
     return definition;

@@ -80,13 +80,17 @@ export function getMappedEventsRule(resources: [ResourcesMappedByType, Resources
                                     };
                                 });
 
+            const eventPattern = JSON.stringify(rule.Properties.EventPattern);
+            const scheduleExpression = rule.Properties.ScheduleExpression;
+
             const res: EventsRule = {
                 id: rule.ID,
                 type: rule.Type,
                 name: rule.Name,
                 parentEventBus: eventBusName,
                 state: rule.Properties.State,
-                pattern: JSON.stringify(rule.Properties.EventPattern),
+                pattern: JSON.stringify(eventPattern),
+                scheduleExpression: scheduleExpression,
                 targets: targets,
             };
             return res;

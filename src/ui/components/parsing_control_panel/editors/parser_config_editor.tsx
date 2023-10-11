@@ -3,10 +3,12 @@ import React from "react";
 import { Button, Card, Form, Input, Row, Switch } from "antd";
 import TextView                                   from "../../common/text_view";
 import { EditorInput, ParserConfig }              from "../../../../md/writers/customs/models";
+import { getCurrentOrDefault }                    from "../../../../utils/utils";
 
 type ParserConfigEditorProps = {
     editorInput: EditorInput<ParserConfig>;
 }
+
 const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConfigEditorProps) => {
     const [form] = Form.useForm();
 
@@ -16,19 +18,22 @@ const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConf
         const prefix = form.getFieldValue("prefixText");
         const suffix = form.getFieldValue("suffixText");
 
-        const isSfEnabledHasValue: boolean = sfEnabled !== undefined;
-        const isLambdaEnabledHasValue: boolean = lambdaEnabled !== undefined;
-        const isPrefixHasValue: boolean = prefix !== undefined;
-        const isSuffixHasValue: boolean = suffix !== undefined;
+        const enableSfDef: boolean = getCurrentOrDefault<boolean>(sfEnabled,
+                                                                  props.editorInput.data.enableStepFunctionDefinition);
+        const lambdaVars: boolean = getCurrentOrDefault<boolean>(lambdaEnabled,
+                                                                 props.editorInput.data.enableStepFunctionDefinition);
+        const resourcePrefix: string = getCurrentOrDefault<string>(prefix,
+                                                                   props.editorInput.data.templateResourceNamePrefixToRemove);
+        const resourceSuffix: string = getCurrentOrDefault<string>(suffix,
+                                                                   props.editorInput.data.templateResourceNameSuffixToRemove);
 
-        if (isSfEnabledHasValue && isLambdaEnabledHasValue && isPrefixHasValue && isSuffixHasValue) {
-            props.editorInput.onDataChanged({
-                                                enableLambdaEnvVarValues: sfEnabled,
-                                                enableStepFunctionDefinition: lambdaEnabled,
-                                                templateResourceNamePrefixToRemove: prefix,
-                                                templateResourceNameSuffixToRemove: suffix,
-                                            });
-        }
+        props.editorInput.onDataChanged({
+                                            enableLambdaEnvVarValues: enableSfDef,
+                                            enableStepFunctionDefinition: lambdaVars,
+                                            templateResourceNamePrefixToRemove: resourcePrefix,
+                                            templateResourceNameSuffixToRemove: resourceSuffix,
+                                        });
+
     };
 
     return <Card style={{width: "100%"}} title={"Configure Parsing of CloudFormation Template"}>
@@ -43,11 +48,11 @@ const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConf
                 <Switch/>
             </Form.Item>
 
-            <Form.Item label="Resource Name Prefix to remove" name="prefixText" rules={[{required: false}]}
+            <Form.Item label="AWS Resource Name Prefix to remove" name="prefixText" rules={[{required: false}]}
                        initialValue={props.editorInput.data.templateResourceNamePrefixToRemove}>
                 <Input/>
             </Form.Item>
-            <Form.Item label="Resource Name Suffix to remove" name="suffixText" rules={[{required: false}]}
+            <Form.Item label="AWS Resource Name Suffix to remove" name="suffixText" rules={[{required: false}]}
                        initialValue={props.editorInput.data.templateResourceNameSuffixToRemove}>
                 <Input/>
             </Form.Item>

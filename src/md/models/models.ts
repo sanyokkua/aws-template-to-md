@@ -35,6 +35,7 @@ export interface EventsRule extends CommonResource {
     parentEventBus: string; // AwsEventsRule.EventBusName.Ref
     state: string;// AwsEventsRule.Sate
     pattern: string; // AwsEventsRule.EventPattern
+    scheduleExpression: string; // AwsEventsRule.ScheduleExpression
     targets: {
         type: string;
         name: string;
