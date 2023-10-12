@@ -7,7 +7,7 @@ import {
     WriterOptions,
     WriterParams,
 }                                                from "../common/common_md_functions";
-import { DocumentResourcesTree, EventsEventBus } from "../../models/models";
+import { DocumentResourcesTree, EventsEventBus } from "../../mapper/models/models";
 
 function createEventBusContent(eventBusList: EventsEventBus[]): string {
     const eventBusesMapped: string[] = eventBusList.map(eventBus => eventBus.name);

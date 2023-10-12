@@ -9,7 +9,7 @@ import {
     WriterOptions,
     WriterParams,
 }                                                           from "../common/common_md_functions";
-import { DocumentResourcesTree, StepFunctionsStateMachine } from "../../models/models";
+import { DocumentResourcesTree, StepFunctionsStateMachine } from "../../mapper/models/models";
 
 function createStepFunctionContent(stepFunctionsStateMachines: StepFunctionsStateMachine[],
                                    enableStepFunctionDefinition: boolean,

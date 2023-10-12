@@ -1,7 +1,7 @@
-import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
+import { ResourcesMappedById, ResourcesMappedByType } from "../../../aws/parser";
 import { LambdaFunction }                             from "../models/models";
-import { AWS_Lambda_Function }                        from "../../aws/constants";
-import { AwsLambdaFunction }                          from "../../aws/models/lambda/lambda";
+import { AWS_Lambda_Function }                        from "../../../aws/constants";
+import { AwsLambdaFunction }                          from "../../../aws/models/lambda/lambda";
 
 
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-memorysize

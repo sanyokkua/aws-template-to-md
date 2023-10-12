@@ -44,17 +44,19 @@ export interface EventsRule extends CommonResource {
     }[];
 }
 
+export interface DynamoDbField {
+    name: string;
+    type: string;
+    keyType: string;
+    globalIndexes: string[];
+    localIndexes: string[];
+    keyRole: string;
+}
+
 export interface DynamoDbTable extends CommonResource {
     structure: {
-        keys: {
-            name: string; // AwsDynamoDbTable.Properties.KeySchema.AttributeName
-            type: string; // AwsDynamoDbTable.Properties.KeySchema.KeyType
-        }[],
-        attributes: {
-            name: string; // AwsDynamoDbTable.Properties.AttributeDefinitions.AttributeName
-            type: string; // AwsDynamoDbTable.Properties.AttributeDefinitions.AttributeType
-        }[]
-    },
+        fields: DynamoDbField[];
+    };
     updateReplacePolicy: string; // AwsDynamoDbTable.UpdateReplacePolicy
     deletionPolicy: string; // AwsDynamoDbTable.DeletionPolicy
 }

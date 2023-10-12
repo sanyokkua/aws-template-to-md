@@ -1,9 +1,9 @@
-import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
+import { ResourcesMappedById, ResourcesMappedByType } from "../../../aws/parser";
 import { EventsEventBus, EventsRule }                 from "../models/models";
-import { AWS_Events_EventBus, AWS_Events_Rule }       from "../../aws/constants";
-import { AwsEventsEventBus, AwsEventsRule }           from "../../aws/models/events/eventbus";
-import { fnGetAtt }                                   from "../writers/common/common_parser_utils";
-import { Resource }                                   from "../../aws/models/common";
+import { AWS_Events_EventBus, AWS_Events_Rule }       from "../../../aws/constants";
+import { AwsEventsEventBus, AwsEventsRule }           from "../../../aws/models/events/eventbus";
+import { fnGetAtt }                                   from "../../writers/common/common_parser_utils";
+import { Resource }                                   from "../../../aws/models/common";
 
 export function getMappedEventsEventBus(resources: [ResourcesMappedByType, ResourcesMappedById]): EventsEventBus[] {
     const resourcesByType = resources[0];

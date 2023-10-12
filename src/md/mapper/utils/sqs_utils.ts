@@ -1,7 +1,7 @@
-import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
+import { ResourcesMappedById, ResourcesMappedByType } from "../../../aws/parser";
 import { SQSQueue }                                   from "../models/models";
-import { AWS_SQS_Queue }                              from "../../aws/constants";
-import { AwsSQSQueue }                                from "../../aws/models/sqs/sqs";
+import { AWS_SQS_Queue }                              from "../../../aws/constants";
+import { AwsSQSQueue }                                from "../../../aws/models/sqs/sqs";
 
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sqs-queue.html#cfn-sqs-queue-delayseconds
 const AWS_SQS_DELAY_SECONDS_DEFAULT: number = 0;

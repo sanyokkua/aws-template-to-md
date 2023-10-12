@@ -14,11 +14,23 @@ export type DynamoDbAttributeDefinitionsItem = {
     AttributeType: string
 }
 
-export type DynamoDbProperties = {
+export type GlobalSecondaryIndex = {
+    IndexName: string,
+    KeySchema: DynamoDbKeySchemaItem[]
+}
+
+export type LocalSecondaryIndex = {
+    IndexName: string,
     KeySchema: DynamoDbKeySchemaItem[],
-    AttributeDefinitions: DynamoDbAttributeDefinitionsItem[],
-    BillingMode: string,
-    TableName: string
+}
+
+export type DynamoDbProperties = {
+    KeySchema: DynamoDbKeySchemaItem[];
+    AttributeDefinitions: DynamoDbAttributeDefinitionsItem[];
+    GlobalSecondaryIndexes: GlobalSecondaryIndex[];
+    LocalSecondaryIndexes: LocalSecondaryIndex[];
+    BillingMode: string;
+    TableName: string;
 }
 
 export interface AwsDynamoDbTable extends CommonResourceInfo {

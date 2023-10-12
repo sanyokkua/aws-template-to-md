@@ -1,4 +1,4 @@
-import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
+import { ResourcesMappedById, ResourcesMappedByType } from "../../../aws/parser";
 import { ApiGatewayRestApi }                          from "../models/models";
 import {
     AWS_ApiGateway_Authorizer,
@@ -6,7 +6,7 @@ import {
     AWS_ApiGateway_Resource,
     AWS_ApiGateway_RestApi,
     AWS_ApiGateway_Stage,
-}                                                     from "../../aws/constants";
+}                                                     from "../../../aws/constants";
 import {
     AwsApiGatewayAuthorizer,
     AwsApiGatewayMethod,
@@ -14,10 +14,10 @@ import {
     AwsApiGatewayResource,
     AwsApiGatewayRestApi,
     AwsApiGatewayStage,
-}                                                     from "../../aws/models/apigateway/api";
-import { fnGetAtt, fnJoin }                           from "../writers/common/common_parser_utils";
-import { Resource }                                   from "../../aws/models/common";
-import { createStyledText, MdStyle }                  from "../writers/common/common_md_functions";
+}                                                     from "../../../aws/models/apigateway/api";
+import { fnGetAtt, fnJoin }                           from "../../writers/common/common_parser_utils";
+import { Resource }                                   from "../../../aws/models/common";
+import { createStyledText, MdStyle }                  from "../../writers/common/common_md_functions";
 
 export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, ResourcesMappedById]): ApiGatewayRestApi[] {
     const resourcesByType = resources[0];

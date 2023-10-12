@@ -9,7 +9,7 @@ import {
     WriterOptions,
     WriterParams,
 }                                            from "../common/common_md_functions";
-import { DocumentResourcesTree, EventsRule } from "../../models/models";
+import { DocumentResourcesTree, EventsRule } from "../../mapper/models/models";
 
 
 function createRuleDescriptionTable(eventsRule: EventsRule): string {

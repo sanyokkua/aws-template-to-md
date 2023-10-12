@@ -15,6 +15,7 @@ const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConf
     const onFormSubmit = () => {
         const sfEnabled = form.getFieldValue("stepFunctionSwitch");
         const lambdaEnabled = form.getFieldValue("lambdaSwitch");
+        const dynamoDbEx = form.getFieldValue("dynamoDbEx");
         const prefix = form.getFieldValue("prefixText");
         const suffix = form.getFieldValue("suffixText");
 
@@ -22,6 +23,8 @@ const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConf
                                                                   props.editorInput.data.enableStepFunctionDefinition);
         const lambdaVars: boolean = getCurrentOrDefault<boolean>(lambdaEnabled,
                                                                  props.editorInput.data.enableStepFunctionDefinition);
+        const dynamoDbExVal: boolean = getCurrentOrDefault<boolean>(dynamoDbEx,
+                                                                    props.editorInput.data.enableDynamoDbExampleStubs);
         const resourcePrefix: string = getCurrentOrDefault<string>(prefix,
                                                                    props.editorInput.data.templateResourceNamePrefixToRemove);
         const resourceSuffix: string = getCurrentOrDefault<string>(suffix,
@@ -30,6 +33,7 @@ const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConf
         props.editorInput.onDataChanged({
                                             enableLambdaEnvVarValues: enableSfDef,
                                             enableStepFunctionDefinition: lambdaVars,
+                                            enableDynamoDbExampleStubs: dynamoDbExVal,
                                             templateResourceNamePrefixToRemove: resourcePrefix,
                                             templateResourceNameSuffixToRemove: resourceSuffix,
                                         });
@@ -45,6 +49,10 @@ const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConf
             </Form.Item>
             <Form.Item label="Show Lambda Var Values" name="lambdaSwitch" valuePropName="checked"
                        initialValue={props.editorInput.data.enableLambdaEnvVarValues}>
+                <Switch/>
+            </Form.Item>
+            <Form.Item label="Show DynamoDB examples" name="dynamoDbEx" valuePropName="checked"
+                       initialValue={props.editorInput.data.enableDynamoDbExampleStubs}>
                 <Switch/>
             </Form.Item>
 

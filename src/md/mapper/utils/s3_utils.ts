@@ -1,7 +1,7 @@
-import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
+import { ResourcesMappedById, ResourcesMappedByType } from "../../../aws/parser";
 import { S3Bucket }                                   from "../models/models";
-import { AWS_S3_Bucket }                              from "../../aws/constants";
-import { AwsS3Bucket }                                from "../../aws/models/s3/s3";
+import { AWS_S3_Bucket }                              from "../../../aws/constants";
+import { AwsS3Bucket }                                from "../../../aws/models/s3/s3";
 
 export function getMappedS3Bucket(resources: [ResourcesMappedByType, ResourcesMappedById]): S3Bucket[] {
     const resourcesByType = resources[0];

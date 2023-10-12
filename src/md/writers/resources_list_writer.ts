@@ -7,7 +7,7 @@ import {
     WriterOptions,
     WriterParams,
 }                                from "./common/common_md_functions";
-import { DocumentResourcesTree } from "../models/models";
+import { DocumentResourcesTree } from "../mapper/models/models";
 
 function createResourceListContent(resourcesList: DocumentResourcesTree): string {
     const allResources: AllowedResource[] = [];

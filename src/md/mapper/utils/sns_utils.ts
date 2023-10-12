@@ -1,7 +1,7 @@
-import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
+import { ResourcesMappedById, ResourcesMappedByType } from "../../../aws/parser";
 import { SNSTopic }                                   from "../models/models";
-import { AWS_SNS_Subscription, AWS_SNS_Topic }        from "../../aws/constants";
-import { AwsSNSSubscription, AwsSNSTopic }            from "../../aws/models/sns/sns";
+import { AWS_SNS_Subscription, AWS_SNS_Topic }        from "../../../aws/constants";
+import { AwsSNSSubscription, AwsSNSTopic }            from "../../../aws/models/sns/sns";
 
 export function getMappedSNSTopic(resources: [ResourcesMappedByType, ResourcesMappedById]): SNSTopic[] {
     const resourcesByType = resources[0];

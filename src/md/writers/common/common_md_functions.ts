@@ -8,7 +8,7 @@ import {
     SNSTopic,
     SQSQueue,
     StepFunctionsStateMachine,
-} from "../../models/models";
+} from "../../mapper/models/models";
 
 export type WriterParams<T> = {
     value: T;
@@ -158,6 +158,24 @@ export function createTableOfContent(headers: string[]): string {
         return {value: `[${headingText}](#${headingAnchor})`, level: counter};
     });
     return createMdListUnorderedWithLevel("Table Of Content", tableOfContentsEntries);
+}
+
+export function createCollapsableSection(header: string, content: string): string {
+    const openTag: string = "<details>";
+    const closeTag: string = "</details>";
+    const headerOpenTag: string = "<summary>";
+    const headerCloseTag: string = "</summary>";
+
+    const data: string[] = [
+        openTag,
+        headerOpenTag,
+        header,
+        headerCloseTag,
+        content,
+        closeTag,
+    ];
+
+    return data.join(NEW_LINE);
 }
 
 function joinTableColumns(values: string[]): string {

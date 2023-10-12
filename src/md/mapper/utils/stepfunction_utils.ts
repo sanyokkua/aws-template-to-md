@@ -1,8 +1,8 @@
-import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
+import { ResourcesMappedById, ResourcesMappedByType } from "../../../aws/parser";
 import { StepFunctionsStateMachine }                  from "../models/models";
-import { AWS_StepFunctions_StateMachine }             from "../../aws/constants";
-import { AwsStepFunctionsStateMachine }               from "../../aws/models/stepfunction/stepfunction";
-import { fnJoin }                                     from "../writers/common/common_parser_utils";
+import { AWS_StepFunctions_StateMachine }             from "../../../aws/constants";
+import { AwsStepFunctionsStateMachine }               from "../../../aws/models/stepfunction/stepfunction";
+import { fnJoin }                                     from "../../writers/common/common_parser_utils";
 
 function replaceIdsInDefinition(definition: string, resourcesById: ResourcesMappedById): string {
     if (definition === undefined || definition.length == 0) {

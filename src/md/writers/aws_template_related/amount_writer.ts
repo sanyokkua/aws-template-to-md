@@ -6,7 +6,7 @@ import {
     WriterOptions,
     WriterParams,
 }                                                from "../common/common_md_functions";
-import { CommonResource, DocumentResourcesTree } from "../../models/models";
+import { CommonResource, DocumentResourcesTree } from "../../mapper/models/models";
 
 type Amount = [number, string];
 

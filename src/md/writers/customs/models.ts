@@ -37,6 +37,7 @@ export type ParserConfig = {
     templateResourceNameSuffixToRemove: string;
     enableStepFunctionDefinition: boolean;
     enableLambdaEnvVarValues: boolean;
+    enableDynamoDbExampleStubs: boolean;
 }
 
 export type OtherAppConfig = {

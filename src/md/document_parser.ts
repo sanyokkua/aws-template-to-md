@@ -1,4 +1,4 @@
-import { DocumentResourcesTree }                                               from "./models/models";
+import { DocumentResourcesTree }                                               from "./mapper/models/models";
 import { parseCloudForgeTemplate, ResourcesMappedById, ResourcesMappedByType } from "../aws/parser";
 import { mapAwsResourcesToMdTypes }                                            from "./mapper";
 import { createMarkdownDocumentBasedOnTheWriters, WriterWrapperImpl }          from "./aws_md_writer";
@@ -170,7 +170,9 @@ export function parseCloudFormationTemplate(parameters: ParserParameters): strin
         "dynamodb": new WriterWrapperImpl(WRITER_AWS_DYNAMO_DB,
                                           writeDynamoDbTables,
                                           {value: documentResourcesTree},
-                                          {}),
+                                          {
+                                              CREATE_DATA_EXAMPLE_STUB: parameters.parserConfig.enableDynamoDbExampleStubs,
+                                          }),
         "lambda": new WriterWrapperImpl(WRITER_AWS_LAMBDA,
                                         writeLambdaFunctions,
                                         {value: documentResourcesTree},

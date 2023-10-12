@@ -1,4 +1,4 @@
-import { ResourcesMappedById, ResourcesMappedByType } from "../../aws/parser";
+import { ResourcesMappedById, ResourcesMappedByType } from "../../../aws/parser";
 import { CommonResource }                             from "../models/models";
 
 export function getCommonResources(resources: [ResourcesMappedByType, ResourcesMappedById]): CommonResource[] {

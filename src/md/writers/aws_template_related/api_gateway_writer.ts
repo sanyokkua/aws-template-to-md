@@ -9,7 +9,7 @@ import {
     WriterOptions,
     WriterParams,
 }                                                   from "../common/common_md_functions";
-import { ApiGatewayRestApi, DocumentResourcesTree } from "../../models/models";
+import { ApiGatewayRestApi, DocumentResourcesTree } from "../../mapper/models/models";
 
 function createApiGatewayEndpointsTable(apiGatewayRestApi: ApiGatewayRestApi) {
     const HEADER_LINE: string[] = ["Method", "Endpoint", "Integration Type", "Destination"];

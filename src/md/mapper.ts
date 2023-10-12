@@ -11,16 +11,16 @@ import {
     SNSTopic,
     SQSQueue,
     StepFunctionsStateMachine,
-}                                                       from "./models/models";
-import { getMappedApiGatewayRestApi }                   from "./utils/api_gateway_utils";
-import { getMappedEventsEventBus, getMappedEventsRule } from "./utils/events_utils";
-import { getMappedDynamoDbTable }                       from "./utils/dynamodb_utils";
-import { getMappedStepFunctionsStateMachine }           from "./utils/stepfunction_utils";
-import { getMappedLambdaFunction }                      from "./utils/lambda_utils";
-import { getMappedS3Bucket }                            from "./utils/s3_utils";
-import { getMappedSNSTopic }                            from "./utils/sns_utils";
-import { getMappedSQSQueue }                            from "./utils/sqs_utils";
-import { getCommonResources }                           from "./utils/common_resource_utils";
+}                                                       from "./mapper/models/models";
+import { getMappedApiGatewayRestApi }                   from "./mapper/utils/api_gateway_utils";
+import { getMappedEventsEventBus, getMappedEventsRule } from "./mapper/utils/events_utils";
+import { getMappedDynamoDbTable }                       from "./mapper/utils/dynamodb_utils";
+import { getMappedStepFunctionsStateMachine }           from "./mapper/utils/stepfunction_utils";
+import { getMappedLambdaFunction }                      from "./mapper/utils/lambda_utils";
+import { getMappedS3Bucket }                            from "./mapper/utils/s3_utils";
+import { getMappedSNSTopic }                            from "./mapper/utils/sns_utils";
+import { getMappedSQSQueue }                            from "./mapper/utils/sqs_utils";
+import { getCommonResources }                           from "./mapper/utils/common_resource_utils";
 
 export function mapAwsResourcesToMdTypes(resources: [ResourcesMappedByType, ResourcesMappedById]): DocumentResourcesTree {
     const mappedApiGatewayRestApi: ApiGatewayRestApi[] = getMappedApiGatewayRestApi(resources);
