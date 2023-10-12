@@ -26,7 +26,10 @@ function extractRulePatternAsCodeBlock(eventsRule: EventsRule): string {
     let pattern = "";
 
     try {
-        const parsedPattern = JSON.parse(eventsRule.pattern);
+        let parsedPattern = JSON.parse(eventsRule.pattern);
+        if (typeof parsedPattern === "string") { // In case if pattern was stringify 2 times
+            parsedPattern = JSON.parse(parsedPattern);
+        }
         const stringify = JSON.stringify(parsedPattern, null, 2);
         pattern = createMdCodeBlock(stringify, CodeSyntax.JSON);
     } catch (e) {

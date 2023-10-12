@@ -1,6 +1,7 @@
 import React             from "react";
 import { Layout, theme } from "antd";
 import AppContent        from "./components/app_content_component";
+import "./github_css.css";
 
 const {Content} = Layout;
 

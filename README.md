@@ -15,11 +15,17 @@ descriptions, etc, and the biggest part of it can be parsed from CloudFormation 
 
 ## Screens
 
-![example](docs/ui_example.png)
+![example](docs/ui_example-1.png)
 
-![example](docs/ui_example_2.png)
+![example](docs/ui_example-2.png)
 
-![example](docs/ui_example_3.png)
+![example](docs/ui_example-3.png)
+
+![example](docs/ui_example-4.png)
+
+![example](docs/ui_example-5.png)
+
+![example](docs/ui_example-6.png)
 
 ## Link to App
 

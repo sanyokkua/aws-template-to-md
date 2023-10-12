@@ -3,7 +3,6 @@ import { Col, Row, Skeleton } from "antd";
 import MdEditor               from "./common/md_editor";
 import MdViewer               from "./common/md_view";
 
-
 export type MarkDownComponentProps = {
     markdownText: string;
     onChange: (markdownText: string) => void;

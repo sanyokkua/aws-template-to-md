@@ -80,6 +80,10 @@ const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConf
                     unCheckedChildren="Lambda Env Vars Values Will NOT Be Showed"
                     checked={props.editorInput.data.enableLambdaEnvVarValues}
                     disabled={true}/>
+            <Switch checkedChildren="DynamoDB Example stub Will Be Showed"
+                    unCheckedChildren="DynamoDB Example stub  Will NOT Be Showed"
+                    checked={props.editorInput.data.enableDynamoDbExampleStubs}
+                    disabled={true}/>
         </Row>
         <TextView name={"Prefix that will be removed:"}
                   value={props.editorInput.data.templateResourceNamePrefixToRemove}/>

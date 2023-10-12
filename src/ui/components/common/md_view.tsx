@@ -1,13 +1,12 @@
-import React     from "react";
-import Markdown  from "react-markdown";
-import remarkGfm from "remark-gfm";
+import React           from "react";
+import MarkdownPreview from "@uiw/react-markdown-preview";
 
 type MdViewerProps = {
     content: string;
 }
 const MdViewer: React.FC<MdViewerProps> = (props: MdViewerProps) => {
     return <div>
-        <Markdown remarkPlugins={[remarkGfm]}>{props.content}</Markdown>
+        <MarkdownPreview source={props.content}/>
     </div>;
 };
 
