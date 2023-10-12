@@ -23,7 +23,7 @@ function extractRulePatternAsCodeBlock(eventsRule: EventsRule): string {
     if (eventsRule.pattern === undefined || eventsRule.pattern.length === 0) {
         return "";
     }
-    let pattern = "";
+    let pattern: string;
 
     try {
         let parsedPattern = JSON.parse(eventsRule.pattern);

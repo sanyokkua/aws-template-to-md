@@ -29,6 +29,7 @@ const defaultArtifactDesign: ArtifactDesign = {
 const defaultParserConfig: ParserConfig = {
     enableLambdaEnvVarValues: false,
     enableStepFunctionDefinition: false,
+    enableDynamoDbExampleStubs: false,
     templateResourceNamePrefixToRemove: "",
     templateResourceNameSuffixToRemove: "",
 };
