@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Button, Card, Col, Form, Input, List, Row } from "antd";
-import { EditorInput, RepositoryTag }                from "../../../../md/writers/customs/models";
+import { Button, Card, Col, Form, Image, Input, List, Row } from "antd";
+import { EditorInput, RepositoryTag }                       from "../../../../md/writers/customs/models";
 
 type RepositoryTagsEditorProps = {
     editorInput: EditorInput<RepositoryTag[]>;
@@ -16,18 +16,42 @@ const RepositoryTagsEditor: React.FC<RepositoryTagsEditorProps> = (props: Reposi
     };
 
     const onAddButtonClicked = () => {
-        const text = form.getFieldValue("RepositoryTagText");
-        const link = form.getFieldValue("RepositoryTagLink");
+        const text: string | undefined = form.getFieldValue("RepositoryTagText");
+        const link: string | undefined = form.getFieldValue("RepositoryTagLink");
+        const rawMarkdown: string | undefined = form.getFieldValue("rawMarkdown");
 
         const isTextFieldNotEmpty = text !== undefined && text.length > 0;
         const isLinkFieldIsNotEmpty = link !== undefined && link.length > 0;
+        const isRawMarkdownFieldIsNotEmpty = rawMarkdown !== undefined && rawMarkdown.length > 0;
 
-        if (isTextFieldNotEmpty && isLinkFieldIsNotEmpty) {
+        if (isTextFieldNotEmpty && isLinkFieldIsNotEmpty || isRawMarkdownFieldIsNotEmpty) {
             const currentArray = props.editorInput.data.slice();
-            const found = currentArray.find(curItem => (curItem.text === text && curItem.imgLink === link));
+            const found = currentArray.find(curItem => {
+                if (curItem.linkMd !== undefined) {
+                    return curItem.linkMd === rawMarkdown;
+                } else {
+                    return curItem.text === text && curItem.imgLink === link;
+                }
+            });
 
             if (!found) {
-                currentArray.push({text: text, imgLink: link});
+                let parsedLink: string = "";
+
+                if (link !== undefined && link.length > 0) {
+                    parsedLink = link;
+                } else if ((link === undefined || link.length === 0) && rawMarkdown !== undefined && rawMarkdown.length > 0) {
+                    const res = rawMarkdown.split("[");
+                    parsedLink = res[1].slice(0, -1);
+                } else {
+                    parsedLink = "";
+                }
+
+                const tag: RepositoryTag = {
+                    text: text,
+                    imgLink: parsedLink,
+                    linkMd: rawMarkdown,
+                };
+                currentArray.push(tag);
                 props.editorInput.onDataChanged(currentArray);
             }
         }
@@ -35,10 +59,14 @@ const RepositoryTagsEditor: React.FC<RepositoryTagsEditorProps> = (props: Reposi
 
     return <Card style={{width: "100%"}} title={"Add RepositoryTags"}>
         <Form form={form} name="RepositoryTag-form" onFinish={() => onAddButtonClicked()} style={{maxWidth: 600}}>
-            <Form.Item name="RepositoryTagText" label="RepositoryTag Text" rules={[{required: true}]}>
+            <Form.Item name="RepositoryTagText" label="RepositoryTag Text" rules={[{required: false}]}>
                 <Input/>
             </Form.Item>
-            <Form.Item name="RepositoryTagLink" label="RepositoryTag Link" rules={[{required: true}]}>
+            <Form.Item name="RepositoryTagLink" label="RepositoryTag Link" rules={[{required: false}]}>
+                <Input/>
+            </Form.Item>
+            <h3>Or</h3>
+            <Form.Item name="rawMarkdown" label="RepositoryTag Link Markdown" rules={[{required: false}]}>
                 <Input/>
             </Form.Item>
             <Form.Item>
@@ -52,7 +80,10 @@ const RepositoryTagsEditor: React.FC<RepositoryTagsEditorProps> = (props: Reposi
                 <List itemLayout="horizontal" dataSource={props.editorInput.data}
                       renderItem={(item) => (
                           <List.Item actions={[<a key="remove" onClick={() => onRemoveItem(item)}>remove</a>]}>
-                              {item.text}, {item.imgLink}
+                              {item.text !== undefined && item.imgLink !== undefined && item.text.length > 0 && item.imgLink.length > 0 ?
+                               `${item.text}, ${item.imgLink}` :
+                               item.linkMd}
+                              <Image width={100} src={item.imgLink}/>
                           </List.Item>
                       )}
                 />

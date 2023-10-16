@@ -10,8 +10,9 @@ export type ArtifactDesign = {
 }
 
 export type RepositoryTag = {
-    text: string;
-    imgLink: string;
+    text?: string | undefined;
+    imgLink?: string | undefined;
+    linkMd?: string | undefined;
 }
 export type RepositoryMaintainer = {
     name: string;
@@ -24,6 +25,11 @@ export type RepositoryInfo = {
     mainProgrammingLanguage: string;
     deploymentDestination: string;
     deploymentTechnology: string;
+    deploymentTechnologyDocs: string;
+    branchingStrategy: string;
+    ciDocumentation: string;
+    ciBuildPage: string;
+    ciDeployPage: string;
     linkToCloudForge: string;
 }
 export type Account = {
@@ -43,6 +49,10 @@ export type ParserConfig = {
 export type OtherAppConfig = {
     enableArchitectureDiagramImgLinkTemplate: boolean;
     enableStepFunctionDiagramLinkTemplate: boolean;
+    showOpenApiStub: boolean;
+    showApiGatewayUsageInstructionStub: boolean;
+    showPostmanStub: boolean;
+    showPostmanSecretsLink: boolean;
     selectedWriters: string[];
 }
 

@@ -17,22 +17,48 @@ export const writeRepositoryCommonInfo: WriterFunc<RepositoryInfo> = (params: Wr
         return "";
     }
 
-    const mainProgrammingLanguage = params.value.mainProgrammingLanguage;
-    const destination = params.value.deploymentDestination;
-    const technology = params.value.deploymentTechnology;
-    const cloudForge = params.value.linkToCloudForge;
+    const mainProgrammingLanguage: string = params.value.mainProgrammingLanguage;
+    const destination: string = params.value.deploymentDestination;
+    const technology: string = params.value.deploymentTechnology;
+    const cloudForge: string = params.value.linkToCloudForge;
+    const deploymentTechnologyDocs: string = params.value.deploymentTechnologyDocs;
+    const branchingStrategy: string = params.value.branchingStrategy;
+    const ciDocumentation: string = params.value.ciDocumentation;
+    const ciBuildPage: string = params.value.ciBuildPage;
+    const ciDeployPage: string = params.value.ciDeployPage;
 
-    if (mainProgrammingLanguage.length === 0 || destination.length === 0 || technology.length === 0 || cloudForge.length === 0) {
+    if (mainProgrammingLanguage.length === 0 || destination.length === 0 || technology.length === 0 || cloudForge.length === 0 ||
+        deploymentTechnologyDocs.length === 0 ||
+        branchingStrategy.length === 0 ||
+        ciDocumentation.length === 0 ||
+        ciBuildPage.length === 0 ||
+        ciDeployPage.length === 0
+    ) {
         return "";
     }
 
-    const programmingLang = `Main programming language \- ${createStyledText(mainProgrammingLanguage, MdStyle.BOLD)}`;
-    const deploymentDestination = `Deploys to ${createStyledText(destination, MdStyle.BOLD)}`;
-    const deploymentTechnology = `Uses \- ${createStyledText(technology, MdStyle.BOLD)} as deployment technology`;
+    const branchingStrategyValue = `Branching Strategy can be found ${createLink("here", branchingStrategy)}`;
+    const programmingLang = `Main programming language: ${createStyledText(mainProgrammingLanguage, MdStyle.BOLD)}`;
+    const deploymentDestination = `Artifact is deployed to: ${createStyledText(destination, MdStyle.BOLD)}`;
+    const deploymentTechnology = `Infrastructure Definition Technology: ${createLink(technology,
+                                                                                     deploymentTechnologyDocs)}`;
+    const ciDocumentationValue = `Repository CI/CD Tool Documentation can be found ${createLink("here",
+                                                                                                ciDocumentation)}`;
+    const ciBuildPageValue = `${createLink("CI/CD Build Pipeline Page", ciBuildPage)}`;
+    const ciDeployPageValue = `${createLink("CI/CD Deployment Pipeline Page", ciDeployPage)}`;
     const linkToCloudForge = `${createLink("Cloud Forge page", cloudForge)}`;
 
-    const list = [programmingLang, deploymentDestination, deploymentTechnology, linkToCloudForge];
+    const list = [
+        branchingStrategyValue,
+        programmingLang,
+        deploymentDestination,
+        deploymentTechnology,
+        ciDocumentationValue,
+        ciBuildPageValue,
+        ciDeployPageValue,
+        linkToCloudForge,
+    ];
     const content = createMdList("", list, MdListType.UNORDERED);
 
-    return createContentBlock("Common Info", MdHeader.HEADER_LEVEL_2, content);
+    return createContentBlock("Common Repository Information", MdHeader.HEADER_LEVEL_2, content);
 };

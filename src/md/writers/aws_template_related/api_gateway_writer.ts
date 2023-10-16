@@ -1,9 +1,12 @@
 import {
     CodeSyntax,
     createContentBlock,
+    createLink,
     createMdCodeBlock,
+    createMdList,
     createMdTable,
     MdHeader,
+    MdListType,
     NEW_LINE,
     WriterFunc,
     WriterOptions,
@@ -52,7 +55,7 @@ function createModelSchemaBlocks(apiGateway: ApiGatewayRestApi) {
     return contentData.length > 0 ? contentData.join(NEW_LINE) : "";
 }
 
-function createApiGatewayTextContent(apiGateways: ApiGatewayRestApi[]): string {
+function createApiGatewayTextContent(apiGateways: ApiGatewayRestApi[], options?: WriterOptions): string {
     const resultText: string[] = [];
 
     apiGateways.forEach(apiGateway => {
@@ -60,6 +63,26 @@ function createApiGatewayTextContent(apiGateways: ApiGatewayRestApi[]): string {
 
         contentData.push(createApiGatewayEndpointsTable(apiGateway));
         contentData.push(createModelSchemaBlocks(apiGateway));
+
+        if (options !== undefined) {
+            const links: string[] = [];
+            if ("showOpenApiStub" in options && options["showOpenApiStub"]) {
+                links.push(createLink("Open API Specification", "TODO"));
+            }
+            if ("showApiGatewayUsageInstructionStub" in options && options["showApiGatewayUsageInstructionStub"]) {
+                links.push(createLink("API Gateway Usage Instruction", "TODO"));
+            }
+            if ("showPostmanStub" in options && options["showPostmanStub"]) {
+                links.push(createLink("Postman Collection", "TODO"));
+            }
+            if ("showPostmanSecretsLink" in options && options["showPostmanSecretsLink"]) {
+                links.push(createLink("Postman Collection Secrets", "TODO"));
+            }
+            const res = createMdList("Useful Links", links, MdListType.UNORDERED, MdHeader.HEADER_LEVEL_4);
+            if (res !== undefined && res.length > 0) {
+                contentData.push(res);
+            }
+        }
 
         const content = contentData.join(NEW_LINE);
 
@@ -75,7 +98,7 @@ export const writeAwsApiGateways: WriterFunc<DocumentResourcesTree> = (params: W
         return "";
     }
 
-    const content = createApiGatewayTextContent(apiGateways);
+    const content = createApiGatewayTextContent(apiGateways, options);
     return createContentBlock("AWS Api Gateway Information", MdHeader.HEADER_LEVEL_2, content);
 
 };

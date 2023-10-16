@@ -158,7 +158,12 @@ export function parseCloudFormationTemplate(parameters: ParserParameters): strin
         "apiGateway": new WriterWrapperImpl(WRITER_AWS_API_GATEWAY,
                                             writeAwsApiGateways,
                                             {value: documentResourcesTree},
-                                            {}),
+                                            {
+                                                "showOpenApiStub": parameters.otherAppConfig.showOpenApiStub,
+                                                "showApiGatewayUsageInstructionStub": parameters.otherAppConfig.showApiGatewayUsageInstructionStub,
+                                                "showPostmanStub": parameters.otherAppConfig.showPostmanStub,
+                                                "showPostmanSecretsLink": parameters.otherAppConfig.showPostmanSecretsLink,
+                                            }),
         "eventBus": new WriterWrapperImpl(WRITER_AWS_EVENT_BUS,
                                           writeEventBuses,
                                           {value: documentResourcesTree},

@@ -23,6 +23,10 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
         const showStepFunctionDiagram = form.getFieldValue("showStepFunctionDiagram");
         const showArchitectureDiagramLinkTemplate = form.getFieldValue("showArchitectureDiagramLinkTemplate");
         const writers = form.getFieldValue("selectWriters");
+        const showOpenApiStub = form.getFieldValue("showOpenApiStub");
+        const showApiGatewayUsageInstructionStub = form.getFieldValue("showApiGatewayUsageInstructionStub");
+        const showPostmanStub = form.getFieldValue("showPostmanStub");
+        const showPostmanSecretsLink = form.getFieldValue("showPostmanSecretsLink");
 
         const showStepFunctionDiagramValue = getCurrentOrDefault<boolean>(showStepFunctionDiagram,
                                                                           props.editorInput.data.enableStepFunctionDiagramLinkTemplate);
@@ -30,6 +34,14 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
             showArchitectureDiagramLinkTemplate,
             props.editorInput.data.enableArchitectureDiagramImgLinkTemplate);
         const writersValue = getCurrentOrDefault(writers, props.editorInput.data.selectedWriters);
+        const showOpenApiStubValue = getCurrentOrDefault<boolean>(showOpenApiStub,
+                                                                  props.editorInput.data.showOpenApiStub);
+        const showApiGatewayUsageInstructionStubValue = getCurrentOrDefault<boolean>(showApiGatewayUsageInstructionStub,
+                                                                                     props.editorInput.data.showApiGatewayUsageInstructionStub);
+        const showPostmanStubValue = getCurrentOrDefault<boolean>(showPostmanStub,
+                                                                  props.editorInput.data.showPostmanStub);
+        const showPostmanSecretsLinkValue = getCurrentOrDefault<boolean>(showPostmanSecretsLink,
+                                                                         props.editorInput.data.showPostmanSecretsLink);
 
         const selectedWriters = writersValue.map((w: string | { label: string, value: string }) => {
             if (typeof w == "string") {
@@ -43,11 +55,14 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
                                             enableArchitectureDiagramImgLinkTemplate: showArchitectureDiagramLinkTemplateValue,
                                             enableStepFunctionDiagramLinkTemplate: showStepFunctionDiagramValue,
                                             selectedWriters: selectedWriters,
+                                            showOpenApiStub: showOpenApiStubValue,
+                                            showApiGatewayUsageInstructionStub: showApiGatewayUsageInstructionStubValue,
+                                            showPostmanStub: showPostmanStubValue,
+                                            showPostmanSecretsLink: showPostmanSecretsLinkValue,
                                         });
     };
     return <Card style={{width: "100%"}} title={"Other Markdown Configurations"}>
         <Form form={form} name="RepositoryTag-form" onFinish={() => onFormSubmit()} style={{maxWidth: 600}}>
-
             <Form.Item label="Show Step Function Diagram Link Template"
                        name="showStepFunctionDiagram"
                        valuePropName="checked"
@@ -58,6 +73,30 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
                        name="showArchitectureDiagramLinkTemplate"
                        valuePropName="checked"
                        initialValue={props.editorInput.data.enableArchitectureDiagramImgLinkTemplate}>
+                <Switch/>
+            </Form.Item>
+            <Form.Item label="Show OpenApi Link Stub"
+                       name="showOpenApiStub"
+                       valuePropName="checked"
+                       initialValue={props.editorInput.data.showOpenApiStub}>
+                <Switch/>
+            </Form.Item>
+            <Form.Item label="Show Api Gateway Usage Instruction Link Stub"
+                       name="showApiGatewayUsageInstructionStub"
+                       valuePropName="checked"
+                       initialValue={props.editorInput.data.showApiGatewayUsageInstructionStub}>
+                <Switch/>
+            </Form.Item>
+            <Form.Item label="Show Postman Collection Link Stub"
+                       name="showPostmanStub"
+                       valuePropName="checked"
+                       initialValue={props.editorInput.data.showPostmanStub}>
+                <Switch/>
+            </Form.Item>
+            <Form.Item label="Show Postman Collection Secrets Link Stub"
+                       name="showPostmanSecretsLink"
+                       valuePropName="checked"
+                       initialValue={props.editorInput.data.showPostmanSecretsLink}>
                 <Switch/>
             </Form.Item>
 
@@ -85,6 +124,22 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
             <Switch checkedChildren="Architecture Diagram Image Link Will Be Added"
                     unCheckedChildren="Architecture Diagram Image Link Will Be Added"
                     checked={props.editorInput.data.enableArchitectureDiagramImgLinkTemplate}
+                    disabled={true}/>
+            <Switch checkedChildren="Hide OpenApi Link Stub"
+                    unCheckedChildren="Show OpenApi Link Stub"
+                    checked={props.editorInput.data.showOpenApiStub}
+                    disabled={true}/>
+            <Switch checkedChildren="Hide Api Gateway Usage Instruction Link Stub"
+                    unCheckedChildren="Show Api Gateway Usage Instruction Link Stub"
+                    checked={props.editorInput.data.showApiGatewayUsageInstructionStub}
+                    disabled={true}/>
+            <Switch checkedChildren="Hide Postman Collection Link Stub"
+                    unCheckedChildren="Show Postman Collection Link Stub"
+                    checked={props.editorInput.data.showPostmanStub}
+                    disabled={true}/>
+            <Switch checkedChildren="Hide Postman Collection Secrets Link Stub"
+                    unCheckedChildren="Show Postman Collection Secrets Link Stub"
+                    checked={props.editorInput.data.showPostmanSecretsLink}
                     disabled={true}/>
         </Row>
         <Row>

@@ -5,5 +5,5 @@ export const writeRepositoryDescription: WriterFunc<string> = (params: WriterPar
         return "";
     }
 
-    return createContentBlock("Short Description Of Current Artifact", MdHeader.HEADER_LEVEL_2, params.value);
+    return createContentBlock("Purpose Of Current Artifact", MdHeader.HEADER_LEVEL_2, params.value);
 };

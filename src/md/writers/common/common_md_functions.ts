@@ -59,11 +59,11 @@ export function createMdHeader(text: string, headerLevel: MdHeader): string {
     return `\n${headerLevel} ${text}\n`;
 }
 
-export function createMdList(header: string, values: string[], listType: MdListType): string {
+export function createMdList(header: string, values: string[], listType: MdListType, headerLevel: MdHeader = MdHeader.HEADER_LEVEL_2): string {
     const text: string[] = [];
 
     if (header !== undefined && header.length > 0) {
-        text.push(createMdHeader(header, MdHeader.HEADER_LEVEL_2));
+        text.push(createMdHeader(header, headerLevel));
     }
 
     for (let i = 0; i < values.length; i++) {

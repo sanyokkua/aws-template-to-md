@@ -6,6 +6,13 @@ export const writeTags: WriterFunc<RepositoryTag[]> = (params: WriterParams<Repo
         return "";
     }
 
-    const content = params.value.map(tag => createImageLink(tag.text, tag.imgLink));
+    const content = params.value.map(tag => {
+        if (tag.text !== undefined && tag.text.length > 0 && tag.imgLink !== undefined && tag.imgLink.length > 0) {
+            return createImageLink(tag.text, tag.imgLink);
+        } else if (tag.linkMd !== undefined && tag.linkMd.length > 0) {
+            return tag.linkMd;
+        }
+        throw new Error("Passed tag object doesn't have appropriate value");
+    });
     return content.join(NEW_LINE);
 };

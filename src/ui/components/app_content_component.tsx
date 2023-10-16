@@ -21,6 +21,11 @@ const defaultRepoInfo: RepositoryInfo = {
     deploymentDestination: "",
     deploymentTechnology: "",
     linkToCloudForge: "",
+    deploymentTechnologyDocs: "",
+    branchingStrategy: "",
+    ciDocumentation: "",
+    ciBuildPage: "",
+    ciDeployPage: "",
 };
 const defaultArtifactDesign: ArtifactDesign = {
     linkToTheSolutionDiagram: "",
@@ -29,7 +34,7 @@ const defaultArtifactDesign: ArtifactDesign = {
 const defaultParserConfig: ParserConfig = {
     enableLambdaEnvVarValues: false,
     enableStepFunctionDefinition: false,
-    enableDynamoDbExampleStubs: false,
+    enableDynamoDbExampleStubs: true,
     templateResourceNamePrefixToRemove: "",
     templateResourceNameSuffixToRemove: "",
 };
@@ -37,6 +42,10 @@ const defaultOtherMdConfig: OtherAppConfig = {
     enableArchitectureDiagramImgLinkTemplate: true,
     enableStepFunctionDiagramLinkTemplate: true,
     selectedWriters: AVAILABLE_WRITERS.slice(),
+    showOpenApiStub: true,
+    showApiGatewayUsageInstructionStub: true,
+    showPostmanStub: true,
+    showPostmanSecretsLink: true,
 
 };
 const defaultParserParameters: ParserParameters = {
@@ -54,7 +63,6 @@ const defaultParserParameters: ParserParameters = {
 function buildErrorMsg(e: any) {
     const errMsgHeader = "Error thrown during parsing passed template";
 
-    let errorMsg: string;
     if (e !== undefined && e.message !== undefined && typeof e.message === "string") {
         return `${errMsgHeader}. ${e.message}`;
     } else {
