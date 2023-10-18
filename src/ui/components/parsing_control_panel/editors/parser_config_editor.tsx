@@ -1,18 +1,18 @@
 import React from "react";
 
-import { Button, Card, Form, Input, Row, Switch } from "antd";
-import TextView                                   from "../../common/text_view";
-import { EditorInput, ParserConfig }              from "../../../../md/writers/customs/models";
-import { getCurrentOrDefault }                    from "../../../../utils/utils";
+import { Button, Card, Form, Input, message, Switch } from "antd";
+import { EditorInput, ParserConfig }                  from "../../../../md/writers/customs/models";
+import { getCurrentOrDefault }                        from "../../../../utils/utils";
 
 type ParserConfigEditorProps = {
     editorInput: EditorInput<ParserConfig>;
 }
 
 const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConfigEditorProps) => {
+    const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
 
-    const onFormSubmit = () => {
+    const onFormSubmit = (values?: any) => {
         const sfEnabled = form.getFieldValue("stepFunctionSwitch");
         const lambdaEnabled = form.getFieldValue("lambdaSwitch");
         const dynamoDbEx = form.getFieldValue("dynamoDbEx");
@@ -30,17 +30,20 @@ const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConf
         const resourceSuffix: string = getCurrentOrDefault<string>(suffix,
                                                                    props.editorInput.data.templateResourceNameSuffixToRemove);
 
-        props.editorInput.onDataChanged({
-                                            enableLambdaEnvVarValues: enableSfDef,
-                                            enableStepFunctionDefinition: lambdaVars,
-                                            enableDynamoDbExampleStubs: dynamoDbExVal,
-                                            templateResourceNamePrefixToRemove: resourcePrefix,
-                                            templateResourceNameSuffixToRemove: resourceSuffix,
-                                        });
+        const result = {
+            enableLambdaEnvVarValues: enableSfDef,
+            enableStepFunctionDefinition: lambdaVars,
+            enableDynamoDbExampleStubs: dynamoDbExVal,
+            templateResourceNamePrefixToRemove: resourcePrefix,
+            templateResourceNameSuffixToRemove: resourceSuffix,
+        };
+        props.editorInput.onDataChanged(result);
+        messageApi.success(`Submitted: ${JSON.stringify(result, null, 0)}`);
 
     };
 
     return <Card style={{width: "100%"}} title={"Configure Parsing of CloudFormation Template"}>
+        {contextHolder}
         <Form form={form} name="RepositoryTag-form" onFinish={() => onFormSubmit()} style={{maxWidth: 600}}>
 
             <Form.Item label="Show Step Function Definition" name="stepFunctionSwitch" valuePropName="checked"
@@ -70,25 +73,41 @@ const ParserConfigEditor: React.FC<ParserConfigEditorProps> = (props: ParserConf
             </Form.Item>
         </Form>
 
-        <Row><h3>Confirmed Values:</h3></Row>
-        <Row>
-            <Switch checkedChildren="Step Function Definition Will Be Showed"
-                    unCheckedChildren="Step Function Definition Will NOT Be Showed"
-                    checked={props.editorInput.data.enableStepFunctionDefinition}
-                    disabled={true}/>
-            <Switch checkedChildren="Lambda Env Vars Values Will Be Showed"
-                    unCheckedChildren="Lambda Env Vars Values Will NOT Be Showed"
-                    checked={props.editorInput.data.enableLambdaEnvVarValues}
-                    disabled={true}/>
-            <Switch checkedChildren="DynamoDB Example stub Will Be Showed"
-                    unCheckedChildren="DynamoDB Example stub  Will NOT Be Showed"
-                    checked={props.editorInput.data.enableDynamoDbExampleStubs}
-                    disabled={true}/>
-        </Row>
-        <TextView name={"Prefix that will be removed:"}
-                  value={props.editorInput.data.templateResourceNamePrefixToRemove}/>
-        <TextView name={"Suffix that will be removed:"}
-                  value={props.editorInput.data.templateResourceNameSuffixToRemove}/>
+
+        <h3>Submitted values:</h3>
+        <div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>Step Function Definition Will Be Showed</td>
+                    <td>{props.editorInput.data.enableStepFunctionDefinition}</td>
+                </tr>
+                <tr>
+                    <td>Lambda Env Vars Values Will Be Showed</td>
+                    <td>{props.editorInput.data.enableLambdaEnvVarValues}</td>
+                </tr>
+                <tr>
+                    <td>DynamoDB Example stub Will Be Showed</td>
+                    <td>{props.editorInput.data.enableDynamoDbExampleStubs}</td>
+                </tr>
+                <tr>
+                    <td>Prefix that will be removed</td>
+                    <td>{props.editorInput.data.templateResourceNamePrefixToRemove}</td>
+                </tr>
+                <tr>
+                    <td>Suffix that will be removed</td>
+                    <td>{props.editorInput.data.templateResourceNameSuffixToRemove}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </Card>;
 };
 

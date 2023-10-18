@@ -1,25 +1,25 @@
 import React from "react";
 
-import { Button, Card, Form, Input, Row } from "antd";
-import { EditorInput, RepositoryInfo }    from "../../../../md/writers/customs/models";
-import TextArea                           from "antd/es/input/TextArea";
-import TextView                           from "../../common/text_view";
-import { getCurrentOrDefault }            from "../../../../utils/utils";
+import { Button, Card, Form, Input, message } from "antd";
+import { EditorInput, RepositoryInfo }        from "../../../../md/writers/customs/models";
+import TextArea                               from "antd/es/input/TextArea";
+import { getCurrentOrDefault }                from "../../../../utils/utils";
+import SubmittedFormValues                    from "../../common/submited_form";
 
 type RepositoryInfoEditorProps = {
     editorInput: EditorInput<RepositoryInfo>;
 }
 const RepositoryInfoEditor: React.FC<RepositoryInfoEditorProps> = (props: RepositoryInfoEditorProps) => {
+    const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
 
-    const onAddButtonClicked = () => {
+    const onAddButtonClicked = (values?: any) => {
         const repoName = form.getFieldValue("repoName");
         const description = form.getFieldValue("description");
         const programmingLang = form.getFieldValue("programmingLang");
         const deploymentDestination = form.getFieldValue("deploymentDestination");
         const deploymentTechnology = form.getFieldValue("deploymentTechnology");
         const linkToCloudForge = form.getFieldValue("linkToCloudForge");
-
         const deploymentTechnologyDocs = form.getFieldValue("deploymentTechnologyDocs");
         const branchingStrategy = form.getFieldValue("branchingStrategy");
         const ciDocumentation = form.getFieldValue("ciDocumentation");
@@ -42,57 +42,80 @@ const RepositoryInfoEditor: React.FC<RepositoryInfoEditorProps> = (props: Reposi
         const ciBuildPageValue = getCurrentOrDefault(ciBuildPage, props.editorInput.data.ciBuildPage);
         const ciDeployPageValue = getCurrentOrDefault(ciDeployPage, props.editorInput.data.ciDeployPage);
 
-        props.editorInput.onDataChanged({
-                                            name: repoNameValue,
-                                            description: descriptionValue,
-                                            mainProgrammingLanguage: programmingLangValue,
-                                            deploymentDestination: deploymentDestinationValue,
-                                            deploymentTechnology: deploymentTechnologyValue,
-                                            linkToCloudForge: linkToCloudForgeValue,
-                                            deploymentTechnologyDocs: deploymentTechnologyDocsValue,
-                                            branchingStrategy: branchingStrategyValue,
-                                            ciDocumentation: ciDocumentationValue,
-                                            ciBuildPage: ciBuildPageValue,
-                                            ciDeployPage: ciDeployPageValue,
-                                        });
+        const result = {
+            name: repoNameValue,
+            description: descriptionValue,
+            mainProgrammingLanguage: programmingLangValue,
+            deploymentDestination: deploymentDestinationValue,
+            deploymentTechnology: deploymentTechnologyValue,
+            linkToCloudForge: linkToCloudForgeValue,
+            deploymentTechnologyDocs: deploymentTechnologyDocsValue,
+            branchingStrategy: branchingStrategyValue,
+            ciDocumentation: ciDocumentationValue,
+            ciBuildPage: ciBuildPageValue,
+            ciDeployPage: ciDeployPageValue,
+        };
+        props.editorInput.onDataChanged(result);
+        messageApi.success(`Submitted: ${JSON.stringify(result, null, 0)}`);
+
     };
 
     return <Card style={{width: "100%"}} title={"Add Repository Information"}>
-
+        {contextHolder}
         <Form form={form} name="repo-info-form" onFinish={() => onAddButtonClicked()} style={{maxWidth: 600}}>
 
-            <Form.Item name="repoName" label="Repository Name" rules={[{required: true}]}>
-                <Input/>
-            </Form.Item>
-            <Form.Item name="description" label="Repository Description" rules={[{required: true}]}>
-                <TextArea rows={4}/>
-            </Form.Item>
-            <Form.Item name="branchingStrategy" label="Link To Branching Strategy" rules={[{required: true}]}>
-                <Input/>
-            </Form.Item>
-            <Form.Item name="programmingLang" label="Programming Language" rules={[{required: true}]}>
-                <Input/>
-            </Form.Item>
-            <Form.Item name="deploymentDestination" label="Deployment Destination" rules={[{required: true}]}>
-                <Input/>
-            </Form.Item>
-            <Form.Item name="deploymentTechnology" label="Deployment Technology" rules={[{required: true}]}>
-                <Input/>
-            </Form.Item>
-            <Form.Item name="deploymentTechnologyDocs" label="Link To Deployment Technology Docs"
+            <Form.Item name="repoName" label="Repository Name" initialValue={props.editorInput.data.name}
                        rules={[{required: true}]}>
                 <Input/>
             </Form.Item>
-            <Form.Item name="ciDocumentation" label="Link To CI/CD Docs" rules={[{required: true}]}>
+            <Form.Item name="description" label="Repository Description"
+                       initialValue={props.editorInput.data.description}
+                       rules={[{required: true}]}>
+                <TextArea rows={4}/>
+            </Form.Item>
+            <Form.Item name="branchingStrategy" label="Link To Branching Strategy"
+                       initialValue={props.editorInput.data.branchingStrategy}
+                       rules={[{required: true}, {type: "url", warningOnly: true}]}>
                 <Input/>
             </Form.Item>
-            <Form.Item name="ciBuildPage" label="Link To CI/CD Build Page" rules={[{required: true}]}>
+            <Form.Item name="programmingLang" label="Programming Language"
+                       initialValue={props.editorInput.data.mainProgrammingLanguage}
+                       rules={[{required: true}]}>
                 <Input/>
             </Form.Item>
-            <Form.Item name="ciDeployPage" label="Link To CI/CD Deployment Page" rules={[{required: true}]}>
+            <Form.Item name="deploymentDestination" label="Deployment Destination"
+                       initialValue={props.editorInput.data.deploymentDestination}
+                       rules={[{required: true}]}>
                 <Input/>
             </Form.Item>
-            <Form.Item name="linkToCloudForge" label="Link To Cloudforge" rules={[{required: true}]}>
+            <Form.Item name="deploymentTechnology" label="Deployment Technology"
+                       initialValue={props.editorInput.data.deploymentTechnology}
+                       rules={[{required: true}]}>
+                <Input/>
+            </Form.Item>
+            <Form.Item name="deploymentTechnologyDocs" label="Link To Deployment Technology Docs"
+                       initialValue={props.editorInput.data.deploymentTechnologyDocs}
+                       rules={[{required: true}, {type: "url", warningOnly: true}]}>
+                <Input/>
+            </Form.Item>
+            <Form.Item name="ciDocumentation" label="Link To CI/CD Docs"
+                       initialValue={props.editorInput.data.ciDocumentation}
+                       rules={[{required: true}, {type: "url", warningOnly: true}]}>
+                <Input/>
+            </Form.Item>
+            <Form.Item name="ciBuildPage" label="Link To CI/CD Build Page"
+                       initialValue={props.editorInput.data.ciBuildPage}
+                       rules={[{required: true}, {type: "url", warningOnly: true}]}>
+                <Input/>
+            </Form.Item>
+            <Form.Item name="ciDeployPage" label="Link To CI/CD Deployment Page"
+                       initialValue={props.editorInput.data.ciDeployPage}
+                       rules={[{required: true}, {type: "url", warningOnly: true}]}>
+                <Input/>
+            </Form.Item>
+            <Form.Item name="linkToCloudForge" label="Link To Cloudforge"
+                       initialValue={props.editorInput.data.linkToCloudForge}
+                       rules={[{required: true}, {type: "url", warningOnly: true}]}>
                 <Input/>
             </Form.Item>
 
@@ -101,18 +124,19 @@ const RepositoryInfoEditor: React.FC<RepositoryInfoEditorProps> = (props: Reposi
             </Form.Item>
         </Form>
 
-        <Row><h3>Confirmed Values:</h3></Row>
-        <TextView name={"Name"} value={props.editorInput.data.name}/>
-        <TextView name={"Description"} value={props.editorInput.data.description} isTextArea={true}/>
-        <TextView name={"Link To Branching Strategy"} value={props.editorInput.data.branchingStrategy}/>
-        <TextView name={"Programming Language"} value={props.editorInput.data.mainProgrammingLanguage}/>
-        <TextView name={"Deployment Destination"} value={props.editorInput.data.deploymentDestination}/>
-        <TextView name={"Deployment Technology"} value={props.editorInput.data.deploymentTechnology}/>
-        <TextView name={"Link To Deployment Technology Docs"} value={props.editorInput.data.deploymentTechnologyDocs}/>
-        <TextView name={"Link To CloudForge"} value={props.editorInput.data.linkToCloudForge}/>
-        <TextView name={"Link To CI/CD Docs"} value={props.editorInput.data.ciDocumentation}/>
-        <TextView name={"Link To CI/CD Build Page"} value={props.editorInput.data.ciBuildPage}/>
-        <TextView name={"Link To CI/CD Deployment Page"} value={props.editorInput.data.ciDeployPage}/>
+        <SubmittedFormValues data={[
+            {fieldName: "name", fieldValue: props.editorInput.data.name},
+            {fieldName: "description", fieldValue: props.editorInput.data.description},
+            {fieldName: "mainProgrammingLanguage", fieldValue: props.editorInput.data.mainProgrammingLanguage},
+            {fieldName: "deploymentDestination", fieldValue: props.editorInput.data.deploymentDestination},
+            {fieldName: "deploymentTechnology", fieldValue: props.editorInput.data.deploymentTechnology},
+            {fieldName: "deploymentTechnologyDocs", fieldValue: props.editorInput.data.deploymentTechnologyDocs},
+            {fieldName: "branchingStrategy", fieldValue: props.editorInput.data.branchingStrategy},
+            {fieldName: "ciDocumentation", fieldValue: props.editorInput.data.ciDocumentation},
+            {fieldName: "ciBuildPage", fieldValue: props.editorInput.data.ciBuildPage},
+            {fieldName: "ciDeployPage", fieldValue: props.editorInput.data.ciDeployPage},
+            {fieldName: "linkToCloudForge", fieldValue: props.editorInput.data.linkToCloudForge},
+        ]}/>
     </Card>;
 };
 

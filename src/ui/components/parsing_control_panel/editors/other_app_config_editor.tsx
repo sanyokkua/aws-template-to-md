@@ -1,8 +1,9 @@
-import React                                                          from "react";
-import { Button, Card, Form, List, Row, Select, SelectProps, Switch } from "antd";
-import { EditorInput, OtherAppConfig }                                from "../../../../md/writers/customs/models";
-import { AVAILABLE_WRITERS }                                          from "../../../../md/document_parser";
-import { getCurrentOrDefault }                                        from "../../../../utils/utils";
+import React                                                        from "react";
+import { Button, Card, Form, message, Select, SelectProps, Switch } from "antd";
+import { EditorInput, OtherAppConfig }                              from "../../../../md/writers/customs/models";
+import { AVAILABLE_WRITERS }                                        from "../../../../md/document_parser";
+import { getCurrentOrDefault }                                      from "../../../../utils/utils";
+import SubmittedFormValues                                          from "../../common/submited_form";
 
 const DEFAULT_WRITERS: string[] = AVAILABLE_WRITERS.slice();
 const DEFAULT_OPTIONS: SelectProps["options"] = DEFAULT_WRITERS.map(name => {
@@ -17,9 +18,10 @@ export type OtherAppConfigEditorProps = {
 }
 
 const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherAppConfigEditorProps) => {
+    const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
 
-    const onFormSubmit = () => {
+    const onFormSubmit = (values?: any) => {
         const showStepFunctionDiagram = form.getFieldValue("showStepFunctionDiagram");
         const showArchitectureDiagramLinkTemplate = form.getFieldValue("showArchitectureDiagramLinkTemplate");
         const writers = form.getFieldValue("selectWriters");
@@ -51,17 +53,20 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
             }
         });
 
-        props.editorInput.onDataChanged({
-                                            enableArchitectureDiagramImgLinkTemplate: showArchitectureDiagramLinkTemplateValue,
-                                            enableStepFunctionDiagramLinkTemplate: showStepFunctionDiagramValue,
-                                            selectedWriters: selectedWriters,
-                                            showOpenApiStub: showOpenApiStubValue,
-                                            showApiGatewayUsageInstructionStub: showApiGatewayUsageInstructionStubValue,
-                                            showPostmanStub: showPostmanStubValue,
-                                            showPostmanSecretsLink: showPostmanSecretsLinkValue,
-                                        });
+        const result = {
+            enableArchitectureDiagramImgLinkTemplate: showArchitectureDiagramLinkTemplateValue,
+            enableStepFunctionDiagramLinkTemplate: showStepFunctionDiagramValue,
+            selectedWriters: selectedWriters,
+            showOpenApiStub: showOpenApiStubValue,
+            showApiGatewayUsageInstructionStub: showApiGatewayUsageInstructionStubValue,
+            showPostmanStub: showPostmanStubValue,
+            showPostmanSecretsLink: showPostmanSecretsLinkValue,
+        };
+        props.editorInput.onDataChanged(result);
+        messageApi.success(`Submitted: ${JSON.stringify(result, null, 0)}`);
     };
     return <Card style={{width: "100%"}} title={"Other Markdown Configurations"}>
+        {contextHolder}
         <Form form={form} name="RepositoryTag-form" onFinish={() => onFormSubmit()} style={{maxWidth: 600}}>
             <Form.Item label="Show Step Function Diagram Link Template"
                        name="showStepFunctionDiagram"
@@ -115,45 +120,27 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
             </Form.Item>
         </Form>
 
-        <Row><h3>Confirmed Values:</h3></Row>
-        <Row>
-            <Switch checkedChildren="Step Function Diagram Image Link Will Be Added"
-                    unCheckedChildren="Step Function Diagram Image Link Will Be Added"
-                    checked={props.editorInput.data.enableStepFunctionDiagramLinkTemplate}
-                    disabled={true}/>
-            <Switch checkedChildren="Architecture Diagram Image Link Will Be Added"
-                    unCheckedChildren="Architecture Diagram Image Link Will Be Added"
-                    checked={props.editorInput.data.enableArchitectureDiagramImgLinkTemplate}
-                    disabled={true}/>
-            <Switch checkedChildren="Hide OpenApi Link Stub"
-                    unCheckedChildren="Show OpenApi Link Stub"
-                    checked={props.editorInput.data.showOpenApiStub}
-                    disabled={true}/>
-            <Switch checkedChildren="Hide Api Gateway Usage Instruction Link Stub"
-                    unCheckedChildren="Show Api Gateway Usage Instruction Link Stub"
-                    checked={props.editorInput.data.showApiGatewayUsageInstructionStub}
-                    disabled={true}/>
-            <Switch checkedChildren="Hide Postman Collection Link Stub"
-                    unCheckedChildren="Show Postman Collection Link Stub"
-                    checked={props.editorInput.data.showPostmanStub}
-                    disabled={true}/>
-            <Switch checkedChildren="Hide Postman Collection Secrets Link Stub"
-                    unCheckedChildren="Show Postman Collection Secrets Link Stub"
-                    checked={props.editorInput.data.showPostmanSecretsLink}
-                    disabled={true}/>
-        </Row>
-        <Row>
-            <List
-                header={<h4>Selected Writers</h4>}
-                bordered
-                dataSource={props.editorInput.data.selectedWriters}
-                renderItem={(item) => (
-                    <List.Item key={item}>
-                        - {item}
-                    </List.Item>
-                )}
-            />
-        </Row>
+        <SubmittedFormValues data={[
+            {
+                fieldName: "Step Function Diagram Image Link",
+                fieldValue: props.editorInput.data.enableStepFunctionDiagramLinkTemplate,
+            },
+            {
+                fieldName: "Architecture Diagram Image Link",
+                fieldValue: props.editorInput.data.enableArchitectureDiagramImgLinkTemplate,
+            },
+            {fieldName: "Hide OpenApi Link", fieldValue: props.editorInput.data.showOpenApiStub},
+            {
+                fieldName: "Hide Api Gateway Usage Instruction Link",
+                fieldValue: props.editorInput.data.showApiGatewayUsageInstructionStub,
+            },
+            {fieldName: "Hide Postman Collection Link", fieldValue: props.editorInput.data.showPostmanStub},
+            {
+                fieldName: "Hide Postman Collection Secrets Link",
+                fieldValue: props.editorInput.data.showPostmanSecretsLink,
+            },
+            {fieldName: "Writers", fieldValue: JSON.stringify(props.editorInput.data.selectedWriters, null, 2)},
+        ]}/>
     </Card>;
 };
 

@@ -26,3 +26,7 @@ export function getCurrentOrDefault<T>(value: T | undefined, defaultValue: T): T
     }
     return value;
 }
+
+export function isEmptyString(value: undefined | null | string): boolean {
+    return value === undefined || value === null || value.trim().length === 0;
+}

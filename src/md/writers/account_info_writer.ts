@@ -1,6 +1,7 @@
 import { Account } from "./customs/models";
 import {
     createContentBlock,
+    createLink,
     createMdTable,
     MdHeader,
     WriterFunc,
@@ -13,9 +14,17 @@ export const writeAccountInfo: WriterFunc<Account[]> = (params: WriterParams<Acc
         return "";
     }
 
-    const HEADER = ["Organization", "Description", "Account ID"];
-    const values: string[][] = params.value.map(acc => [acc.organizationName, acc.description, acc.accountId]);
+    const HEADER = ["Name", "Description", "Account ID"];
+    const values: string[][] = params.value.map(acc => {
+        let accountId: string;
+        if (acc.accountUrl !== undefined && acc.accountUrl.trim().length > 0) {
+            accountId = createLink(acc.accountId, acc.accountUrl);
+        } else {
+            accountId = acc.accountId;
+        }
+        return [acc.name, acc.description, accountId];
+    });
     const table = createMdTable(HEADER, values);
 
-    return createContentBlock("Aws Accounts And Environments", MdHeader.HEADER_LEVEL_2, table);
+    return createContentBlock("Artifact Environments", MdHeader.HEADER_LEVEL_2, table);
 };

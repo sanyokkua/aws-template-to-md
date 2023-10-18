@@ -1,94 +1,118 @@
 import React from "react";
 
-import { Button, Card, Col, Form, Image, Input, List, Row } from "antd";
-import { EditorInput, RepositoryTag }                       from "../../../../md/writers/customs/models";
+import { Button, Card, Form, Input, message, Space } from "antd";
+import { EditorInput, RepositoryTag }                from "../../../../md/writers/customs/models";
+import { MinusCircleOutlined, PlusOutlined }         from "@ant-design/icons";
+import SubmittedFormValues, { FieldMapping }         from "../../common/submited_form";
+import { isEmptyString }                             from "../../../../utils/utils";
 
 type RepositoryTagsEditorProps = {
     editorInput: EditorInput<RepositoryTag[]>;
 }
+
+type FormItem = {
+    key: number;
+    name: number;
+    repositoryTagText: string;
+    repositoryTagLink: string;
+    repositoryTagMarkdown: string;
+}
+
 const RepositoryTagsEditor: React.FC<RepositoryTagsEditorProps> = (props: RepositoryTagsEditorProps) => {
+    const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
 
-    const onRemoveItem = (item: RepositoryTag) => {
-        const currentArray = props.editorInput.data.slice();
-        const result = currentArray.filter(curItem => !(curItem.text === item.text && curItem.imgLink === item.imgLink));
-        props.editorInput.onDataChanged(result);
-    };
+    const onAddButtonClicked = (values?: any) => {
+        if (values !== undefined && "tags" in values && values.tags.length > 0) {
+            const tags = values.tags
+                               .map((item: FormItem) => {
+                                   const tag: RepositoryTag = {
+                                       text: item.repositoryTagText,
+                                       imgLink: item.repositoryTagLink,
+                                       linkMd: item.repositoryTagMarkdown,
+                                   };
+                                   return tag;
+                               })
+                               .filter((tag: RepositoryTag) => {
+                                   const isMarkdownEmpty = isEmptyString(tag.linkMd);
+                                   const isLinkAndTextEmpty = (isEmptyString(tag.imgLink)) && (isEmptyString(tag.text));
 
-    const onAddButtonClicked = () => {
-        const text: string | undefined = form.getFieldValue("RepositoryTagText");
-        const link: string | undefined = form.getFieldValue("RepositoryTagLink");
-        const rawMarkdown: string | undefined = form.getFieldValue("rawMarkdown");
+                                   return !(isMarkdownEmpty && isLinkAndTextEmpty);
+                               })
+                               .map((tag: RepositoryTag) => {
+                                   const isMarkdownEmpty = isEmptyString(tag.linkMd);
+                                   const isLinkAndTextEmpty = (isEmptyString(tag.imgLink)) && (isEmptyString(tag.text));
 
-        const isTextFieldNotEmpty = text !== undefined && text.length > 0;
-        const isLinkFieldIsNotEmpty = link !== undefined && link.length > 0;
-        const isRawMarkdownFieldIsNotEmpty = rawMarkdown !== undefined && rawMarkdown.length > 0;
-
-        if (isTextFieldNotEmpty && isLinkFieldIsNotEmpty || isRawMarkdownFieldIsNotEmpty) {
-            const currentArray = props.editorInput.data.slice();
-            const found = currentArray.find(curItem => {
-                if (curItem.linkMd !== undefined) {
-                    return curItem.linkMd === rawMarkdown;
-                } else {
-                    return curItem.text === text && curItem.imgLink === link;
-                }
-            });
-
-            if (!found) {
-                let parsedLink: string = "";
-
-                if (link !== undefined && link.length > 0) {
-                    parsedLink = link;
-                } else if ((link === undefined || link.length === 0) && rawMarkdown !== undefined && rawMarkdown.length > 0) {
-                    const res = rawMarkdown.split("[");
-                    parsedLink = res[1].slice(0, -1);
-                } else {
-                    parsedLink = "";
-                }
-
-                const tag: RepositoryTag = {
-                    text: text,
-                    imgLink: parsedLink,
-                    linkMd: rawMarkdown,
-                };
-                currentArray.push(tag);
-                props.editorInput.onDataChanged(currentArray);
-            }
+                                   if (isLinkAndTextEmpty && !isMarkdownEmpty && tag.linkMd !== undefined) {
+                                       const res: string[] = tag.linkMd.split("[");
+                                       tag.imgLink = res[1].slice(0, -1);
+                                   }
+                                   return tag;
+                               });
+            props.editorInput.onDataChanged(tags.slice());
+            messageApi.success(`Submitted: ${JSON.stringify(tags, null, 0)}`);
         }
     };
 
+    const initialValue = props.editorInput.data.map((value, id) => {
+        return {
+            key: id,
+            name: id,
+            repositoryTagText: value.text,
+            repositoryTagLink: value.imgLink,
+            repositoryTagMarkdown: value.linkMd,
+        };
+    });
+
     return <Card style={{width: "100%"}} title={"Add RepositoryTags"}>
-        <Form form={form} name="RepositoryTag-form" onFinish={() => onAddButtonClicked()} style={{maxWidth: 600}}>
-            <Form.Item name="RepositoryTagText" label="RepositoryTag Text" rules={[{required: false}]}>
-                <Input/>
-            </Form.Item>
-            <Form.Item name="RepositoryTagLink" label="RepositoryTag Link" rules={[{required: false}]}>
-                <Input/>
-            </Form.Item>
-            <h3>Or</h3>
-            <Form.Item name="rawMarkdown" label="RepositoryTag Link Markdown" rules={[{required: false}]}>
-                <Input/>
-            </Form.Item>
+        {contextHolder}
+        <Form form={form} name="RepositoryTag-form" onFinish={onAddButtonClicked} style={{maxWidth: "100%"}}
+              autoComplete="on">
+
+            <Form.List name="tags" initialValue={initialValue}>
+                {(fields, {add, remove}) => (
+                    <>
+                        {fields.map(({key, name, ...restField}) => (
+                            <Space key={key} style={{display: "flex", marginBottom: 8}} align="baseline">
+
+                                <Form.Item{...restField} name={[name, "repositoryTagText"]} label={"Tag Text"}
+                                          rules={[{required: false}]}>
+                                    <Input placeholder="Tag Text"/>
+                                </Form.Item>
+
+                                <Form.Item{...restField} name={[name, "repositoryTagLink"]} label={"Tag URL"}
+                                          rules={[{required: false}, {type: "url", warningOnly: true}]}>
+                                    <Input placeholder="Tag URL"/>
+                                </Form.Item>
+
+                                <Form.Item{...restField} name={[name, "repositoryTagMarkdown"]}
+                                          label={"Or Tag Markdown"}
+                                          rules={[{required: false}]}>
+                                    <Input placeholder="Tag MD"/>
+                                </Form.Item>
+
+                                <MinusCircleOutlined onClick={() => remove(name)}/>
+                            </Space>
+                        ))}
+                        <Form.Item>
+                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined/>}>
+                                Add tag
+                            </Button>
+                        </Form.Item>
+                    </>
+                )}
+            </Form.List>
+
             <Form.Item>
                 <Button type="primary" htmlType="submit">Submit Data</Button>
             </Form.Item>
         </Form>
 
-        <Row><h3>Confirmed Values:</h3></Row>
-        <Row>
-            <Col span={24}>
-                <List itemLayout="horizontal" dataSource={props.editorInput.data}
-                      renderItem={(item) => (
-                          <List.Item actions={[<a key="remove" onClick={() => onRemoveItem(item)}>remove</a>]}>
-                              {item.text !== undefined && item.imgLink !== undefined && item.text.length > 0 && item.imgLink.length > 0 ?
-                               `${item.text}, ${item.imgLink}` :
-                               item.linkMd}
-                              <Image width={100} src={item.imgLink}/>
-                          </List.Item>
-                      )}
-                />
-            </Col>
-        </Row>
+        <SubmittedFormValues data={props.editorInput.data.map(item => {
+            const value = `${item.text}, ${item.imgLink}, ${item.linkMd}`;
+            const val: FieldMapping = {fieldName: "", fieldValue: value};
+            return val;
+        })} isList={true}/>
     </Card>;
 };
 

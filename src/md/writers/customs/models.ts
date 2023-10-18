@@ -33,9 +33,10 @@ export type RepositoryInfo = {
     linkToCloudForge: string;
 }
 export type Account = {
-    organizationName: string;
+    name: string;
     description: string;
     accountId: string;
+    accountUrl?: string;
 }
 
 export type ParserConfig = {
