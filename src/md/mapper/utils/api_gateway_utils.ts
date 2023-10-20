@@ -32,25 +32,28 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
     for (let i = 0; i < restApis.length; i++) {
         const currentResource: AwsApiGatewayRestApi = restApis[i] as AwsApiGatewayRestApi;
 
-        const stage: AwsApiGatewayStage | undefined = resourcesByType[AWS_ApiGateway_Stage]
-            .map(resource => {
+        const foundStages = resourcesByType[AWS_ApiGateway_Stage];
+        const stage: AwsApiGatewayStage | undefined = foundStages
+            ?.map(resource => {
                 return resource as AwsApiGatewayStage;
             })
-            .find(currentStage => {
+            ?.find(currentStage => {
                 return currentStage.Properties.RestApiId.Ref === currentResource.ID;
             });
-        const methods: AwsApiGatewayMethod[] = resourcesByType[AWS_ApiGateway_Method]
-            .map(resource => {
+        const foundMethods = resourcesByType[AWS_ApiGateway_Method];
+        const methods: AwsApiGatewayMethod[] = foundMethods
+            ?.map(resource => {
                 return resource as AwsApiGatewayMethod;
             })
-            .filter(currentMethod => {
+            ?.filter(currentMethod => {
                 return currentMethod.Properties.RestApiId.Ref === currentResource.ID;
             });
-        const authorizer: AwsApiGatewayAuthorizer | undefined = resourcesByType[AWS_ApiGateway_Authorizer]
-            .map(resource => {
+        const foundAuthorizers = resourcesByType[AWS_ApiGateway_Authorizer];
+        const authorizer: AwsApiGatewayAuthorizer | undefined = foundAuthorizers
+            ?.map(resource => {
                 return resource as AwsApiGatewayAuthorizer;
             })
-            .find(currentStage => {
+            ?.find(currentStage => {
                 return currentStage.Properties.RestApiId.Ref === currentResource.ID;
             });
 
