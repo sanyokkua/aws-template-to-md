@@ -58,7 +58,6 @@ import {
     AWS_Events_Connection,
     AWS_Events_EventBus,
     AWS_Events_Rule,
-    AWS_Lambda_EventSourceMapping,
     AWS_Lambda_Function,
     AWS_S3_Bucket,
     AWS_SNS_Topic,
@@ -75,7 +74,6 @@ import {
     AwsEventsRule,
 }                                       from "./models/events/eventbus";
 import {
-    AwsLambdaEventSourceMapping,
     AwsLambdaFunction,
 }                                       from "./models/lambda/lambda";
 import {
@@ -160,10 +158,6 @@ export function parseCloudForgeTemplate(templateJsonString: string, prefix?: str
             }
             case AWS_Events_Rule: {
                 expectedName = (resource as AwsEventsRule).Properties.Name;
-                break;
-            }
-            case AWS_Lambda_EventSourceMapping: {
-                expectedName = (resource as AwsLambdaEventSourceMapping).Properties.EventSourceArn;
                 break;
             }
             case AWS_Lambda_Function: {
