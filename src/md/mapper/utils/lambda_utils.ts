@@ -33,7 +33,7 @@ export function getMappedLambdaFunction(resources: [ResourcesMappedByType, Resou
                 lambda.Properties.MemorySize >= LAMBDA_MEMORY_SIZE_DEFAULT
                 ? lambda.Properties.MemorySize : LAMBDA_MEMORY_SIZE_DEFAULT;
             const envVars = lambda.Properties.Environment !== undefined && lambda.Properties.Environment.Variables != undefined
-                            ? JSON.stringify(lambda.Properties.Environment.Variables) : ";";
+                            ? JSON.stringify(lambda.Properties.Environment.Variables) : "";
             const tracing = lambda.Properties.TracingConfig !== undefined && lambda.Properties.TracingConfig.Mode !== undefined
                             ? lambda.Properties.TracingConfig.Mode : "";
             const arch = lambda.Properties.Architectures !== undefined && lambda.Properties.Architectures.length > 0
