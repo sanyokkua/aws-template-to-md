@@ -60,5 +60,5 @@ export const writeRepositoryCommonInfo: WriterFunc<RepositoryInfo> = (params: Wr
     ];
     const content = createMdList("", list, MdListType.UNORDERED);
 
-    return createContentBlock("Common Repository Information", MdHeader.HEADER_LEVEL_2, content);
+    return createContentBlock("Essential Repository Information", MdHeader.HEADER_LEVEL_2, content);
 };

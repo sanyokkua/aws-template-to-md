@@ -39,5 +39,5 @@ function createResourceListContent(resourcesList: DocumentResourcesTree): string
 
 export const writeListOfResources: WriterFunc<DocumentResourcesTree> = (params: WriterParams<DocumentResourcesTree>, options?: WriterOptions): string => {
     const content: string = createResourceListContent(params.value);
-    return createContentBlock("List of the main AWS Resources", MdHeader.HEADER_LEVEL_2, content);
+    return createContentBlock("Main AWS Resources Overview (Diagram Representation)", MdHeader.HEADER_LEVEL_2, content);
 };

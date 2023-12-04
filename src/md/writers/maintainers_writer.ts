@@ -17,5 +17,5 @@ export const writeMaintainers: WriterFunc<Maintainer[]> = (params: WriterParams<
     const values: string[][] = params.value.map(maintainer => [maintainer.name, maintainer.link, maintainer.email]);
     const table = createMdTable(HEADER, values);
 
-    return createContentBlock("Maintainers", MdHeader.HEADER_LEVEL_2, table);
+    return createContentBlock("Repository Maintainers", MdHeader.HEADER_LEVEL_2, table);
 };

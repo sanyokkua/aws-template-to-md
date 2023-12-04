@@ -21,5 +21,5 @@ export const writeArtifactDesign: WriterFunc<ArtifactDesign> = (params: WriterPa
         createImageLink("Diagram of the current artifact", params.value.linkToTheDiagramImage),
     ];
 
-    return createContentBlock("Design Of The Artifact", MdHeader.HEADER_LEVEL_2, content.join(NEW_LINE));
+    return createContentBlock("Artifact Design Description", MdHeader.HEADER_LEVEL_2, content.join(NEW_LINE));
 };
