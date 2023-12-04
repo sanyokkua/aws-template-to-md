@@ -15,7 +15,7 @@ const SubmittedFormValues: React.FC<SubmittedFormValuesProps> = (props: Submitte
     if (props.isList) {
         content = <ul>
             {props.data.map(item => {
-                return <li>{item.fieldValue}</li>;
+                return <li key={item.fieldValue as string}>{item.fieldValue}</li>;
             })}
         </ul>;
     } else {

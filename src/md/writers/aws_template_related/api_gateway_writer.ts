@@ -14,17 +14,44 @@ import {
 }                                                   from "../common/common_md_functions";
 import { ApiGatewayRestApi, DocumentResourcesTree } from "../../mapper/models/models";
 
-function createApiGatewayEndpointsTable(apiGatewayRestApi: ApiGatewayRestApi) {
-    const HEADER_LINE: string[] = ["Method", "Endpoint", "Integration Type", "Destination"];
+function createApiGatewayEndpointsTable(apiGatewayRestApi: ApiGatewayRestApi, options: WriterOptions | undefined) {
+    let showMaintainers: boolean = false;
+    let showApiDocsLink: boolean = false;
+    if (options !== undefined) {
+        if ("showApiMaintainerColumn" in options && options["showApiMaintainerColumn"]) {
+            showMaintainers = options["showApiMaintainerColumn"];
+        }
+        if ("showApiDocsLinkColumn" in options && options["showApiDocsLinkColumn"]) {
+            showApiDocsLink = options["showApiDocsLinkColumn"];
+        }
+    }
+    const HEADER_LINE: string[] = [];
+    if (showMaintainers) {
+        HEADER_LINE.push("Maintainer");
+    }
+    HEADER_LINE.push("Method");
+    HEADER_LINE.push("Endpoint");
+    HEADER_LINE.push("Integration Type");
+    HEADER_LINE.push("Destination");
+    if (showApiDocsLink) {
+        HEADER_LINE.push("Documentation");
+    }
+
     const tableValues: string[][] = [];
 
     apiGatewayRestApi.endpoints.forEach(endpoint => {
-        tableValues.push([
-                             endpoint.method !== undefined ? endpoint.method : "",
-                             endpoint.url !== undefined ? endpoint.url : "",
-                             endpoint.integrationType !== undefined ? endpoint.integrationType : "",
-                             endpoint.destination !== undefined ? endpoint.destination : "",
-                         ]);
+        const values: string[] = [];
+        if (showMaintainers) {
+            values.push("TODO:");
+        }
+        values.push(endpoint.method !== undefined ? endpoint.method : "");
+        values.push(endpoint.url !== undefined ? endpoint.url : "");
+        values.push(endpoint.integrationType !== undefined ? endpoint.integrationType : "");
+        values.push(endpoint.destination !== undefined ? endpoint.destination : "");
+        if (showApiDocsLink) {
+            values.push(createLink("Docs", "TODO:"));
+        }
+        tableValues.push(values);
     });
 
     return createMdTable(HEADER_LINE, tableValues);
@@ -61,7 +88,7 @@ function createApiGatewayTextContent(apiGateways: ApiGatewayRestApi[], options?:
     apiGateways.forEach(apiGateway => {
         const contentData: string[] = [];
 
-        contentData.push(createApiGatewayEndpointsTable(apiGateway));
+        contentData.push(createApiGatewayEndpointsTable(apiGateway, options));
         contentData.push(createModelSchemaBlocks(apiGateway));
 
         if (options !== undefined) {

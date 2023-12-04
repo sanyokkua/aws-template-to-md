@@ -44,6 +44,8 @@ const defaultOtherMdConfig: OtherAppConfig = {
     selectedWriters: AVAILABLE_WRITERS.slice(),
     showOpenApiStub: true,
     showApiGatewayUsageInstructionStub: true,
+    showApiMaintainerColumn: true,
+    showApiDocsLinkColumn: true,
     showPostmanStub: true,
     showPostmanSecretsLink: true,
 

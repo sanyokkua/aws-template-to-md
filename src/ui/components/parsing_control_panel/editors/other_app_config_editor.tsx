@@ -29,6 +29,8 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
         const showApiGatewayUsageInstructionStub = form.getFieldValue("showApiGatewayUsageInstructionStub");
         const showPostmanStub = form.getFieldValue("showPostmanStub");
         const showPostmanSecretsLink = form.getFieldValue("showPostmanSecretsLink");
+        const showApiMaintainerColumn = form.getFieldValue("showMaintainerColumn");
+        const showApiDocsLinkColumn = form.getFieldValue("showLinkToDocsColumn");
 
         const showStepFunctionDiagramValue = getCurrentOrDefault<boolean>(showStepFunctionDiagram,
                                                                           props.editorInput.data.enableStepFunctionDiagramLinkTemplate);
@@ -44,6 +46,11 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
                                                                   props.editorInput.data.showPostmanStub);
         const showPostmanSecretsLinkValue = getCurrentOrDefault<boolean>(showPostmanSecretsLink,
                                                                          props.editorInput.data.showPostmanSecretsLink);
+
+        const showApiMaintainerColumnValue = getCurrentOrDefault<boolean>(showApiMaintainerColumn,
+                                                                          props.editorInput.data.showApiMaintainerColumn);
+        const showApiDocsLinkColumnValue = getCurrentOrDefault<boolean>(showApiDocsLinkColumn,
+                                                                        props.editorInput.data.showApiDocsLinkColumn);
 
         const selectedWriters = writersValue.map((w: string | { label: string, value: string }) => {
             if (typeof w == "string") {
@@ -61,6 +68,8 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
             showApiGatewayUsageInstructionStub: showApiGatewayUsageInstructionStubValue,
             showPostmanStub: showPostmanStubValue,
             showPostmanSecretsLink: showPostmanSecretsLinkValue,
+            showApiMaintainerColumn: showApiMaintainerColumnValue,
+            showApiDocsLinkColumn: showApiDocsLinkColumnValue,
         };
         props.editorInput.onDataChanged(result);
         messageApi.success(`Submitted: ${JSON.stringify(result, null, 0)}`);
@@ -105,6 +114,19 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
                 <Switch/>
             </Form.Item>
 
+            <Form.Item label="Show Maintainer Column Stub in API Gateway"
+                       name="showMaintainerColumn"
+                       valuePropName="checked"
+                       initialValue={props.editorInput.data.showApiMaintainerColumn}>
+                <Switch/>
+            </Form.Item>
+            <Form.Item label="Show Link To Docs Column Stub in API Gateway"
+                       name="showLinkToDocsColumn"
+                       valuePropName="checked"
+                       initialValue={props.editorInput.data.showApiDocsLinkColumn}>
+                <Switch/>
+            </Form.Item>
+
             <Form.Item label={"Writers used in parsing process"} name="selectWriters" initialValue={DEFAULT_OPTIONS}>
                 <Select
                     mode="multiple"
@@ -138,6 +160,14 @@ const OtherAppConfigEditor: React.FC<OtherAppConfigEditorProps> = (props: OtherA
             {
                 fieldName: "Hide Postman Collection Secrets Link",
                 fieldValue: props.editorInput.data.showPostmanSecretsLink,
+            },
+            {
+                fieldName: "Show Postman Collection Secrets Link Stub",
+                fieldValue: props.editorInput.data.showApiMaintainerColumn,
+            },
+            {
+                fieldName: "Show Maintainer Column Stub in API Gateway",
+                fieldValue: props.editorInput.data.showApiDocsLinkColumn,
             },
             {fieldName: "Writers", fieldValue: JSON.stringify(props.editorInput.data.selectedWriters, null, 2)},
         ]}/>

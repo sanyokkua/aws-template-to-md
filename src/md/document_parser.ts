@@ -163,6 +163,8 @@ export function parseCloudFormationTemplate(parameters: ParserParameters): strin
                                                 "showApiGatewayUsageInstructionStub": parameters.otherAppConfig.showApiGatewayUsageInstructionStub,
                                                 "showPostmanStub": parameters.otherAppConfig.showPostmanStub,
                                                 "showPostmanSecretsLink": parameters.otherAppConfig.showPostmanSecretsLink,
+                                                "showApiMaintainerColumn": parameters.otherAppConfig.showApiMaintainerColumn,
+                                                "showApiDocsLinkColumn": parameters.otherAppConfig.showApiDocsLinkColumn,
                                             }),
         "eventBus": new WriterWrapperImpl(WRITER_AWS_EVENT_BUS,
                                           writeEventBuses,

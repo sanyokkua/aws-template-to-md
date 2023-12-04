@@ -54,6 +54,8 @@ export type OtherAppConfig = {
     showApiGatewayUsageInstructionStub: boolean;
     showPostmanStub: boolean;
     showPostmanSecretsLink: boolean;
+    showApiMaintainerColumn: boolean;
+    showApiDocsLinkColumn: boolean;
     selectedWriters: string[];
 }
 
