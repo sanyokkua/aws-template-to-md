@@ -13,7 +13,7 @@ import {
     RepositoryInfo,
 }                          from "../../md/writers/customs/models";
 import MarkDownComponent   from "./markdown_component";
-import { copyToClipboard } from "../utils";
+import { copyToClipboard } from "../../utils/utils";
 
 const defaultRepoInfo: RepositoryInfo = {
     description: "",

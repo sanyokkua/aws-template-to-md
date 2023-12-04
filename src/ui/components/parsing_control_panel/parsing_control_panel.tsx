@@ -13,7 +13,7 @@ import {
 import ParsingControlPanelHeaderLine         from "./components/parsing_control_panel_header_line";
 import ParsingControlPanelJsonTemplateEditor from "./components/parsing_control_panel_json_template_editor";
 import EditorSelector                        from "./components/editor_selector_component";
-import { getFromClipboard }                  from "../../utils";
+import { getFromClipboard }                  from "../../../utils/utils";
 
 type ParsingControlPanelProps = {
     params: ParserParameters;
