@@ -40,7 +40,7 @@ function createDynamoDbTextContent(dynamoDbTables: DynamoDbTable[], options?: Wr
 
         if (options !== undefined && "CREATE_DATA_EXAMPLE_STUB" in options) {
             if (options["CREATE_DATA_EXAMPLE_STUB"] === true) {
-                content.push(createCollapsableSection("Data Example", "TODO:"));
+                content.push(createCollapsableSection("Record Example", "TODO:"));
             }
         }
 
