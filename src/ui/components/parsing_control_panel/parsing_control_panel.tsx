@@ -1,5 +1,5 @@
 import React, { useState }                   from "react";
-import { Button }                            from "antd";
+import { Button, message }                   from "antd";
 import {
     Account,
     ArtifactDesign,
@@ -13,6 +13,7 @@ import {
 import ParsingControlPanelHeaderLine         from "./components/parsing_control_panel_header_line";
 import ParsingControlPanelJsonTemplateEditor from "./components/parsing_control_panel_json_template_editor";
 import EditorSelector                        from "./components/editor_selector_component";
+import { getFromClipboard }                  from "../../utils";
 
 type ParsingControlPanelProps = {
     params: ParserParameters;
@@ -21,6 +22,7 @@ type ParsingControlPanelProps = {
 
 
 const ParsingControlPanel: React.FC<ParsingControlPanelProps> = (props: ParsingControlPanelProps) => {
+    const [messageApi, contextHolder] = message.useMessage();
     // Component Controls
     const [showTemplateJsonSwitch, setShowTemplateJsonSwitch] = useState<boolean>(true);
     const [showParsingConfigSwitch, setShowParsingConfigSwitch] = useState<boolean>(true);
@@ -51,10 +53,20 @@ const ParsingControlPanel: React.FC<ParsingControlPanelProps> = (props: ParsingC
     };
 
     return <>
+        {contextHolder}
         <ParsingControlPanelHeaderLine
             hideControlsPanel={showParsingConfigSwitch}
             hideJsonEditor={showTemplateJsonSwitch}
             onSetJsonTemplateBtnClicked={() => {
+                getFromClipboard()
+                    .then((text) => {
+                        setJsonTemplateValue(text);
+                        messageApi.open({type: "info", content: "Json Template is Pasted"});
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        messageApi.open({type: "error", content: "Problem Occurred during pasting Json Template"});
+                    });
             }}
             onHideControlSwitchClicked={(checked: boolean) => setShowParsingConfigSwitch(checked)}
             onHideJsonSwitchClicked={(checked: boolean) => setShowTemplateJsonSwitch(checked)}/>

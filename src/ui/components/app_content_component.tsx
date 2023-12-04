@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { message }         from "antd";
+import { Button, message } from "antd";
 import ParsingControlPanel from "./parsing_control_panel/parsing_control_panel";
 import {
     AVAILABLE_WRITERS,
@@ -13,6 +13,7 @@ import {
     RepositoryInfo,
 }                          from "../../md/writers/customs/models";
 import MarkDownComponent   from "./markdown_component";
+import { copyToClipboard } from "../utils";
 
 const defaultRepoInfo: RepositoryInfo = {
     description: "",
@@ -92,12 +93,19 @@ const AppContent: React.FC<any> = (props: any) => {
         }
     };
 
+    const copyMarkdown = () => {
+        copyToClipboard(markDownText);
+        messageApi.open({type: "info", content: "Markdown is copied to clipboard"});
+    };
+
     return <>
         {contextHolder}
 
         <ParsingControlPanel params={parserParameters}
                              onParseButtonClicked={(opt) => onOptionsChange(opt)}/>
-
+        {markDownText !== undefined && markDownText !== null && markDownText.length > 0 && <>
+            <Button onClick={() => copyMarkdown()}>Copy MarkDown</Button>
+        </>}
         <MarkDownComponent markdownText={markDownText}
                            onChange={(data) => setMarkDownText(data)}/>
     </>;
