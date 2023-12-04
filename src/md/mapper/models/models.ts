@@ -21,6 +21,8 @@ export interface ApiGatewayRestApi extends CommonResource {
         method: string; // AwsApiGatewayMethod.Properties.HttpMethod
         integrationType: string; // AwsApiGatewayMethod.Properties.Integration.Type
         destination: string; // Should be built by joining of AwsApiGatewayMethod.Properties.Integration.Uri
+        destinationType: string; // Should be built by joining of AwsApiGatewayMethod.Properties.Integration.Uri
+        destinationResource: string; // Should be built by joining of AwsApiGatewayMethod.Properties.Integration.Uri
         modelSchema: string; // AwsApiGatewayMethod.Properties.* There is a ref to AwsApiGatewayModel.Properties.Schema
     }[];
     authorizer: {

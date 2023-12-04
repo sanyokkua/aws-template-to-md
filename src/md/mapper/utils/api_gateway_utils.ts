@@ -144,6 +144,8 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
             let destination = method.Properties.Integration.Uri !== undefined ?
                               fnJoin(method.Properties.Integration.Uri["Fn::Join"], resourcesById) :
                               "";
+            let destinationType: string = "";
+            let destinationResource: string = "";
 
             if (method.Properties.Integration.Type === "AWS" || method.Properties.Integration.Type === "AWS_PROXY") {
                 const partsOfDest = destination.split(":");
@@ -166,10 +168,16 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
 
                     if (targetService.toLowerCase() === "lambda") {
                         destination = `Lambda ${createStyledText(targetAction, MdStyle.BOLD)}`;
+                        destinationType = "Lambda";
+                        destinationResource = createStyledText(targetAction, MdStyle.BOLD);
                     } else if (targetService.toLowerCase() === "events") {
                         destination = `AWS EventBus, ${createStyledText(targetApi, MdStyle.BOLD)}`;
+                        destinationType = "EventBus";
+                        destinationResource = createStyledText("TODO:", MdStyle.BOLD);
                     } else {
                         destination = `AWS Service: ${targetService}, Service Action: ${targetAction}, Service API: ${targetApi}`;
+                        destinationType = `${targetService}`;
+                        destinationResource = createStyledText(targetApi, MdStyle.BOLD);
                     }
                 }
             }
@@ -179,6 +187,8 @@ export function getMappedApiGatewayRestApi(resources: [ResourcesMappedByType, Re
                 method: method.Properties.HttpMethod,
                 integrationType: method.Properties.Integration.Type,
                 destination: destination,
+                destinationType: destinationType,
+                destinationResource: destinationResource,
                 modelSchema: model,
             };
         });

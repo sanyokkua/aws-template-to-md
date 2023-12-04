@@ -32,7 +32,8 @@ function createApiGatewayEndpointsTable(apiGatewayRestApi: ApiGatewayRestApi, op
     HEADER_LINE.push("Method");
     HEADER_LINE.push("Endpoint");
     HEADER_LINE.push("Integration Type");
-    HEADER_LINE.push("Destination");
+    HEADER_LINE.push("Destination Type");
+    HEADER_LINE.push("Destination Resource");
     if (showApiDocsLink) {
         HEADER_LINE.push("Documentation");
     }
@@ -47,7 +48,8 @@ function createApiGatewayEndpointsTable(apiGatewayRestApi: ApiGatewayRestApi, op
         values.push(endpoint.method !== undefined ? endpoint.method : "");
         values.push(endpoint.url !== undefined ? endpoint.url : "");
         values.push(endpoint.integrationType !== undefined ? endpoint.integrationType : "");
-        values.push(endpoint.destination !== undefined ? endpoint.destination : "");
+        values.push(endpoint.destination !== undefined ? endpoint.destinationType : "");
+        values.push(endpoint.destination !== undefined ? endpoint.destinationResource : "");
         if (showApiDocsLink) {
             values.push(createLink("Docs", "TODO:"));
         }
