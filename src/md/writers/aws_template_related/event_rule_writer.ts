@@ -13,8 +13,16 @@ import { DocumentResourcesTree, EventsRule } from "../../mapper/models/models";
 
 
 function createRuleDescriptionTable(eventsRule: EventsRule): string {
-    const RULE_DESCRIPTION_HEADER: string[] = ["Name", "Parent Event Bus", "State"];
-    const ruleDescriptionData: string[][] = [[eventsRule.name, eventsRule.parentEventBus, eventsRule.state]];
+    const RULE_DESCRIPTION_HEADER: string[] = ["Name", "Parent Event Bus", "State", "Target"];
+    const ruleTarget: string[] = eventsRule?.targets.map(t => t.name);
+    const ruleDescriptionData: string[][] = [
+        [
+            eventsRule.name,
+            eventsRule.parentEventBus,
+            eventsRule.state,
+            ruleTarget.join(","),
+        ],
+    ];
 
     return createMdTable(RULE_DESCRIPTION_HEADER, ruleDescriptionData);
 }
