@@ -61,6 +61,7 @@ const defaultParserParameters: ParserParameters = {
     artifactDesign: defaultArtifactDesign,
     additionalMarkdownContent: "",
     otherAppConfig: defaultOtherMdConfig,
+    relatedProjects: {projects: []},
 };
 
 function buildErrorMsg(e: any) {

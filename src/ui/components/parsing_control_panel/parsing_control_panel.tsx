@@ -7,6 +7,7 @@ import {
     OtherAppConfig,
     ParserConfig,
     ParserParameters,
+    RelatedProjects,
     RepositoryInfo,
     RepositoryTag,
 }                                            from "../../../md/writers/customs/models";
@@ -37,6 +38,7 @@ const ParsingControlPanel: React.FC<ParsingControlPanelProps> = (props: ParsingC
     const [customMdText, setCustomMdText] = useState<string>(props.params.additionalMarkdownContent);
     const [parserConfig, setParserConfig] = useState<ParserConfig>(props.params.parserConfig);
     const [otherMarkdownConfig, setOtherMarkdownConfig] = useState<OtherAppConfig>(props.params.otherAppConfig);
+    const [relatedProjects, setRelatedProjects] = useState<RelatedProjects>(props.params.relatedProjects);
 
     const onParseButtonClicked = () => {
         props.onParseButtonClicked({
@@ -49,6 +51,7 @@ const ParsingControlPanel: React.FC<ParsingControlPanelProps> = (props: ParsingC
                                        additionalMarkdownContent: customMdText,
                                        parserConfig: parserConfig,
                                        otherAppConfig: otherMarkdownConfig,
+                                       relatedProjects: relatedProjects,
                                    });
     };
 
@@ -88,6 +91,7 @@ const ParsingControlPanel: React.FC<ParsingControlPanelProps> = (props: ParsingC
             parserConfig={{data: parserConfig, onDataChanged: setParserConfig}}
             customMdText={{data: customMdText, onDataChanged: setCustomMdText}}
             otherAppConfig={{data: otherMarkdownConfig, onDataChanged: setOtherMarkdownConfig}}
+            relatedProjects={{data: relatedProjects, onDataChanged: setRelatedProjects}}
         />
 
         <br/>

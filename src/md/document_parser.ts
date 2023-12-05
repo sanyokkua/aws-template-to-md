@@ -53,20 +53,17 @@ import { ParserParameters }                                                    f
 import {
     writeTableOfContent,
 }                                                                              from "./writers/document_table_of_content_writer";
+import { writeRelatedProjects }                                                from "./writers/related_projects_writer";
 
 const WRITER_REPOSITORY_NAME = "repositoryName";
 const WRITER_REPOSITORY_TAGS = "tags";
-
 const WRITER_REPOSITORY_DESCRIPTION = "repoDescription";
 const WRITER_REPOSITORY_TABLE_OF_CONTENT = "tableOfContent";
-
 const WRITER_REPOSITORY_MAINTAINERS = "maintainers";
 const WRITER_REPOSITORY_INFORMATION = "repoInfo";
 const WRITER_ACCOUNTS = "accounts";
-
-
 const WRITER_DESIGN_INFO = "designInfo";
-
+const WRITER_RELATED_PROJECTS = "relatedProjects";
 const WRITER_AMOUNT_OF_RESOURCES = "amountOfResources";
 const WRITER_LIST_OF_MAIN_RESOURCES = "listOfResources";
 const WRITER_AWS_API_GATEWAY = "apiGateway";
@@ -89,6 +86,7 @@ export const AVAILABLE_WRITERS: string[] = [
     WRITER_REPOSITORY_INFORMATION,
     WRITER_ACCOUNTS,
     WRITER_DESIGN_INFO,
+    WRITER_RELATED_PROJECTS,
     WRITER_AMOUNT_OF_RESOURCES,
     WRITER_LIST_OF_MAIN_RESOURCES,
     WRITER_AWS_API_GATEWAY,
@@ -147,6 +145,10 @@ export function parseCloudFormationTemplate(parameters: ParserParameters): strin
                                             writeArtifactDesign,
                                             {value: parameters.artifactDesign},
                                             {}),
+        "relatedProjects": new WriterWrapperImpl(WRITER_RELATED_PROJECTS,
+                                                 writeRelatedProjects,
+                                                 {value: parameters.relatedProjects},
+                                                 {}),
         "amountOfResources": new WriterWrapperImpl(WRITER_AMOUNT_OF_RESOURCES,
                                                    writeAmountOfResources,
                                                    {value: documentResourcesTree},
