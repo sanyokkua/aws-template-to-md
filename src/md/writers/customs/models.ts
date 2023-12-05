@@ -59,6 +59,15 @@ export type OtherAppConfig = {
     selectedWriters: string[];
 }
 
+export type Project = {
+    projectName: string;
+    projectLink: string;
+}
+
+export type RelatedProjects = {
+    projects: Project[]
+}
+
 export type ParserParameters = {
     templateJsonValue: string;
     parserConfig: ParserConfig;
@@ -69,6 +78,7 @@ export type ParserParameters = {
     artifactDesign: ArtifactDesign,
     additionalMarkdownContent: string;
     otherAppConfig: OtherAppConfig;
+    relatedProjects: RelatedProjects;
 }
 
 export type EditorInput<T> = {
