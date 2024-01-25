@@ -14,6 +14,13 @@ import {
 }                          from "../../md/writers/customs/models";
 import MarkDownComponent   from "./markdown_component";
 import { copyToClipboard } from "../../utils/utils";
+import {
+    createRawCloudFormationResourcesCollection,
+    parseCloudFormationTemplate2,
+}                          from "../../core/cloudformation/json_parser";
+import {
+    createDocumentResourcesTree,
+}                          from "../../core/mapping/cloudformation_mapper";
 
 const defaultRepoInfo: RepositoryInfo = {
     description: "",
@@ -87,6 +94,10 @@ const AppContent: React.FC<any> = (props: any) => {
     const parseTemplate = (params: ParserParameters) => {
         try {
             const markdownDocument: string = parseCloudFormationTemplate(params);
+            // TODO: switch to new parser
+            const res = parseCloudFormationTemplate2(params.templateJsonValue);
+            const res2 = createRawCloudFormationResourcesCollection(res);
+            const res3 = createDocumentResourcesTree(res2);
             setMarkDownText(markdownDocument);
         } catch (e: any) {
             const errorMsg = buildErrorMsg(e);
