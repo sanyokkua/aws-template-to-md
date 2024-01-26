@@ -62,7 +62,5 @@ export function createDocumentResourcesTree(rawResCollection: RawCloudFormationR
         docTree.addResource(mappedResource);
     });
 
-    console.log(docTree);
-
     return docTree;
 }

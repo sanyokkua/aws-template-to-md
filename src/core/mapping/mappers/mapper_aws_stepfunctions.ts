@@ -31,6 +31,8 @@ import {
 }                                          from "../../cloudformation/models/aws_stepfunctions";
 import {
     isEmptyString,
+    removeSuffix,
+    replaceSubstring,
 }                                          from "../../string_utils";
 
 type StateMapperFn = (stateId: string, state: State) => MappedState;
@@ -49,6 +51,31 @@ const STEP_FUNCTION_STATES_MAPPERS = new Map<StateTypes, StateMapperFn>(
         [StateTypes.Parallel, mapStateOfTypeParallel],
         [StateTypes.Map, mapStateOfTypeMap],
     ]);
+
+export class MapperMappedStepFunctionsStateMachine implements Mapper<MappedStepFunctionsStateMachine> {
+    mapResource(resource: CommonResource, rawResourcesCollection: RawCloudFormationResourcesCollection, options?: ParsingOptions): MappedStepFunctionsStateMachine {
+        basicResourceValidation(resource, AWS_STEP_FUNCTIONS_STATE_MACHINE);
+
+        const sfResource: AwsStepFunctionsStateMachine = resource as AwsStepFunctionsStateMachine;
+        const sfResourceId: string = sfResource._ID;
+        const sfResourceType: string = sfResource.Type;
+        const sfResourceName: string = getFixedName(sfResource._Name, options);
+
+        const sfDefinition: string = getStringValueForField(sfResource?.Properties?.DefinitionString);
+        const updatedSFDefinition: string = replaceIdsInDefinition(sfDefinition, rawResourcesCollection, options);
+
+        const parsedDefinition: StateMachineDefinition = JSON.parse(updatedSFDefinition);
+        const mappedStateMachineDefinition: MappedStateMachineDefinition = mapSfDefinitionObject(parsedDefinition);
+
+        return {
+            id: sfResourceId,
+            type: sfResourceType,
+            name: sfResourceName,
+            definition: updatedSFDefinition,
+            definitionObj: mappedStateMachineDefinition,
+        };
+    }
+}
 
 function replaceIdsInDefinition(definition: string, rawResourcesCollection: RawCloudFormationResourcesCollection, options?: ParsingOptions): string {
     if (isEmptyString(definition)) {
@@ -73,44 +100,7 @@ function replaceIdsInDefinition(definition: string, rawResourcesCollection: RawC
     return definition;
 }
 
-export class MapperMappedStepFunctionsStateMachine implements Mapper<MappedStepFunctionsStateMachine> {
-    mapResource(resource: CommonResource, rawResourcesCollection: RawCloudFormationResourcesCollection, options?: ParsingOptions): MappedStepFunctionsStateMachine {
-        basicResourceValidation(resource, AWS_STEP_FUNCTIONS_STATE_MACHINE);
-
-        const sfResource: AwsStepFunctionsStateMachine = resource as AwsStepFunctionsStateMachine;
-        const sfResourceId: string = sfResource._ID;
-        const sfResourceType: string = sfResource.Type;
-        const sfResourceName: string = getFixedName(sfResource._Name, options);
-
-        const sfDefinition: string = getStringValueForField(sfResource?.Properties?.DefinitionString);
-        const updatedSFDefinition: string = replaceIdsInDefinition(sfDefinition, rawResourcesCollection, options);
-
-        const parsedDefinition: StateMachineDefinition = JSON.parse(updatedSFDefinition);
-        const mappedStateMachineDefinition = mapSfDefinitionObject(parsedDefinition);
-
-        return {
-            id: sfResourceId,
-            type: sfResourceType,
-            name: sfResourceName,
-            definition: updatedSFDefinition,
-            definitionObj: mappedStateMachineDefinition,
-        };
-    }
-
-
-}
-
-function mapState(stateId: string, state: State): MappedState {
-    const stateType = state.Type;
-    const mapper = STEP_FUNCTION_STATES_MAPPERS.get(stateType);
-    if (mapper === undefined) {
-        throw new Error(`Mapper for StateType=${stateType} is not found`);
-    }
-
-    return mapper(stateId, state);
-}
-
-function mapSfDefinitionObject(parsedDefinition: StateMachineDefinition) {
+function mapSfDefinitionObject(parsedDefinition: StateMachineDefinition): MappedStateMachineDefinition {
     const timeout = parsedDefinition.TimeoutSeconds;
     const firstTask = parsedDefinition.StartAt;
     const states = parsedDefinition.States;
@@ -122,12 +112,21 @@ function mapSfDefinitionObject(parsedDefinition: StateMachineDefinition) {
         mappedStates.push(mapState(stateId, state));
     }
 
-    const mappedSf: MappedStateMachineDefinition = {
+    return {
         "TimeoutSeconds": timeout,
         "StartAt": firstTask,
         "States": mappedStates,
     };
-    return mappedSf;
+}
+
+function mapState(stateId: string, state: State): MappedState {
+    const stateType = state.Type;
+    const mapper = STEP_FUNCTION_STATES_MAPPERS.get(stateType);
+    if (mapper === undefined) {
+        throw new Error(`Mapper for StateType=${stateType} is not found`);
+    }
+
+    return mapper(stateId, state);
 }
 
 function mapStateOfTypePass(stateId: string, state: State): MappedState {
@@ -148,77 +147,7 @@ function mapStateOfTypeTask(stateId: string, state: State): MappedState {
     const isFinalTask = state.End ?? false;
     const retryItems: MappedRetryItem[] = mapRetryItems(state?.Retry);
     const catchItems: MappedCatchItem[] = mapCatchItems(state?.Catch);
-
-    let service: string;
-    let serviceAction: string;
-    let resourceName: string;
-
-    const resUri = state.Resource ?? "";
-    if (resUri.trim().toLowerCase().startsWith("arn:aws:states:::")) {
-        // arn:aws:states:::dynamodb:getItem
-        const resourceAndAction = resUri.trim().replace("arn:aws:states:::", "");
-        [service, serviceAction] = resourceAndAction.split(":");
-
-        switch (service) {
-            case "dynamodb": {
-                resourceName = state.Parameters?.TableName ?? "";
-                break;
-            }
-            case "lambda": {
-                resourceName = state.Parameters?.FunctionName ?? "";
-                break;
-            }
-            case "sns": {
-                resourceName = state.Parameters?.TopicArn ?? "";
-                break;
-            }
-            case "sqs": {
-                resourceName = state.Parameters?.QueueUrl ?? "";
-                break;
-            }
-            case "events": {
-                const eventBusNames = new Set<string>();
-                state.Parameters?.Entries?.forEach(entry => {
-                    const value = entry.EventBusName ?? "";
-                    if (value.trim().toLowerCase().startsWith("arn:")) {
-                        const splitValues = value.trim().toLowerCase().split(":");
-                        const name = splitValues[splitValues.length - 1];
-                        if (name.includes("/")) {
-                            const nameSplit = name.split("/");
-                            eventBusNames.add(nameSplit[nameSplit.length - 1]);
-                        } else {
-                            eventBusNames.add(name);
-                        }
-                    } else {
-                        eventBusNames.add(value);
-                    }
-                });
-                resourceName = Array.from(eventBusNames).join(",");
-                break;
-            }
-            default: {
-                resourceName = resourceAndAction;
-                break;
-            }
-        }
-    } else if (resUri.trim().toLowerCase().startsWith("arn:aws:")) {
-        // arn:aws:dynamodb:us-west-2:123456789012:table/myDynamoDBTable
-        service = resUri.trim().toLowerCase().split(":")[2];
-        serviceAction = "";
-        resourceName = resUri.trim().split(":")[-1];
-        console.log("Warning:: Not tested retrieving resource Name");
-    } else {
-        service = "";
-        serviceAction = "";
-        resourceName = resUri;
-        console.log("Warning:: Not tested retrieving resource Name");
-    }
-
-    let mappedResource: MappedResource = {
-        service: service,
-        serviceAction: serviceAction,
-        resourceName: resourceName,
-    };
+    const mappedResource: MappedResource = findTaskResource(state);
 
     return {
         "StateID": stateId,
@@ -233,6 +162,145 @@ function mapStateOfTypeTask(stateId: string, state: State): MappedState {
         "TimestampPath": state.TimestampPath,
         "TimeoutSeconds": state.TimeoutSeconds,
     };
+}
+
+function findTaskResource(state: State): MappedResource {
+    const resourceArnFromTask = prepareArnValue(state);
+
+    if (!resourceArnFromTask.startsWith("arn:")) {
+        return {
+            service: "",
+            taskType: "",
+            resourceName: resourceArnFromTask,
+        };
+    }
+
+    const [, , serviceName, , , taskType, apiName] = resourceArnFromTask.split(":");
+    if (serviceName === "states") {
+        switch (taskType) {
+            case "dynamodb": {
+                const resourceName = extractNameFromResourceArn(state.Parameters?.TableName);
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceName,
+                };
+            }
+            case "lambda": {
+                const resourceName = extractNameFromResourceArn(state.Parameters?.FunctionName);
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceName,
+                };
+            }
+            case "sns": {
+                const resourceName = extractNameFromResourceArn(state.Parameters?.TopicArn);
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceName,
+                };
+            }
+            case "sqs": {
+                const resourceName = extractNameFromResourceArn(state.Parameters?.QueueUrl);
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceName,
+                };
+            }
+            case "events": {
+                const eventBusNames = new Set<string>();
+                state.Parameters?.Entries?.forEach(entry => {
+                    eventBusNames.add(extractNameFromResourceArn(entry.EventBusName));
+                });
+                const resourceName = Array.from(eventBusNames).join(",");
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceName,
+                };
+            }
+            case "batch": {
+                const resourceName = extractNameFromResourceArn(state.Parameters?.JobName);
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceName,
+                };
+            }
+            case "glue": {
+                const resourceName = extractNameFromResourceArn(state.Parameters?.JobName);
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceName,
+                };
+            }
+            case "apigateway": {
+                const resourceName = extractNameFromResourceArn(state.Parameters?.EventBusName);
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceName,
+                };
+            }
+            case "states": {
+                const resourceName = extractNameFromResourceArn(state.Parameters?.StateMachineArn);
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceName,
+                };
+            }
+            case "http": {
+                const resourceName = extractNameFromResourceArn(state.Parameters?.ApiEndpoint);
+                const method = state.Parameters?.Method ?? "NOT_DEFINED";
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: `${method} - ${resourceName}`,
+                };
+            }
+            default: {
+                return {
+                    service: taskType,
+                    taskType: apiName,
+                    resourceName: resourceArnFromTask,
+                };
+            }
+        }
+    }
+
+    return {
+        service: serviceName,
+        taskType: `${taskType}/${apiName}`,
+        resourceName: extractNameFromResourceArn(resourceArnFromTask),
+    };
+}
+
+function prepareArnValue(state: State) {
+    let resourceArnFromTask = state.Resource?.trim().toLowerCase() ?? "";
+    [".waitfortasktoken", ".sync"].forEach(suffix => {
+        resourceArnFromTask = removeSuffix(resourceArnFromTask, suffix);
+    });
+    return replaceSubstring(resourceArnFromTask, "aws-sdk:", "");
+}
+
+function extractNameFromResourceArn(resourceNameOrArn: string | undefined): string {
+    const value = resourceNameOrArn ?? "";
+    if (value.startsWith("arn:")) {
+        const splitValues = value.split(":");
+        const name = splitValues[splitValues.length - 1];
+        if (name.includes("/")) {
+            const nameSplit = name.split("/");
+            return nameSplit[nameSplit.length - 1];
+        } else {
+            return name;
+        }
+    }
+    return value;
 }
 
 function mapStateOfTypeChoice(stateId: string, state: State): MappedState {

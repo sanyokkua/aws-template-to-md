@@ -21,7 +21,7 @@ export interface MappedRetryItem {
 
 export interface MappedResource {
     service: string;
-    serviceAction: string;
+    taskType: string;
     resourceName: string;
 }
 
