@@ -16,7 +16,7 @@ import MarkDownComponent   from "./markdown_component";
 import { copyToClipboard } from "../../utils/utils";
 import {
     createRawCloudFormationResourcesCollection,
-    parseCloudFormationTemplate2,
+    parseCloudFormationTemplateJson,
 }                          from "../../core/cloudformation/json_parser";
 import {
     createDocumentResourcesTree,
@@ -95,7 +95,7 @@ const AppContent: React.FC<any> = (props: any) => {
         try {
             const markdownDocument: string = parseCloudFormationTemplate(params);
             // TODO: switch to new parser
-            const res = parseCloudFormationTemplate2(params.templateJsonValue);
+            const res = parseCloudFormationTemplateJson(params.templateJsonValue);
             const res2 = createRawCloudFormationResourcesCollection(res);
             const res3 = createDocumentResourcesTree(res2);
             setMarkDownText(markdownDocument);

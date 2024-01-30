@@ -1,7 +1,7 @@
 import { CloudFormationTemplate, RawCloudFormationResourcesCollection } from "./models/common_models";
 import { isEmptyString }                                                from "../../utils/utils";
 
-export function parseCloudFormationTemplate2(jsonString: string | undefined | null): CloudFormationTemplate {
+export function parseCloudFormationTemplateJson(jsonString: string | undefined | null): CloudFormationTemplate {
     if (isEmptyString(jsonString) || jsonString === undefined || jsonString === null) {
         throw new Error("Passed CloudFormationTemplate string is null or empty");
     }
