@@ -6,9 +6,8 @@ import {
     MDListType,
     MDTextStyle,
     NEW_LINE,
-}                                   from "./constants";
-import { isEmptyString }            from "../string_utils";
-import { createMdHeader, MdHeader } from "../../md/writers/common/common_md_functions";
+}                        from "./constants";
+import { isEmptyString } from "../string_utils";
 
 export function mdMakeHeader(text: string, headerLevel: MDHeader): string {
     if (isEmptyString(text)) {
@@ -24,7 +23,7 @@ export function mdAddStyleToText(text: string, style: MDTextStyle): string {
     return `${style}${text}${style}`;
 }
 
-export function mdMakeList(values: string[], header: string = "", listType: MDListType = MDListType.UNORDERED, headerLevel: MDHeader = MDHeader.HEADER_LEVEL_2): string {
+export function mdMakeList(values: string[], header: string = "", listType: MDListType = MDListType.UNORDERED, headerLevel: MDHeader = MDHeader.HEADER_LEVEL_3): string {
     if (values === undefined || values === null || values.length === 0) {
         return "";
     }
@@ -81,18 +80,22 @@ function joinTableColumns(values: string[]): string {
     return `| ${values.join(" | ")} |`;
 }
 
-export function mdMakeContentBlock(content: string, header: string, headerLevel: MDHeader): string {
+export function mdMakeContentBlock(content: string, header: string = "", headerLevel: MDHeader = MDHeader.HEADER_LEVEL_2): string {
     if (isEmptyString(content)) {
         return "";
     }
 
-    const resultStrings: string[] = [];
+    if (isEmptyString(header)) {
+        return `${NEW_LINE}${content}${NEW_LINE}`;
+    }
+
+    const contentLines: string[] = [];
     const headerText: string = mdMakeHeader(header, headerLevel);
 
-    resultStrings.push(headerText);
-    resultStrings.push(content);
+    contentLines.push(headerText);
+    contentLines.push(content);
 
-    return resultStrings.join(NEW_LINE);
+    return `${contentLines.join(NEW_LINE)}${NEW_LINE}`;
 }
 
 export function mdMakeCodeBlock(codeContent: string, syntax: MDCodeSyntax): string {
@@ -107,7 +110,7 @@ export function mdCreateImageLink(link: string, description: string): string {
     return `![${description}](${link})`;
 }
 
-export function makeCollapsableSection(content: string, header: string): string {
+export function mdMakeCollapsableSection(content: string, header: string): string {
     const openTag: string = "<details>";
     const closeTag: string = "</details>";
     const headerOpenTag: string = "<summary>";
@@ -146,7 +149,7 @@ function createMdListUnorderedWithLevel(header: string, items: { value: string, 
     const text: string[] = [];
 
     if (header !== undefined && header.length > 0) {
-        text.push(createMdHeader(header, MdHeader.HEADER_LEVEL_2));
+        text.push(mdMakeHeader(header, MDHeader.HEADER_LEVEL_2));
     }
 
     for (let i = 0; i < items.length; i++) {

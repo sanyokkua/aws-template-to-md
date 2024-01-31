@@ -14,7 +14,7 @@ const DesignConfiguration: React.FC<DesignConfigurationProps> = (props: DesignCo
     const solutionDiagramUrl = props.designInfo.solutionDiagramUrl ?? "";
     const solutionDiagramImageUrl = props.designInfo.solutionDiagramImageUrl ?? "";
 
-    const onFormSubmit = (values?: any) => {
+    const onFormSubmit = () => {
         const linkToTheSolutionDiagram = form.getFieldValue("linkToTheSolutionDiagram") ?? solutionDiagramUrl;
         const linkToTheDiagramImage = form.getFieldValue("linkToTheDiagramImage") ?? solutionDiagramImageUrl;
 

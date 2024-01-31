@@ -40,8 +40,8 @@ export const ESSENTIAL_REPOSITORY_INFORMATION: string = "Essential Repository In
 export const ENVIRONMENTS: string = "Environments";
 export const DESIGN: string = "Design";
 export const RELATED_PROJECTS: string = "Related Projects";
-export const AMOUNT_OF_AWSRESOURCES: string = "Amount of AWS Resources";
-export const MAIN_AWSRESOURCES_DIAGRAM: string = "Main AWS Resources (diagram)";
+export const AMOUNT_OF_AWS_RESOURCES: string = "Amount of AWS Resources";
+export const MAIN_AWS_RESOURCES_DIAGRAM: string = "Main AWS Resources (diagram)";
 export const API_GATEWAY: string = "API Gateway";
 export const EVENT_BUS: string = "Event Bus";
 export const EVENT_RULES: string = "Event Rules";
@@ -63,8 +63,8 @@ export const AVAILABLE_MARKDOWN_DOC_SECTIONS: string[] = [
     ENVIRONMENTS,
     DESIGN,
     RELATED_PROJECTS,
-    AMOUNT_OF_AWSRESOURCES,
-    MAIN_AWSRESOURCES_DIAGRAM,
+    AMOUNT_OF_AWS_RESOURCES,
+    MAIN_AWS_RESOURCES_DIAGRAM,
     API_GATEWAY,
     EVENT_BUS,
     EVENT_RULES,

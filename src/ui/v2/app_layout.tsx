@@ -2,7 +2,7 @@ import React             from "react";
 import { Layout, theme } from "antd";
 import MainAppView       from "./components/main_app/main_view";
 
-const {Header, Content, Footer} = Layout;
+const {Header, Content} = Layout;
 
 const App: React.FC = () => {
     const {

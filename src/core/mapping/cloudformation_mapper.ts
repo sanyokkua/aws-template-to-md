@@ -3,7 +3,6 @@ import { RawCloudFormationResourcesCollection }               from "../cloudform
 import { Mapper }                                             from "./mappers/mapper";
 import { MapperApiGatewayRestApi }                            from "./mappers/mapper_aws_apigateway";
 import { CommonMappedResource }                               from "./models/mapped_common";
-import { isEmptyString }                                      from "../../utils/utils";
 import {
     AWS_API_GATEWAY_REST_API,
     AWS_DYNAMO_DB_TABLE,
@@ -24,6 +23,7 @@ import { MapperMappedS3Bucket }                               from "./mappers/ma
 import { MapperMappedSNSTopic }                               from "./mappers/mapper_aws_sns";
 import { MapperMappedSQSQueue }                               from "./mappers/mapper_aws_sqs";
 import { MapperMappedStepFunctionsStateMachine }              from "./mappers/mapper_aws_stepfunctions";
+import { isEmptyString }                                      from "../string_utils";
 
 
 const AWS_RES_TO_APP_STRUCT_MAPPERS = new Map<string, Mapper<CommonMappedResource>>(

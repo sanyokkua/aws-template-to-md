@@ -42,7 +42,7 @@ const OtherAppConfigurations: React.FC<OtherAppConfigurationProps> = (props: Oth
 
     const initialListOfOptions = mapValuesToSelectProps(selectedMarkdownSections);
 
-    const onFormSubmit = (values?: any) => {
+    const onFormSubmit = () => {
         const showStepFunctionDefinitionValue: boolean = form.getFieldValue("showStepFunctionDefinition") ?? showStepFunctionDefinition;
         const showStepFunctionStepsValue: boolean = form.getFieldValue("showStepFunctionSteps") ?? showStepFunctionSteps;
         const showLambdaVarsValue: boolean = form.getFieldValue("showLambdaVars") ?? showLambdaVars;

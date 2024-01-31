@@ -1,12 +1,10 @@
 import { basicResourceValidation, Mapper }                      from "./mapper";
 import { CommonResource, RawCloudFormationResourcesCollection } from "../../cloudformation/models/common_models";
 import { ParsingOptions }                                       from "../options/parsing_options";
-import { AWS_SNS_TOPIC }                                        from "../../cloudformation/constants";
+import { AWS_SNS_SUBSCRIPTION, AWS_SNS_TOPIC }                  from "../../cloudformation/constants";
 import { getFixedName, getStringValueForField }                 from "../utils/utils";
 import { MappedSNSTopic, SnsTopicSubscription }                 from "../models/mapped_aws_sns";
 import { AwsSNSSubscription, AwsSNSTopic }                      from "../../cloudformation/models/aws_sns";
-import { AWS_SNS_Subscription }                                 from "../../../aws/constants";
-
 
 export class MapperMappedSNSTopic implements Mapper<MappedSNSTopic> {
     mapResource(resource: CommonResource, rawResourcesCollection: RawCloudFormationResourcesCollection, options?: ParsingOptions): MappedSNSTopic {
@@ -49,7 +47,7 @@ export class MapperMappedSNSTopic implements Mapper<MappedSNSTopic> {
     }
 
     private getSnsSubscriptionsRelatedToTheCurrentTopic(rawResourcesCollection: RawCloudFormationResourcesCollection, snsResourceId: string) {
-        return rawResourcesCollection.getResourcesByType(AWS_SNS_Subscription)
+        return rawResourcesCollection.getResourcesByType(AWS_SNS_SUBSCRIPTION)
                                      .map(subscription => {
                                          return subscription as AwsSNSSubscription;
                                      })

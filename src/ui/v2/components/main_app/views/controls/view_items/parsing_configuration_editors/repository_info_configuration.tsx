@@ -26,7 +26,7 @@ const RepositoryInfoConfiguration: React.FC<RepositoryInfoConfigurationProps> = 
     const ciCdBuildPage: string = props.repositoryInfo?.ciCdBuildPage ?? "";
     const ciCdDeployPage: string = props.repositoryInfo?.ciCdDeployPage ?? "";
 
-    const onFormSubmit = (values?: any) => {
+    const onFormSubmit = () => {
         const repositoryNameValue = form.getFieldValue("repoName") ?? repositoryName;
         const repositoryDescriptionValue = form.getFieldValue("description") ?? repositoryDescription;
         const branchingStrategyValue = form.getFieldValue("branchingStrategy") ?? branchingStrategy;

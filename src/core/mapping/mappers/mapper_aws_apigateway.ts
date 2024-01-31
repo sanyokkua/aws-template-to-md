@@ -19,7 +19,7 @@ import {
     AwsApiGatewayStage,
 }                                                               from "../../cloudformation/models/aws_apigateway";
 import { getFixedName, getStringValueForField }                 from "../utils/utils";
-import { isEmptyString }                                        from "../../../utils/utils";
+import { isEmptyString }                                        from "../../string_utils";
 
 interface ParsedArn {
     service: string;

@@ -8,7 +8,7 @@ import { copyToClipboard }                                          from "../../
 import { parseCloudFormationTemplate }                              from "../../../../core/cloudformation_parser";
 
 
-const MainAppView: React.FC<any> = (props: any) => {
+const MainAppView: React.FC = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     // ControlsContentView

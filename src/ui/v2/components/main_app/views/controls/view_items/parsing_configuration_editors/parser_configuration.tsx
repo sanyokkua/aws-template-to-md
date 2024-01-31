@@ -17,7 +17,7 @@ const ParserConfiguration: React.FC<ParserConfigurationProps> = (props: ParserCo
     const currentOriginalValue = props.config?.replaceOriginalValue ?? "";
     const currentReplaceValue = props.config?.replaceToValue ?? "";
 
-    const onFormSubmit = (values?: any) => {
+    const onFormSubmit = () => {
         const prefix = form.getFieldValue("prefixText") ?? currentPrefixValue;
         const suffix = form.getFieldValue("suffixText") ?? currentSuffixValue;
         const originalValue = form.getFieldValue("replaceOriginalValue") ?? currentOriginalValue;
