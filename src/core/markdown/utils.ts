@@ -81,7 +81,7 @@ function joinTableColumns(values: string[]): string {
 }
 
 export function mdMakeContentBlock(content: string, header: string = "", headerLevel: MDHeader = MDHeader.HEADER_LEVEL_2): string {
-    if (isEmptyString(content)) {
+    if (isEmptyString(content) && isEmptyString(header)) {
         return "";
     }
 
