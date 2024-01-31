@@ -112,7 +112,12 @@ export class RawCloudFormationResourcesCollection {
 
         resource._ID = key;
         const resType = resource.Type;
-        resource._Name = getNameForResource(resource, key, resType);
+        let resourceName = getNameForResource(resource, key, resType);
+        if (isEmptyString(resourceName)) {
+            resourceName = key;
+        }
+        resource._Name = resourceName;
+
 
         // Add to the Map of resources with resource ID as a Map Key
         this.mappedByID.set(key, resource);
