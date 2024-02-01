@@ -1,0 +1,79 @@
+{
+    "Resources": {
+        "MyEventBus": {
+            "Type": "AWS::Events::EventBus",
+            "Properties": {
+                "Name": "MyEventBus"
+            }
+        },
+        "MyEventBusRule": {
+            "Type": "AWS::Events::Rule",
+            "Properties": {
+                "EventBusName": {
+                    "Ref": "MyEventBus"
+                },
+                "Name": "MyEventBusRule",
+                "EventPattern": {
+                    "source": [
+                        "aws.ec2"
+                    ],
+                    "detail-type": [
+                        "EC2 Instance State-change Notification"
+                    ]
+                },
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Ref": "MyLambdaFunction"
+                        },
+                        "Id": "MyLambdaTarget"
+                    }
+                ]
+            }
+        },
+        "MyStepFunction": {
+            "Type": "AWS::StepFunctions::StateMachine",
+            "Properties": {
+                "StateMachineName": "MyStepFunction",
+                "Definition": {
+                    "Comment": "A simple AWS Step Functions state machine",
+                    "StartAt": "MyTask",
+                    "States": {
+                        "MyTask": {
+                            "Type": "Task",
+                            "Resource": {
+                                "Fn::GetAtt": [
+                                    "MyLambdaFunction",
+                                    "Arn"
+                                ]
+                            },
+                            "End": true
+                        }
+                    }
+                }
+            }
+        },
+        "MyLambdaRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": "MyLambdaRole",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

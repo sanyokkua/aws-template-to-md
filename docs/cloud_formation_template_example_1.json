@@ -1,0 +1,57 @@
+{
+    "Resources": {
+        "MySNSTopic": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "DisplayName": "MySNSTopic"
+            }
+        },
+        "MySQSQueue": {
+            "Type": "AWS::SQS::Queue",
+            "Properties": {
+                "QueueName": "MySQSQueue"
+            }
+        },
+        "MyDynamoDBTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "MyDynamoDBTable",
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "ID",
+                        "AttributeType": "N"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "ID",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 5,
+                    "WriteCapacityUnits": 5
+                }
+            }
+        },
+        "MyApiGateway": {
+            "Type": "AWS::ApiGateway::RestApi",
+            "Properties": {
+                "Name": "MyApiGateway"
+            }
+        },
+        "MyLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "FunctionName": "MyLambdaFunction",
+                "Handler": "index.handler",
+                "Runtime": "nodejs14.x",
+                "Role": "arn:aws:iam::123456789012:role/MyLambdaRole",
+                "Code": {
+                    "S3Bucket": "my-bucket",
+                    "S3Key": "lambda.zip"
+                }
+            }
+        }
+    }
+}

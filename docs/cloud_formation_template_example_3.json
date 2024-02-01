@@ -1,0 +1,132 @@
+{
+    "Resources": {
+        "MySNSTopic": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "DisplayName": "MySNSTopic"
+            }
+        },
+        "MySQSQueue": {
+            "Type": "AWS::SQS::Queue",
+            "Properties": {
+                "QueueName": "MySQSQueue"
+            }
+        },
+        "MyEventBus": {
+            "Type": "AWS::Events::EventBus",
+            "Properties": {
+                "Name": "MyEventBus"
+            }
+        },
+        "MyEventBusRule": {
+            "Type": "AWS::Events::Rule",
+            "Properties": {
+                "EventBusName": {
+                    "Ref": "MyEventBus"
+                },
+                "Name": "MyEventBusRule",
+                "EventPattern": {
+                    "source": [
+                        "aws.ec2"
+                    ],
+                    "detail-type": [
+                        "EC2 Instance State-change Notification"
+                    ]
+                },
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Ref": "MyLambdaFunction"
+                        },
+                        "Id": "MyLambdaTarget"
+                    }
+                ]
+            }
+        },
+        "MyDynamoDBTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "MyDynamoDBTable",
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "ID",
+                        "AttributeType": "N"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "ID",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 5,
+                    "WriteCapacityUnits": 5
+                }
+            }
+        },
+        "MyApiGateway": {
+            "Type": "AWS::ApiGateway::RestApi",
+            "Properties": {
+                "Name": "MyApiGateway"
+            }
+        },
+        "MyLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "FunctionName": "MyLambdaFunction",
+                "Handler": "index.handler",
+                "Runtime": "nodejs14.x",
+                "Role": "arn:aws:iam::123456789012:role/MyLambdaRole",
+                "Code": {
+                    "S3Bucket": "my-bucket",
+                    "S3Key": "lambda.zip"
+                }
+            }
+        },
+        "MyStepFunction": {
+            "Type": "AWS::StepFunctions::StateMachine",
+            "Properties": {
+                "StateMachineName": "MyStepFunction",
+                "Definition": {
+                    "Comment": "A simple AWS Step Functions state machine",
+                    "StartAt": "MyTask",
+                    "States": {
+                        "MyTask": {
+                            "Type": "Task",
+                            "Resource": {
+                                "Fn::GetAtt": [
+                                    "MyLambdaFunction",
+                                    "Arn"
+                                ]
+                            },
+                            "End": true
+                        }
+                    }
+                }
+            }
+        },
+        "MyLambdaRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": "MyLambdaRole",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
