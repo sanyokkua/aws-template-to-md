@@ -4,6 +4,9 @@ Converter of AWS CloudFormation template (JSON) to readable MD document with onl
 
 **It is just more POC to see if it will be really helpful for documentation creation**
 
+**THE MAIN IDEA - TO BE SECURE FOR PRODUCTION TEMPLATES AND COMPANIES, BECAUSE IT IS FULLY CLIENT SIDE APPLICATION,
+WITHOUT PASSING ANY DATA TO THE SERVER**
+
 ## Purpose
 
 During work with AWS Projects I had to create documentations for repositories that
