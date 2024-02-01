@@ -34,6 +34,7 @@ import {
     removeSuffix,
     replaceSubstring,
 }                                          from "../../string_utils";
+import logger from "../../../logger";
 
 type StateMapperFn = (stateId: string, state: State) => MappedState;
 
@@ -61,9 +62,18 @@ export class MapperMappedStepFunctionsStateMachine implements Mapper<MappedStepF
         const sfResourceType: string = sfResource.Type;
         const sfResourceName: string = getFixedName(sfResource._Name, options);
 
-        const sfDefinition: string = getStringValueForField(sfResource?.Properties?.DefinitionString);
-        const updatedSFDefinition: string = replaceIdsInDefinition(sfDefinition, rawResourcesCollection, options);
+        let sfDefinition: string;
+        if (sfResource?.Properties?.DefinitionString !== undefined) {
+            sfDefinition = getStringValueForField(sfResource?.Properties?.DefinitionString);
+        } else if (sfResource?.Properties?.Definition !== undefined) {
+            const serializedString = JSON.stringify(sfResource.Properties.Definition);
+            sfDefinition = getStringValueForField(serializedString);
+        } else {
+            logger.debug(sfResource, "State Machine Definition is not found in the resource");
+            throw new Error("State Machine Definition is not found in the resource, check logs");
+        }
 
+        const updatedSFDefinition: string = replaceIdsInDefinition(sfDefinition, rawResourcesCollection, options);
         const parsedDefinition: StateMachineDefinition = JSON.parse(updatedSFDefinition);
         const mappedStateMachineDefinition: MappedStateMachineDefinition = mapSfDefinitionObject(parsedDefinition);
 
@@ -281,7 +291,8 @@ function findTaskResource(state: State): MappedResource {
 }
 
 function prepareArnValue(state: State) {
-    let resourceArnFromTask = state.Resource?.trim().toLowerCase() ?? "";
+    const resourceValue = getStringValueForField(state.Resource);
+    let resourceArnFromTask = resourceValue.trim().toLowerCase();
     [".waitfortasktoken", ".sync"].forEach(suffix => {
         resourceArnFromTask = removeSuffix(resourceArnFromTask, suffix);
     });

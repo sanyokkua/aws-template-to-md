@@ -3,17 +3,22 @@ import { DocumentResourcesTree }                 from "../../../mapping/models/m
 import { isEmptyArray }                          from "../../../common_utils";
 import { MappedS3Bucket }                        from "../../../mapping/models/mapped_aws_s3";
 import { mdMakeContentBlock, mdMakeList }        from "../../utils";
+import logger from "../../../../logger";
 
 
 export const createAwsS3SectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({}, "createAwsS3SectionText. dataValue is null and empty string will be returned");
         return "";
     }
 
     const mappedS3Buckets = dataValue.getMappedS3Bucket();
     if (isEmptyArray(mappedS3Buckets)) {
+        logger.debug({}, "createAwsS3SectionText. mappedS3Buckets is emptyArray, empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createAwsS3SectionText. input values");
 
     return createMarkdownContent(mappedS3Buckets);
 };

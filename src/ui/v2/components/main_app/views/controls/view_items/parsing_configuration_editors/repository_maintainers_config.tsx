@@ -4,6 +4,7 @@ import { Button, Card, Form, Input, message, Space } from "antd";
 import { MinusCircleOutlined, PlusOutlined }         from "@ant-design/icons";
 import { RepositoryMaintainer }                      from "../../../../../../../../core/config/models";
 import { isEmptyString }                             from "../../../../../../../../core/string_utils";
+import logger from "../../../../../../../../logger";
 
 type RepositoryMaintainersConfigProps = {
     maintainers: RepositoryMaintainer[];
@@ -32,9 +33,12 @@ const RepositoryMaintainersConfig: React.FC<RepositoryMaintainersConfigProps> = 
         };
     });
 
+    logger.debug(initialValue, "RepositoryInfoConfiguration, initialValue");
+
     const onFormSubmit = (values?: any) => {
         if (values === undefined || !("maintainers" in values)) {
             messageApi.warning("Form is not returned list of items");
+            logger.debug(values, "RepositoryInfoConfiguration, onFormSubmit, Form is not returned list of items");
             return;
         }
 
@@ -45,10 +49,11 @@ const RepositoryMaintainersConfig: React.FC<RepositoryMaintainersConfigProps> = 
 
             props.onChange(maintainers.slice());// Slice required to make a copy of array, React expects new object to update
             messageApi.info("Repository Maintainers Values are Changed");
-            console.log(maintainers);
+            logger.debug(maintainers, "RepositoryInfoConfiguration, onFormSubmit, maintainers");
             return;
         }
 
+        logger.debug(values, "RepositoryInfoConfiguration, onFormSubmit, No Update happen");
         messageApi.warning("No Update happen");
     };
 

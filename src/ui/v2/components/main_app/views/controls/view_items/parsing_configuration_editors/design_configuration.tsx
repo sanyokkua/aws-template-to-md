@@ -2,6 +2,7 @@ import React from "react";
 
 import { Button, Card, Form, Input, message } from "antd";
 import { DesignInformation }                  from "../../../../../../../../core/config/models";
+import logger from "../../../../../../../../logger";
 
 type DesignConfigurationProps = {
     designInfo: DesignInformation;
@@ -14,6 +15,8 @@ const DesignConfiguration: React.FC<DesignConfigurationProps> = (props: DesignCo
     const solutionDiagramUrl = props.designInfo.solutionDiagramUrl ?? "";
     const solutionDiagramImageUrl = props.designInfo.solutionDiagramImageUrl ?? "";
 
+    logger.debug({solutionDiagramUrl, solutionDiagramImageUrl}, "DesignConfiguration, initialValues");
+
     const onFormSubmit = () => {
         const linkToTheSolutionDiagram = form.getFieldValue("linkToTheSolutionDiagram") ?? solutionDiagramUrl;
         const linkToTheDiagramImage = form.getFieldValue("linkToTheDiagramImage") ?? solutionDiagramImageUrl;
@@ -25,7 +28,7 @@ const DesignConfiguration: React.FC<DesignConfigurationProps> = (props: DesignCo
 
         props.onChange(result);
         messageApi.info("Project Design Information Values are Changed");
-        console.log(result);
+        logger.debug(result, "DesignConfiguration, onFormSubmit");
     };
 
     return <Card style={{width: "100%"}} title={"Add Repository Information"}>

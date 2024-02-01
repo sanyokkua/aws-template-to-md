@@ -3,11 +3,15 @@ import { DesignInformation }                     from "../../../config/models";
 
 import { mdCreateImageLink, mdCreateLink, mdMakeContentBlock } from "../../utils";
 import { NEW_LINE }                                            from "../../constants";
+import logger from "../../../../logger";
 
 export const createSolutionDesignSectionText: MarkdownWriterFunc<DesignInformation> = (dataValue: DesignInformation, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({}, "createSolutionDesignSectionText. dataValue is null and empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createSolutionDesignSectionText. input values");
 
     const solutionDiagramLink = mdCreateLink(dataValue.solutionDiagramUrl, "link");
     const content = [
@@ -15,6 +19,6 @@ export const createSolutionDesignSectionText: MarkdownWriterFunc<DesignInformati
         mdCreateImageLink(dataValue.solutionDiagramImageUrl, "Diagram of the current artifact"),
     ];
 
-    return mdMakeContentBlock(content.join(NEW_LINE), "Artifact Design Description");
+    return mdMakeContentBlock(content.join(NEW_LINE), "Artifact Design");
 
 };

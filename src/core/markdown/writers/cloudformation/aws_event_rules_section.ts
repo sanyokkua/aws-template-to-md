@@ -5,16 +5,22 @@ import { MappedEventsRule }                                 from "../../../mappi
 import { mdMakeCodeBlock, mdMakeContentBlock, mdMakeTable } from "../../utils";
 import { MDCodeSyntax, MDHeader, NEW_LINE }                 from "../../constants";
 import { isEmptyString }                                    from "../../../string_utils";
+import logger from "../../../../logger";
 
 export const createAwsEventsRulesSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({}, "createAwsEventsRulesSectionText. dataValue is null and empty string will be returned");
         return "";
     }
 
     const mappedEventsRules = dataValue.getMappedEventsRule();
     if (isEmptyArray(mappedEventsRules)) {
+        logger.debug({},
+                     "createAwsEventsRulesSectionText. mappedEventsRules is emptyArray, empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createAwsEventsRulesSectionText. input values");
 
     return createMarkdownContent(mappedEventsRules);
 };
@@ -116,7 +122,7 @@ function extractRulePatternAsCodeBlock(eventsRule: MappedEventsRule): string {
 
         return mdMakeCodeBlock(stringify, MDCodeSyntax.JSON);
     } catch (e) {
-        console.log(e);
+        logger.warn(eventsRule.pattern, "extractRulePatternAsCodeBlock, result", e);
         return eventsRule.pattern;
     }
 }

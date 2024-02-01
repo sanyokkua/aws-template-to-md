@@ -4,6 +4,7 @@ import { OtherAppConfiguration }                                    from "../../
 import {
     AVAILABLE_MARKDOWN_DOC_SECTIONS,
 }                                                                   from "../../../../../../../../core/config/constatns";
+import logger from "../../../../../../../../logger";
 
 function mapValuesToSelectProps(values: string[]): SelectProps["options"] {
     return values.slice().map(name => {
@@ -41,6 +42,24 @@ const OtherAppConfigurations: React.FC<OtherAppConfigurationProps> = (props: Oth
     const selectedMarkdownSections: string[] = props.config.selectedMarkdownSections ?? [];
 
     const initialListOfOptions = mapValuesToSelectProps(selectedMarkdownSections);
+
+    logger.debug({
+                     showStepFunctionDefinition,
+                     showStepFunctionSteps,
+                     showLambdaVars,
+                     showLambdaVarsValues,
+                     showApiGatewayEndpointMaintainerColumn,
+                     showApiGatewayEndpointDocsLinkColumn,
+                     addDynamoDbExamplesStub,
+                     addDesignLinkStub,
+                     addStepFunctionDesignImgStub,
+                     addOpenApiLinkStub,
+                     addApiGatewayUsageInstructionStub,
+                     addPostmanLinkStub,
+                     addPostmanSecretsLinkStub,
+                     selectedMarkdownSections,
+                     initialListOfOptions,
+                 }, "OtherAppConfigurations, initialValues");
 
     const onFormSubmit = () => {
         const showStepFunctionDefinitionValue: boolean = form.getFieldValue("showStepFunctionDefinition") ?? showStepFunctionDefinition;
@@ -87,7 +106,7 @@ const OtherAppConfigurations: React.FC<OtherAppConfigurationProps> = (props: Oth
 
         props.onChange(result);
         messageApi.info("Application Other Configuration Values are Changed");
-        console.log(result);
+        logger.debug(result, "OtherAppConfigurations, onFormSubmit");
     };
 
     return <Card style={{width: "100%"}} title={"Other Markdown Configurations"}>

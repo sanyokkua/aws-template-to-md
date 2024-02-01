@@ -4,8 +4,6 @@ export type ParserConfig = {
     replaceOriginalValue?: string;
     replaceToValue?: string;
 }
-
-
 export type RepositoryInfo = {
     repositoryName: string;
     repositoryDescription: string;
@@ -21,36 +19,30 @@ export type RepositoryInfo = {
     ciCdBuildPage: string;
     ciCdDeployPage: string;
 }
-
 export type RepositoryTag = {
     text?: string;
     imgUrl?: string;
     imgMd?: string;
 }
-
 export type RepositoryMaintainer = {
     name: string;
     link: string;
     email: string;
 }
-
 export type DesignInformation = {
     solutionDiagramUrl: string;
     solutionDiagramImageUrl: string;
 }
-
 export type AccountInformation = {
     name: string;
     description: string;
     accountId: string;
     accountUrl?: string;
 }
-
 export type Project = {
     projectName: string;
     projectLink: string;
 }
-
 export type OtherAppConfiguration = {
     showStepFunctionDefinition: boolean;
     showStepFunctionSteps: boolean;
@@ -69,7 +61,6 @@ export type OtherAppConfiguration = {
 
     selectedMarkdownSections: string[];
 }
-
 export type ParsingConfiguration = {
     parserConfig: ParserConfig;
     repositoryInfo: RepositoryInfo;

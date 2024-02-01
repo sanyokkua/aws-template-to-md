@@ -2,11 +2,16 @@ import { AdditionalConfigs, MarkdownWriterFunc }                          from "
 import { RepositoryInfo }                                                 from "../../../config/models";
 import { mdAddStyleToText, mdCreateLink, mdMakeContentBlock, mdMakeList } from "../../utils";
 import { MDTextStyle }                                                    from "../../constants";
+import logger from "../../../../logger";
 
 export const createRepositoryUsefulInformationSectionText: MarkdownWriterFunc<RepositoryInfo> = (dataValue: RepositoryInfo, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({},
+                     "createRepositoryUsefulInformationSectionText. dataValue is null and empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createRepositoryUsefulInformationSectionText. input values");
 
     const branchingStrategy: string = dataValue.branchingStrategy ?? "";
     const programmingLang: string = dataValue.programmingLang ?? "";

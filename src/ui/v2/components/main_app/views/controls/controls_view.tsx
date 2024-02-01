@@ -5,12 +5,14 @@ import MainControlHeaderButtonsView from "./view_items/main_control_header_butto
 import RawTemplateEditorView        from "./view_items/raw_template_editor_view";
 import ParsingConfigurationView     from "./view_items/parsing_configuration_view";
 import { ParsingConfiguration }     from "../../../../../../core/config/models";
+import logger from "../../../../../../logger";
 
 
 type ControlsContentViewProps = {
     onFileNameUpdated: (fileName: string) => void;
     onJsonTemplateUpdated: (jsonTemplate: string) => void;
     onParsingConfigurationChanged: (config: ParsingConfiguration) => void;
+    onResetButtonClicked: () => void;
 
     onSwitchEditorStateUpdated: (value: boolean) => void;
     onSwitchControlStateUpdated: (value: boolean) => void;
@@ -28,13 +30,16 @@ type ControlsContentViewProps = {
 
 const ControlsContentView: React.FC<ControlsContentViewProps> = (props: ControlsContentViewProps) => {
     const setJsonTemplateValue = (text: string) => {
+        logger.debug(text, "setJsonTemplateValue passed value");
         if (isEmptyString(text)) {
             props.onSwitchEditorStateUpdated(false);
             props.onJsonTemplateUpdated(text);
+            logger.debug(text, "setJsonTemplateValue, text was empty");
         } else {
             props.onSwitchEditorStateUpdated(true);
             props.onSwitchControlStateUpdated(true);
             props.onJsonTemplateUpdated(text);
+            logger.debug(text, "setJsonTemplateValue, non empty string");
         }
     };
 
@@ -51,6 +56,8 @@ const ControlsContentView: React.FC<ControlsContentViewProps> = (props: Controls
                 switchEditorValue={props.switchEditorState}
 
                 uploadedFileName={props.fileName}
+
+                onResetButtonClicked={() => props.onResetButtonClicked()}
             />
 
             <RawTemplateEditorView

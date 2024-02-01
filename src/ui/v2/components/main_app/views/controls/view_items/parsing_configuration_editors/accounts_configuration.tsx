@@ -4,6 +4,7 @@ import { Button, Card, Form, Input, message, Space } from "antd";
 import { MinusCircleOutlined, PlusOutlined }         from "@ant-design/icons";
 import { AccountInformation }                        from "../../../../../../../../core/config/models";
 import { isEmptyString }                             from "../../../../../../../../core/string_utils";
+import logger from "../../../../../../../../logger";
 
 type AccountsConfigurationProps = {
     accounts: AccountInformation[];
@@ -34,9 +35,12 @@ const AccountsConfiguration: React.FC<AccountsConfigurationProps> = (props: Acco
         };
     });
 
+    logger.debug(initialValue, "AccountsConfiguration, initialValue");
+
     const onFormSubmit = (values?: any) => {
         if (values === undefined || !("accounts" in values)) {
             messageApi.warning("Form is not returned list of items");
+            logger.debug(values, "AccountsConfiguration, onFormSubmit, Form is not returned list of items");
             return;
         }
 
@@ -47,10 +51,11 @@ const AccountsConfiguration: React.FC<AccountsConfigurationProps> = (props: Acco
 
             props.onChange(accounts.slice());// Slice required to make a copy of array, React expects new object to update
             messageApi.info("Accounts Information Values are Changed");
-            console.log(accounts);
+            logger.debug(accounts, "AccountsConfiguration, onFormSubmit, accounts");
             return;
         }
 
+        logger.debug(values, "AccountsConfiguration, onFormSubmit, No Update happen");
         messageApi.warning("No Update happen");
     };
 

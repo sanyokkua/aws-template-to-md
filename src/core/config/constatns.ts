@@ -30,7 +30,6 @@ export const AVAILABLE_APP_CONFIGURATORS: string[] = [
     CUSTOM_MARKDOWN_TEXT_CONFIGURATION,
     OTHER_APP_CONFIG,
 ];
-
 export const REPOSITORY_NAME: string = "Repository Name";
 export const REPOSITORY_TAGS: string = "Repository Tags";
 export const REPOSITORY_DESCRIPTION: string = "Repository Description";
@@ -52,7 +51,6 @@ export const SNS: string = "SNS";
 export const STATE_MACHINE: string = "State Machine";
 export const S3: string = "S3";
 export const CUSTOMS: string = "Customs";
-
 export const AVAILABLE_MARKDOWN_DOC_SECTIONS: string[] = [
     REPOSITORY_NAME,
     REPOSITORY_TAGS,
@@ -76,7 +74,6 @@ export const AVAILABLE_MARKDOWN_DOC_SECTIONS: string[] = [
     S3,
     CUSTOMS,
 ];
-
 export const DEFAULT_PARSER_CONFIG: ParserConfig = {
     prefixToRemove: "",
     suffixToRemove: "",
@@ -107,7 +104,6 @@ export const DEFAULT_DESIGN_INFORMATION: DesignInformation = {
 };
 export const DEFAULT_RELATED_PROJECTS_LIST: Project[] = [];
 export const DEFAULT_CUSTOM_MARKDOWN_TEXT: string = "";
-
 export const DEFAULT_OTHER_APP_CONFIGURATION: OtherAppConfiguration = {
     showStepFunctionDefinition: false,
     showStepFunctionSteps: true,
@@ -126,7 +122,6 @@ export const DEFAULT_OTHER_APP_CONFIGURATION: OtherAppConfiguration = {
 
     selectedMarkdownSections: AVAILABLE_MARKDOWN_DOC_SECTIONS,
 };
-
 export const DefaultParsingConfiguration: ParsingConfiguration = {
     parserConfig: DEFAULT_PARSER_CONFIG,
     repositoryInfo: DEFAULT_REPOSITORY_INFO,

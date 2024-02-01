@@ -5,6 +5,7 @@ import { DEFAULT_OTHER_APP_CONFIGURATION }                           from "../..
 import { MappedDynamoDbTable }                                       from "../../../mapping/models/mapped_aws_dynamodb";
 import { MDHeader, NEW_LINE }                                        from "../../constants";
 import { mdMakeCollapsableSection, mdMakeContentBlock, mdMakeTable } from "../../utils";
+import logger from "../../../../logger";
 
 export const ADD_DYNAMO_DB_EXAMPLES_STUB = "addDynamoDbExamplesStub";
 
@@ -14,13 +15,17 @@ type Configuration = {
 
 export const createAwsDynamoDBsSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({}, "createAwsDynamoDBsSectionText. dataValue is null and empty string will be returned");
         return "";
     }
 
     const dynamoDbTables = dataValue.getMappedDynamoDbTable();
     if (isEmptyArray(dynamoDbTables)) {
+        logger.debug({}, "createAwsDynamoDBsSectionText. dynamoDbTables is emptyArray, empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createAwsDynamoDBsSectionText. input values");
 
     let addDynamoDbExamplesStub: boolean = DEFAULT_OTHER_APP_CONFIGURATION.addDynamoDbExamplesStub;
 

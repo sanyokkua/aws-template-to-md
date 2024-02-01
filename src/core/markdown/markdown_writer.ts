@@ -102,12 +102,16 @@ import {
     createCustomMarkdownSectionText,
 }                               from "./writers/generic/custom_markdown_section";
 import { NEW_LINE }             from "./constants";
+import { isEmptyString } from "../string_utils";
+import logger            from "../../logger";
 
 export function createMarkdownDocument(parsingConfiguration: ParsingConfiguration, documentResourcesTree: DocumentResourcesTree): string {
+    logger.debug({parsingConfiguration, documentResourcesTree}, "createMarkdownDocument. Input Values");
     const selectedWriters = parsingConfiguration.otherAppConfiguration.selectedMarkdownSections;
     const resultLines: string[] = [];
 
     for (const writerName of selectedWriters) {
+        logger.debug(writerName, "createMarkdownDocument. Writer Name that will be used");
         switch (writerName) {
             case REPOSITORY_NAME: {
                 resultLines.push(createRepositoryNameSectionText(parsingConfiguration.repositoryInfo.repositoryName));
@@ -210,14 +214,18 @@ export function createMarkdownDocument(parsingConfiguration: ParsingConfiguratio
                 break;
             }
             default:
-                throw new Error(`Section writer with name = ${writerName} is not found`);
+                throw new Error(`Section writer with name = ${writerName} is not found, check console for details`);
         }
     }
 
-    let mdDocumentContent = resultLines.join(NEW_LINE);
+    logger.debug(resultLines, "createMarkdownDocument. Generated resultLines");
+    let mdDocumentContent = resultLines.filter(text => !isEmptyString(text)).join(NEW_LINE);
+    logger.debug(mdDocumentContent, "createMarkdownDocument. mdDocumentContent");
 
     if (selectedWriters.find(item => item === TABLE_OF_CONTENT) !== undefined) {
+        logger.debug(mdDocumentContent, "createMarkdownDocument. among writers was found table of content writer");
         mdDocumentContent = replaceTableOfContentMarker(mdDocumentContent);
+        logger.debug(mdDocumentContent, "createMarkdownDocument. Table of content was injected");
     }
 
     return mdDocumentContent;

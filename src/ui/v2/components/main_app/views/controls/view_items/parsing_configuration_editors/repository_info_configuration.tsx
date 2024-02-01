@@ -3,6 +3,7 @@ import React from "react";
 import { Button, Card, Form, Input, message } from "antd";
 import TextArea                               from "antd/es/input/TextArea";
 import { RepositoryInfo }                     from "../../../../../../../../core/config/models";
+import logger from "../../../../../../../../logger";
 
 type RepositoryInfoConfigurationProps = {
     repositoryInfo: RepositoryInfo;
@@ -25,6 +26,22 @@ const RepositoryInfoConfiguration: React.FC<RepositoryInfoConfigurationProps> = 
     const ciCdDocumentation: string = props.repositoryInfo?.ciCdDocumentation ?? "";
     const ciCdBuildPage: string = props.repositoryInfo?.ciCdBuildPage ?? "";
     const ciCdDeployPage: string = props.repositoryInfo?.ciCdDeployPage ?? "";
+
+    logger.debug({
+                     repositoryName,
+                     repositoryDescription,
+                     branchingStrategy,
+                     programmingLang,
+                     programmingLangDoc,
+                     deploymentDestination,
+                     deploymentTechnology,
+                     deploymentTechnologyDocs,
+                     linkToCloudForge,
+                     ciCdTechnology,
+                     ciCdDocumentation,
+                     ciCdBuildPage,
+                     ciCdDeployPage,
+                 }, "RepositoryInfoConfiguration, initialValues");
 
     const onFormSubmit = () => {
         const repositoryNameValue = form.getFieldValue("repoName") ?? repositoryName;
@@ -58,7 +75,7 @@ const RepositoryInfoConfiguration: React.FC<RepositoryInfoConfigurationProps> = 
         };
         props.onChange(result);
         messageApi.info("Repository Information Values are Changed");
-        console.log(result);
+        logger.debug(result, "RepositoryInfoConfiguration, onFormSubmit");
     };
 
     return <Card style={{width: "100%"}} title={"Add Repository Information"}>

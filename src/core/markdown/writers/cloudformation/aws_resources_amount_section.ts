@@ -3,18 +3,24 @@ import { DocumentResourcesTree }                 from "../../../mapping/models/m
 import { isEmptyArray }                          from "../../../common_utils";
 import { CommonMappedResource }                  from "../../../mapping/models/mapped_common";
 import { mdMakeContentBlock, mdMakeTable }       from "../../utils";
+import logger from "../../../../logger";
 
 type Amount = [number, string];
 
 export const createAwsAmountOfResourceSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({}, "createAwsAmountOfResourceSectionText. dataValue is null and empty string will be returned");
         return "";
     }
 
     const allResources = dataValue.getAllResources();
     if (isEmptyArray(allResources)) {
+        logger.debug({},
+                     "createAwsAmountOfResourceSectionText. allResources is emptyArray, empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createAwsAmountOfResourceSectionText. input values");
 
     return createMarkdownContent(allResources);
 };
@@ -22,7 +28,7 @@ export const createAwsAmountOfResourceSectionText: MarkdownWriterFunc<DocumentRe
 function createMarkdownContent(allResources: CommonMappedResource[]): string {
     const content = createAmountMappingTable(allResources);
 
-    return mdMakeContentBlock(content, "Amount of The AWS Resources in CloudFormation Template");
+    return mdMakeContentBlock(content, "AWS Resources Overview");
 }
 
 

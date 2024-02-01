@@ -72,7 +72,7 @@ export interface StateParameters {
 
 export interface State {
     "Type": StateTypes;
-    "Resource"?: string;
+    "Resource"?: StringType;
     "Next"?: string;
     "Comment"?: string;
     "End"?: boolean;

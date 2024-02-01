@@ -11,6 +11,7 @@ import {
 import { MDCodeSyntax, MDHeader, MDListType, NEW_LINE }                               from "../../constants";
 import { mdCreateLink, mdMakeCodeBlock, mdMakeContentBlock, mdMakeList, mdMakeTable } from "../../utils";
 import { isEmptyString }                                                              from "../../../string_utils";
+import logger from "../../../../logger";
 
 export const SHOW_API_GATEWAY_ENDPOINT_MAINTAINER_COLUMN = "showApiGatewayEndpointMaintainerColumn";
 export const SHOW_API_GATEWAY_ENDPOINT_DOCS_LINK_COLUMN = "showApiGatewayEndpointDocsLinkColumn";
@@ -30,13 +31,18 @@ type Configuration = {
 
 export const createAwsApiGatewaysSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({dataValue, additionalConfigs},
+                     "createAwsApiGatewaysSectionText. passed dataValue is null, empty string will be returned");
         return "";
     }
 
     const restApis = dataValue.getMappedApiGatewayRestApi();
     if (isEmptyArray(restApis)) {
+        logger.debug({}, "createAwsApiGatewaysSectionText. restApis is emptyArray, empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createAwsApiGatewaysSectionText. input values");
 
     let showApiGatewayEndpointMaintainerColumn: boolean = DEFAULT_OTHER_APP_CONFIGURATION.showApiGatewayEndpointMaintainerColumn;
     let showApiGatewayEndpointDocsLinkColumn: boolean = DEFAULT_OTHER_APP_CONFIGURATION.showApiGatewayEndpointDocsLinkColumn;

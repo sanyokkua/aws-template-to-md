@@ -2,6 +2,7 @@ import React from "react";
 
 import { Button, Card, Form, Input, message } from "antd";
 import { ParserConfig }                       from "../../../../../../../../core/config/models";
+import logger from "../../../../../../../../logger";
 
 type ParserConfigurationProps = {
     config: ParserConfig;
@@ -17,6 +18,9 @@ const ParserConfiguration: React.FC<ParserConfigurationProps> = (props: ParserCo
     const currentOriginalValue = props.config?.replaceOriginalValue ?? "";
     const currentReplaceValue = props.config?.replaceToValue ?? "";
 
+    logger.debug({currentPrefixValue, currentSuffixValue, currentOriginalValue, currentReplaceValue},
+                 "ParserConfiguration, initialValues");
+
     const onFormSubmit = () => {
         const prefix = form.getFieldValue("prefixText") ?? currentPrefixValue;
         const suffix = form.getFieldValue("suffixText") ?? currentSuffixValue;
@@ -31,9 +35,8 @@ const ParserConfiguration: React.FC<ParserConfigurationProps> = (props: ParserCo
         };
 
         messageApi.info("Parser Configuration Values are Changed");
-        console.log(parserConf);
-
         props.onChange(parserConf);
+        logger.debug(parserConf, "ParserConfiguration, onFormSubmit");
     };
 
     return <Card style={{width: "100%"}} title={"Configure Parsing of CloudFormation Template"}>

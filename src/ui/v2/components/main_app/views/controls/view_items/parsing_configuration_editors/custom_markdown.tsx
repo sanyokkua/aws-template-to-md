@@ -1,6 +1,7 @@
 import React, { useState }                         from "react";
 import { Button, Card, Col, message, Row, Switch } from "antd";
 import MarkdownEditorPlusViewer, { Show }          from "../../../../../common/markdown/markdown_editor_plus_viewer";
+import logger from "../../../../../../../../logger";
 
 type CustomMarkdownConfigurationProps = {
     markdown: string;
@@ -11,6 +12,8 @@ const CustomMarkdownConfiguration: React.FC<CustomMarkdownConfigurationProps> = 
     const [markdownText, setMarkdownText] = useState(props.markdown ?? "");
     const [showPreview, setShowPreview] = useState(Show.EDITOR);
 
+    logger.debug(markdownText, "CustomMarkdownConfiguration, initialValue");
+
     const onChange = (checked: boolean) => {
         let show;
         if (checked) {
@@ -19,12 +22,13 @@ const CustomMarkdownConfiguration: React.FC<CustomMarkdownConfigurationProps> = 
             show = Show.EDITOR;
         }
         setShowPreview(show);
+        logger.debug(show, "CustomMarkdownConfiguration, onChange");
     };
 
     const onSubmit = () => {
         props.onChange(markdownText);
         messageApi.info("Custom Markdown Text Value is Changed");
-        console.log(markdownText);
+        logger.debug(markdownText, "CustomMarkdownConfiguration, onSubmit");
     };
 
     return <Card style={{width: "100%"}} title={"Add Custom MD text to end of document"}>

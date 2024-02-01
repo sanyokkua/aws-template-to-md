@@ -5,6 +5,7 @@ import { Button, Card, Form, Input, message, Space } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { RepositoryTag }                     from "../../../../../../../../core/config/models";
 import { isEmptyString }                     from "../../../../../../../../core/string_utils";
+import logger from "../../../../../../../../logger";
 
 type RepositoryTagsConfigurationProps = {
     repositoryTags: RepositoryTag[];
@@ -34,9 +35,12 @@ const RepositoryTagsConfiguration: React.FC<RepositoryTagsConfigurationProps> = 
         };
     });
 
+    logger.debug(initialValue, "RepositoryTagsConfiguration, initialValue");
+
     const onFormSubmit = (values?: any) => {
         if (values === undefined || !("tags" in values)) {
             messageApi.warning("Form is not returned list of items");
+            logger.debug(values, "RepositoryTagsConfiguration, onFormSubmit, Form is not returned list of items");
             return;
         }
 
@@ -48,10 +52,11 @@ const RepositoryTagsConfiguration: React.FC<RepositoryTagsConfigurationProps> = 
 
             props.onChange(tags.slice());// Slice required to make a copy of array, React expects new object to update
             messageApi.info("Repository Tags Values are Changed");
-            console.log(tags);
+            logger.debug(tags, "RepositoryTagsConfiguration, onFormSubmit, tags");
             return;
         }
 
+        logger.debug(values, "RepositoryTagsConfiguration, onFormSubmit, No Update happen");
         messageApi.warning("No Update happen");
     };
 

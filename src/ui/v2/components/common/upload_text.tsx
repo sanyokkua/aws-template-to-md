@@ -2,6 +2,7 @@ import React                       from "react";
 import { UploadOutlined }          from "@ant-design/icons";
 import { Button, message, Upload } from "antd";
 import { RcFile }                  from "antd/lib/upload";
+import logger from "../../../../logger";
 
 export type UploadResult = {
     fileContent: string;
@@ -38,12 +39,13 @@ const UploadText: React.FC<UploadTextProps> = (props: UploadTextProps) => {
                 messageApi.success("Successfully loaded content of the file");
             } else {
                 messageApi.error("Error occurred during loading content of the file, check console for details");
-                console.error("Type of content is not a string");
+                logger.error("Type of content is not a string");
             }
         };
         reader.onerror = (event) => {
             messageApi.error("Error occurred during loading content of the file, check console for details");
-            console.error(event?.target?.error);
+            logger.error(event?.target?.error);
+
         };
 
         reader.readAsText(file);

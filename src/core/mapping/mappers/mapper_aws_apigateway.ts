@@ -20,6 +20,7 @@ import {
 }                                                               from "../../cloudformation/models/aws_apigateway";
 import { getFixedName, getStringValueForField }                 from "../utils/utils";
 import { isEmptyString }                                        from "../../string_utils";
+import logger from "../../../logger";
 
 interface ParsedArn {
     service: string;
@@ -88,7 +89,7 @@ export class MapperApiGatewayRestApi implements Mapper<MappedApiGatewayRestApi> 
         const urlPath = this.buildUrlPath(method, rawResourcesCollection);
 
         if (urlPath === undefined) {
-            console.log("URL Path was not built");
+            logger.debug({}, "URL Path was not built");
             return undefined;
         }
 
@@ -171,7 +172,7 @@ export class MapperApiGatewayRestApi implements Mapper<MappedApiGatewayRestApi> 
         // Get top Resource for current method with its Path Part
         const topResourceId = getStringValueForField(method.Properties.ResourceId);
         if (topResourceId === undefined || topResourceId === null || isEmptyString(topResourceId)) {
-            console.warn("Something went wrong with getting ResourceID");
+            logger.warn("Something went wrong with getting ResourceID");
             return undefined;
         }
 

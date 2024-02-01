@@ -23,7 +23,6 @@ export enum MDCodeSyntax {
     JSON = "json",
 }
 
-export const HEADER_COLUMN = "---";
-export const CODE_BLOCK_SYMBOL = "```";
-
+export const HEADER_COLUMN: string = "---";
+export const CODE_BLOCK_SYMBOL: string = "```";
 export const NEW_LINE: string = "\n";

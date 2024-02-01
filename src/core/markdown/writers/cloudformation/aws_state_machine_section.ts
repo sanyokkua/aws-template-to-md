@@ -11,6 +11,7 @@ import {
 }                                                                         from "../../../mapping/models/mapped_aws_stepfunctions";
 import { mdCreateLink, mdMakeCodeBlock, mdMakeContentBlock, mdMakeTable } from "../../utils";
 import { MDCodeSyntax, MDHeader, NEW_LINE }                               from "../../constants";
+import logger from "../../../../logger";
 
 export const SHOW_STEP_FUNCTION_DEFINITION = "showStepFunctionDefinition";
 export const SHOW_STEP_FUNCTION_STEPS = "showStepFunctionSteps";
@@ -24,14 +25,18 @@ type Configuration = {
 
 export const createAwsStateMachinesSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({}, "createAwsStateMachinesSectionText. dataValue is null and empty string will be returned");
         return "";
     }
 
     const stateMachines = dataValue.getMappedStepFunctionsStateMachine();
     if (isEmptyArray(stateMachines)) {
+        logger.debug({},
+                     "createAwsStateMachinesSectionText. stateMachines is emptyArray, empty string will be returned");
         return "";
     }
 
+    logger.debug({dataValue, additionalConfigs}, "createAwsStateMachinesSectionText. input values");
 
     let showStepFunctionDefinition: boolean = DEFAULT_OTHER_APP_CONFIGURATION.showStepFunctionDefinition;
     let showStepFunctionSteps: boolean = DEFAULT_OTHER_APP_CONFIGURATION.showStepFunctionSteps;
@@ -111,7 +116,7 @@ function createStateMachineStepsTable(definitionObj: MappedStateMachineDefinitio
             } else if (Array.isArray(step.Next)) {
                 next = step.Next.join(" or ");
             } else {
-                console.warn(step.Next);
+                logger.warn(step.Next);
                 throw Error("state.Next has wrong type. Check console for details");
             }
         }

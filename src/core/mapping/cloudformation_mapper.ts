@@ -24,6 +24,7 @@ import { MapperMappedSNSTopic }                               from "./mappers/ma
 import { MapperMappedSQSQueue }                               from "./mappers/mapper_aws_sqs";
 import { MapperMappedStepFunctionsStateMachine }              from "./mappers/mapper_aws_stepfunctions";
 import { isEmptyString }                                      from "../string_utils";
+import logger from "../../logger";
 
 
 const AWS_RES_TO_APP_STRUCT_MAPPERS = new Map<string, Mapper<CommonMappedResource>>(
@@ -43,24 +44,32 @@ const DEFAULT_MAPPER = new MapperDefault();
 
 export function createDocumentResourcesTree(rawResCollection: RawCloudFormationResourcesCollection, options?: ParsingOptions): DocumentResourcesTree {
     if (rawResCollection === undefined || rawResCollection === null) {
-        throw new Error("Passed RawCloudFormationResourcesCollection is null or undefined");
+        logger.debug({rawResCollection, options}, "createDocumentResourcesTree. rawResCollection is null");
+        throw new Error("Passed RawCloudFormationResourcesCollection is null or undefined, check console for details");
     }
 
     const docTree = new DocumentResourcesTree();
 
     rawResCollection.getAllResources().forEach(resource => {
         if (resource.Type === undefined || resource.Type === null || isEmptyString(resource.Type)) {
-            throw new Error("Type is null or empty, incorrect resource passed to cloud formation mapper");
+            logger.debug(resource, "createDocumentResourcesTree. getAllResources().forEach, resource type is absent");
+            throw new Error(
+                "Type is null or empty, incorrect resource passed to cloud formation mapper, check console for details");
         }
 
         let mapperForCurrentResourceType = AWS_RES_TO_APP_STRUCT_MAPPERS.get(resource.Type);
+        logger.debug(mapperForCurrentResourceType, "createDocumentResourcesTree. mapperForCurrentResourceType");
         if (mapperForCurrentResourceType === undefined) {
+            logger.debug(mapperForCurrentResourceType,
+                         "createDocumentResourcesTree. mapperForCurrentResourceType is null, default mapper will be used");
             mapperForCurrentResourceType = DEFAULT_MAPPER;
         }
 
         const mappedResource = mapperForCurrentResourceType.mapResource(resource, rawResCollection, options);
         docTree.addResource(mappedResource);
+        logger.debug({mappedResource, docTree}, "createDocumentResourcesTree. resource was mapped and added to tree");
     });
 
+    logger.debug(docTree, "createDocumentResourcesTree. Final tree will be returned");
     return docTree;
 }

@@ -5,6 +5,7 @@ import { DEFAULT_OTHER_APP_CONFIGURATION }       from "../../../config/constatns
 import { MappedLambdaFunction }                  from "../../../mapping/models/mapped_aws_lambda";
 import { mdMakeContentBlock, mdMakeTable }       from "../../utils";
 import { isEmptyString }                         from "../../../string_utils";
+import logger from "../../../../logger";
 
 export const SHOW_LAMBDA_VARS = "showLambdaVars";
 export const SHOW_LAMBDA_VARS_VALUES = "showLambdaVarsValues";
@@ -16,13 +17,18 @@ type Configuration = {
 
 export const createAwsLambdaFunctionsSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({}, "createAwsLambdaFunctionsSectionText. dataValue is null and empty string will be returned");
         return "";
     }
 
     const mappedLambdaFunctions = dataValue.getMappedLambdaFunction();
     if (isEmptyArray(mappedLambdaFunctions)) {
+        logger.debug({},
+                     "createAwsLambdaFunctionsSectionText. mappedLambdaFunctions is emptyArray, empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createAwsLambdaFunctionsSectionText. input values");
 
     let showLambdaVars: boolean = DEFAULT_OTHER_APP_CONFIGURATION.showLambdaVars;
     let showLambdaVarsValues: boolean = DEFAULT_OTHER_APP_CONFIGURATION.showLambdaVarsValues;

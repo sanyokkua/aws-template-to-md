@@ -4,6 +4,7 @@ import { Button, Card, Form, Input, message, Space } from "antd";
 import { MinusCircleOutlined, PlusOutlined }         from "@ant-design/icons";
 import { Project }                                   from "../../../../../../../../core/config/models";
 import { isEmptyString }                             from "../../../../../../../../core/string_utils";
+import logger from "../../../../../../../../logger";
 
 type RelatedProjectsConfigurationProps = {
     relatedProjects: Project[];
@@ -31,9 +32,12 @@ const RelatedProjectsConfiguration: React.FC<RelatedProjectsConfigurationProps> 
         };
     });
 
+    logger.debug(initialValue, "RelatedProjectsConfiguration, initialValues");
+
     const onFormSubmit = (values?: any) => {
         if (values === undefined || !("projects" in values)) {
             messageApi.warning("Form is not returned list of items");
+            logger.debug(values, "RelatedProjectsConfiguration, onFormSubmit, Form is not returned list of items");
             return;
         }
 
@@ -44,11 +48,12 @@ const RelatedProjectsConfiguration: React.FC<RelatedProjectsConfigurationProps> 
 
             props.onChange(projects.slice());// Slice required to make a copy of array, React expects new object to update
             messageApi.info("Related Projects Values are Changed");
-            console.log(projects);
+            logger.debug(projects, "RelatedProjectsConfiguration, onFormSubmit");
             return;
         }
 
         messageApi.warning("No Update happen");
+        logger.debug(initialValue, "RelatedProjectsConfiguration, onFormSubmit, no update happen");
     };
 
     return <Card style={{width: "100%"}} title={"Add Related Projects"}>

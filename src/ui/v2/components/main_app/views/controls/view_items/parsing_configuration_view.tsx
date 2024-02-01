@@ -22,6 +22,7 @@ import {
 }                                   from "../../../../../../../core/config/constatns";
 import { ParsingConfiguration }     from "../../../../../../../core/config/models";
 import OtherAppConfigurations       from "./parsing_configuration_editors/other_app_configuration";
+import logger from "../../../../../../../logger";
 
 export type MainControlElementsProps = {
     showElement: boolean;
@@ -43,6 +44,7 @@ const OTHER_APP_CONFIGURATION = "otherAppConfiguration";
 
 const ParsingConfigurationView: React.FC<MainControlElementsProps> = (props: MainControlElementsProps) => {
     if (!props.showElement) {
+        logger.debug(props.showElement, "ParsingConfigurationView, props.showElement, empty element will be returned");
         return <></>;
     }
 
@@ -61,9 +63,11 @@ const ParsingConfigurationView: React.FC<MainControlElementsProps> = (props: Mai
                            ...props.parsingConfiguration,
                            [fieldToUpdate]: data,
                        });
+        logger.debug({fieldToUpdate, data}, "ParsingConfigurationView, onConfigUpdated");
     };
 
     const getConfigurationComponent = (editor: string) => {
+        logger.debug(editor, "ParsingConfigurationView, getConfigurationComponent, editor");
         switch (editor) {
             case PARSER_CONFIGURATION:
                 return <ParserConfiguration config={currentParserConfig}

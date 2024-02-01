@@ -3,11 +3,15 @@ import { AccountInformation }                            from "../../../config/m
 import { isEmptyArray }                                  from "../../../common_utils";
 import { isEmptyString }                                 from "../../../string_utils";
 import { mdCreateLink, mdMakeContentBlock, mdMakeTable } from "../../utils";
+import logger from "../../../../logger";
 
 export const createAccountInformationSectionText: MarkdownWriterFunc<AccountInformation[]> = (dataValue: AccountInformation[], additionalConfigs?: AdditionalConfigs): string => {
     if (isEmptyArray(dataValue)) {
+        logger.debug({}, "createAccountInformationSectionText. dataValue is null and empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createAccountInformationSectionText. input values");
 
     const header = ["Name", "Description", "Account ID"];
     const values: string[][] = dataValue.map(accountInfo => {

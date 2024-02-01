@@ -3,17 +3,22 @@ import { DocumentResourcesTree }                 from "../../../mapping/models/m
 import { isEmptyArray }                          from "../../../common_utils";
 import { MappedSQSQueue }                        from "../../../mapping/models/mapped_aws_sqs";
 import { mdMakeContentBlock, mdMakeTable }       from "../../utils";
+import logger from "../../../../logger";
 
 
 export const createAwsSqsSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {
+        logger.debug({}, "createAwsSqsSectionText. dataValue is null and empty string will be returned");
         return "";
     }
 
     const mappedSQSQueues = dataValue.getMappedSQSQueue();
     if (isEmptyArray(mappedSQSQueues)) {
+        logger.debug({}, "createAwsSqsSectionText. mappedSQSQueues is emptyArray, empty string will be returned");
         return "";
     }
+
+    logger.debug({dataValue, additionalConfigs}, "createAwsSqsSectionText. input values");
 
     return createMarkdownContent(mappedSQSQueues);
 };
