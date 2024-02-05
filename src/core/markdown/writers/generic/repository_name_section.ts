@@ -2,7 +2,7 @@ import { AdditionalConfigs, MarkdownWriterFunc } from "../common";
 import { isEmptyString }                         from "../../../string_utils";
 import { mdMakeContentBlock }                    from "../../utils";
 import { MDHeader }                              from "../../constants";
-import logger from "../../../../logger";
+import logger                                    from "../../../../logger";
 
 export const createRepositoryNameSectionText: MarkdownWriterFunc<string> = (dataValue: string, additionalConfigs?: AdditionalConfigs): string => {
     if (isEmptyString(dataValue)) {

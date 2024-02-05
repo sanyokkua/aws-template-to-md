@@ -3,7 +3,7 @@ import { DesignInformation }                     from "../../../config/models";
 
 import { mdCreateImageLink, mdCreateLink, mdMakeContentBlock } from "../../utils";
 import { NEW_LINE }                                            from "../../constants";
-import logger from "../../../../logger";
+import logger                                                  from "../../../../logger";
 
 export const createSolutionDesignSectionText: MarkdownWriterFunc<DesignInformation> = (dataValue: DesignInformation, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {

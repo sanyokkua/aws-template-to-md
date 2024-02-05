@@ -3,7 +3,7 @@ import { DocumentResourcesTree }                 from "../../../mapping/models/m
 import { isEmptyArray }                          from "../../../common_utils";
 import { CommonMappedResource }                  from "../../../mapping/models/mapped_common";
 import { mdMakeContentBlock, mdMakeTable }       from "../../utils";
-import logger from "../../../../logger";
+import logger                                    from "../../../../logger";
 
 type Amount = [number, string];
 

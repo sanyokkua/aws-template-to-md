@@ -4,7 +4,7 @@ import { OtherAppConfiguration }                                    from "../../
 import {
     AVAILABLE_MARKDOWN_DOC_SECTIONS,
 }                                                                   from "../../../../../../../../core/config/constatns";
-import logger from "../../../../../../../../logger";
+import logger                                                       from "../../../../../../../../logger";
 
 function mapValuesToSelectProps(values: string[]): SelectProps["options"] {
     return values.slice().map(name => {
@@ -28,6 +28,7 @@ const OtherAppConfigurations: React.FC<OtherAppConfigurationProps> = (props: Oth
 
     const showStepFunctionDefinition: boolean = props.config.showStepFunctionDefinition ?? "";
     const showStepFunctionSteps: boolean = props.config.showStepFunctionSteps ?? "";
+    const showStepFunctionStepsDetails: boolean = props.config.showStepFunctionStepsDetails ?? "";
     const showLambdaVars: boolean = props.config.showLambdaVars ?? "";
     const showLambdaVarsValues: boolean = props.config.showLambdaVarsValues ?? "";
     const showApiGatewayEndpointMaintainerColumn: boolean = props.config.showApiGatewayEndpointMaintainerColumn ?? "";
@@ -46,6 +47,7 @@ const OtherAppConfigurations: React.FC<OtherAppConfigurationProps> = (props: Oth
     logger.debug({
                      showStepFunctionDefinition,
                      showStepFunctionSteps,
+                     showStepFunctionStepsDetails,
                      showLambdaVars,
                      showLambdaVarsValues,
                      showApiGatewayEndpointMaintainerColumn,
@@ -64,6 +66,7 @@ const OtherAppConfigurations: React.FC<OtherAppConfigurationProps> = (props: Oth
     const onFormSubmit = () => {
         const showStepFunctionDefinitionValue: boolean = form.getFieldValue("showStepFunctionDefinition") ?? showStepFunctionDefinition;
         const showStepFunctionStepsValue: boolean = form.getFieldValue("showStepFunctionSteps") ?? showStepFunctionSteps;
+        const showStepFunctionStepsDetailsValue: boolean = form.getFieldValue("showStepFunctionStepsDetails") ?? showStepFunctionStepsDetails;
         const showLambdaVarsValue: boolean = form.getFieldValue("showLambdaVars") ?? showLambdaVars;
         const showLambdaVarsValuesValue: boolean = form.getFieldValue("showLambdaVarsValues") ?? showLambdaVarsValues;
         const showApiGatewayEndpointMaintainerColumnValue: boolean = form.getFieldValue(
@@ -90,6 +93,7 @@ const OtherAppConfigurations: React.FC<OtherAppConfigurationProps> = (props: Oth
         const result: OtherAppConfiguration = {
             showStepFunctionDefinition: showStepFunctionDefinitionValue,
             showStepFunctionSteps: showStepFunctionStepsValue,
+            showStepFunctionStepsDetails: showStepFunctionStepsDetailsValue,
             showLambdaVars: showLambdaVarsValue,
             showLambdaVarsValues: showLambdaVarsValuesValue,
             showApiGatewayEndpointMaintainerColumn: showApiGatewayEndpointMaintainerColumnValue,
@@ -118,10 +122,16 @@ const OtherAppConfigurations: React.FC<OtherAppConfigurationProps> = (props: Oth
                        initialValue={showStepFunctionDefinition}>
                 <Switch/>
             </Form.Item>
-            <Form.Item label="Show Step Function Steps Description"
+            <Form.Item label="Show Step Function Steps Table"
                        name="showStepFunctionSteps"
                        valuePropName="checked"
                        initialValue={showStepFunctionSteps}>
+                <Switch/>
+            </Form.Item>
+            <Form.Item label="Show Step Function Steps Details"
+                       name="showStepFunctionStepsDetails"
+                       valuePropName="checked"
+                       initialValue={showStepFunctionStepsDetails}>
                 <Switch/>
             </Form.Item>
             <Form.Item label="Show LambdaFunction Environment Variables"

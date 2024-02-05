@@ -1,6 +1,6 @@
 import { CloudFormationTemplate, RawCloudFormationResourcesCollection } from "./models/common_models";
 import { isEmptyString }                                                from "../string_utils";
-import logger from "../../logger";
+import logger                                                           from "../../logger";
 
 
 export function parseCloudFormationTemplateJson(jsonString: string | undefined | null): CloudFormationTemplate {

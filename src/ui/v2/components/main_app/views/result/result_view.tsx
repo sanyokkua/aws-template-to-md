@@ -2,7 +2,7 @@ import React                    from "react";
 import { Skeleton }             from "antd";
 import { isEmptyString }        from "../../../../../../core/string_utils";
 import MarkdownEditorPlusViewer from "../../../common/markdown/markdown_editor_plus_viewer";
-import logger from "../../../../../../logger";
+import logger                   from "../../../../../../logger";
 
 export type ResultContentComponentProps = {
     markdownText: string;

@@ -5,7 +5,7 @@ import { MappedEventsRule }                                 from "../../../mappi
 import { mdMakeCodeBlock, mdMakeContentBlock, mdMakeTable } from "../../utils";
 import { MDCodeSyntax, MDHeader, NEW_LINE }                 from "../../constants";
 import { isEmptyString }                                    from "../../../string_utils";
-import logger from "../../../../logger";
+import logger                                               from "../../../../logger";
 
 export const createAwsEventsRulesSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {

@@ -16,7 +16,7 @@ import {
 import {
     createMarkdownDocument,
 }                               from "./markdown/markdown_writer";
-import logger from "../logger";
+import logger                   from "../logger";
 
 export function parseCloudFormationTemplate(jsonTemplate: string, parsingConfiguration: ParsingConfiguration): string {
     logger.debug({jsonTemplate, parsingConfiguration}, "parseCloudFormationTemplate. passed arguments");

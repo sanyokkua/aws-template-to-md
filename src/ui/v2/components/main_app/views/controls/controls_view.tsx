@@ -5,7 +5,7 @@ import MainControlHeaderButtonsView from "./view_items/main_control_header_butto
 import RawTemplateEditorView        from "./view_items/raw_template_editor_view";
 import ParsingConfigurationView     from "./view_items/parsing_configuration_view";
 import { ParsingConfiguration }     from "../../../../../../core/config/models";
-import logger from "../../../../../../logger";
+import logger                       from "../../../../../../logger";
 
 
 type ControlsContentViewProps = {

@@ -6,11 +6,11 @@ import { isEmptyString }                                            from "../../
 import { AVAILABLE_APP_CONFIGURATORS, DefaultParsingConfiguration } from "../../../../core/config/constatns";
 import { copyToClipboard }                                          from "../../../../core/clipboard_utils";
 import { parseCloudFormationTemplate }                              from "../../../../core/cloudformation_parser";
-import { saveTextAsFile }                             from "../../../../core/file_save_utils";
-import { loadAppConfiguration, saveAppConfiguration } from "../../../../core/config/config_storage";
-import { ParsingConfiguration }                       from "../../../../core/config/models";
-import { DownloadOutlined }                           from "@ant-design/icons";
-import logger                                         from "../../../../logger";
+import { saveTextAsFile }                                           from "../../../../core/file_save_utils";
+import { loadAppConfiguration, saveAppConfiguration }               from "../../../../core/config/config_storage";
+import { ParsingConfiguration }                                     from "../../../../core/config/models";
+import { DownloadOutlined }                                         from "@ant-design/icons";
+import logger                                                       from "../../../../logger";
 
 
 const MainAppView: React.FC = () => {

@@ -2,7 +2,7 @@ import { AdditionalConfigs, MarkdownWriterFunc }                          from "
 import { RepositoryInfo }                                                 from "../../../config/models";
 import { mdAddStyleToText, mdCreateLink, mdMakeContentBlock, mdMakeList } from "../../utils";
 import { MDTextStyle }                                                    from "../../constants";
-import logger from "../../../../logger";
+import logger                                                             from "../../../../logger";
 
 export const createRepositoryUsefulInformationSectionText: MarkdownWriterFunc<RepositoryInfo> = (dataValue: RepositoryInfo, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {

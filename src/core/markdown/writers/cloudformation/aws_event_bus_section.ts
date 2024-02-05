@@ -3,7 +3,7 @@ import { DocumentResourcesTree }                 from "../../../mapping/models/m
 import { isEmptyArray }                          from "../../../common_utils";
 import { MappedEventsEventBus }                  from "../../../mapping/models/mapped_aws_events";
 import { mdMakeContentBlock, mdMakeList }        from "../../utils";
-import logger from "../../../../logger";
+import logger                                    from "../../../../logger";
 
 export const createAwsEventBusSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {

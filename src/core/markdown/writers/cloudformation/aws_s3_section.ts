@@ -3,7 +3,7 @@ import { DocumentResourcesTree }                 from "../../../mapping/models/m
 import { isEmptyArray }                          from "../../../common_utils";
 import { MappedS3Bucket }                        from "../../../mapping/models/mapped_aws_s3";
 import { mdMakeContentBlock, mdMakeList }        from "../../utils";
-import logger from "../../../../logger";
+import logger                                    from "../../../../logger";
 
 
 export const createAwsS3SectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {

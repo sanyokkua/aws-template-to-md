@@ -3,7 +3,7 @@ import { mdCreateTableOfContent, mdMakeContentBlock } from "../../utils";
 import { isEmptyString }                              from "../../../string_utils";
 import { MDHeader, NEW_LINE }                         from "../../constants";
 import { isEmptyArray }                               from "../../../common_utils";
-import logger from "../../../../logger";
+import logger                                         from "../../../../logger";
 
 export const TABLE_OF_CONTENT_MARKER_TEXT: string = "$$$TABLE_OF_CONTENT$$$";
 export const createTableOfContentSectionText: MarkdownWriterFunc<string> = (dataValue: string, additionalConfigs?: AdditionalConfigs): string => {

@@ -94,6 +94,7 @@ import {
     createAwsStateMachinesSectionText,
     SHOW_STEP_FUNCTION_DEFINITION,
     SHOW_STEP_FUNCTION_STEPS,
+    SHOW_STEP_FUNCTION_STEPS_DETAILS,
 }                               from "./writers/cloudformation/aws_state_machine_section";
 import {
     createAwsS3SectionText,
@@ -102,8 +103,8 @@ import {
     createCustomMarkdownSectionText,
 }                               from "./writers/generic/custom_markdown_section";
 import { NEW_LINE }             from "./constants";
-import { isEmptyString } from "../string_utils";
-import logger            from "../../logger";
+import { isEmptyString }        from "../string_utils";
+import logger                   from "../../logger";
 
 export function createMarkdownDocument(parsingConfiguration: ParsingConfiguration, documentResourcesTree: DocumentResourcesTree): string {
     logger.debug({parsingConfiguration, documentResourcesTree}, "createMarkdownDocument. Input Values");
@@ -201,6 +202,7 @@ export function createMarkdownDocument(parsingConfiguration: ParsingConfiguratio
                 resultLines.push(createAwsStateMachinesSectionText(documentResourcesTree, {
                     [SHOW_STEP_FUNCTION_DEFINITION]: parsingConfiguration.otherAppConfiguration[SHOW_STEP_FUNCTION_DEFINITION],
                     [SHOW_STEP_FUNCTION_STEPS]: parsingConfiguration.otherAppConfiguration[SHOW_STEP_FUNCTION_STEPS],
+                    [SHOW_STEP_FUNCTION_STEPS_DETAILS]: parsingConfiguration.otherAppConfiguration[SHOW_STEP_FUNCTION_STEPS_DETAILS],
                     [ADD_STEP_FUNCTION_DESIGN_IMG_STUB]: parsingConfiguration.otherAppConfiguration[ADD_STEP_FUNCTION_DESIGN_IMG_STUB],
                 }));
                 break;

@@ -2,7 +2,7 @@ import { AdditionalConfigs, MarkdownWriterFunc }         from "../common";
 import { RepositoryMaintainer }                          from "../../../config/models";
 import { isEmptyArray }                                  from "../../../common_utils";
 import { mdCreateLink, mdMakeContentBlock, mdMakeTable } from "../../utils";
-import logger from "../../../../logger";
+import logger                                            from "../../../../logger";
 
 export const createRepositoryMaintainersSectionText: MarkdownWriterFunc<RepositoryMaintainer[]> = (dataValue: RepositoryMaintainer[], additionalConfigs?: AdditionalConfigs): string => {
     if (isEmptyArray(dataValue)) {

@@ -4,7 +4,7 @@ import { isEmptyArray }                          from "../../../common_utils";
 import { isEmptyString }                         from "../../../string_utils";
 import { mdCreateImageLink, mdMakeContentBlock } from "../../utils";
 import { NEW_LINE }                              from "../../constants";
-import logger from "../../../../logger";
+import logger                                    from "../../../../logger";
 
 export const createRepositoryTagsSectionText: MarkdownWriterFunc<RepositoryTag[]> = (dataValue: RepositoryTag[], additionalConfigs?: AdditionalConfigs): string => {
     if (isEmptyArray(dataValue)) {

@@ -4,7 +4,7 @@ import { Button, Card, Form, Input, message, Space } from "antd";
 import { MinusCircleOutlined, PlusOutlined }         from "@ant-design/icons";
 import { AccountInformation }                        from "../../../../../../../../core/config/models";
 import { isEmptyString }                             from "../../../../../../../../core/string_utils";
-import logger from "../../../../../../../../logger";
+import logger                                        from "../../../../../../../../logger";
 
 type AccountsConfigurationProps = {
     accounts: AccountInformation[];

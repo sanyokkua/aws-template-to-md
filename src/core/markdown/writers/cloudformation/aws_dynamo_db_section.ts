@@ -5,7 +5,7 @@ import { DEFAULT_OTHER_APP_CONFIGURATION }                           from "../..
 import { MappedDynamoDbTable }                                       from "../../../mapping/models/mapped_aws_dynamodb";
 import { MDHeader, NEW_LINE }                                        from "../../constants";
 import { mdMakeCollapsableSection, mdMakeContentBlock, mdMakeTable } from "../../utils";
-import logger from "../../../../logger";
+import logger                                                        from "../../../../logger";
 
 export const ADD_DYNAMO_DB_EXAMPLES_STUB = "addDynamoDbExamplesStub";
 

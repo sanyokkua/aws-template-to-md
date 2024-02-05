@@ -5,7 +5,7 @@ import { DEFAULT_OTHER_APP_CONFIGURATION }       from "../../../config/constatns
 import { MappedLambdaFunction }                  from "../../../mapping/models/mapped_aws_lambda";
 import { mdMakeContentBlock, mdMakeTable }       from "../../utils";
 import { isEmptyString }                         from "../../../string_utils";
-import logger from "../../../../logger";
+import logger                                    from "../../../../logger";
 
 export const SHOW_LAMBDA_VARS = "showLambdaVars";
 export const SHOW_LAMBDA_VARS_VALUES = "showLambdaVarsValues";

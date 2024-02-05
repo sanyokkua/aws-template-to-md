@@ -2,7 +2,7 @@ import React                       from "react";
 import { UploadOutlined }          from "@ant-design/icons";
 import { Button, message, Upload } from "antd";
 import { RcFile }                  from "antd/lib/upload";
-import logger from "../../../../logger";
+import logger                      from "../../../../logger";
 
 export type UploadResult = {
     fileContent: string;

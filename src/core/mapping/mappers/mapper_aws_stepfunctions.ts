@@ -34,7 +34,7 @@ import {
     removeSuffix,
     replaceSubstring,
 }                                          from "../../string_utils";
-import logger from "../../../logger";
+import logger                              from "../../../logger";
 
 type StateMapperFn = (stateId: string, state: State) => MappedState;
 
@@ -321,10 +321,16 @@ function mapStateOfTypeChoice(stateId: string, state: State): MappedState {
     nextStates.push(state?.Default ?? "");
 
     const result = nextStates.filter(v => !isEmptyString(v));
+    const choices: string[] = state.Choices?.map(ch => {
+        return JSON.stringify(ch, null, 2);
+    }) ?? [];
+    const defaultDest = state.Default ?? "";
     return {
         "StateID": stateId,
         "StateType": state.Type,
         "Next": result,
+        "Choices": choices,
+        "Default": defaultDest,
     };
 }
 
@@ -378,11 +384,19 @@ function mapStateOfTypeParallel(stateId: string, state: State): MappedState {
 function mapStateOfTypeMap(stateId: string, state: State): MappedState {
     validateStateType(StateTypes.Map, state.Type);
 
+    let mappedSfDefinition;
+    if (state.Iterator !== undefined) {
+        mappedSfDefinition = mapSfDefinitionObject(state.Iterator);
+    } else if (state.ItemProcessor !== undefined) {
+        mappedSfDefinition = mapSfDefinitionObject(state.ItemProcessor);
+    }
+
     return {
         "StateID": stateId,
         "StateType": state.Type,
         "Next": state.Next,
         "End": state.End,
+        "ItemProcessor": mappedSfDefinition,
     };
 }
 

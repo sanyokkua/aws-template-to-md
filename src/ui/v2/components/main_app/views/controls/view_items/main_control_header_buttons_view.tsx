@@ -3,7 +3,7 @@ import UploadText, { UploadResult }             from "../../../../common/upload_
 import { Alert, Button, Flex, message, Switch } from "antd";
 import { pasteFromClipboard }                   from "../../../../../../../core/clipboard_utils";
 import { isEmptyString }                        from "../../../../../../../core/string_utils";
-import logger from "../../../../../../../logger";
+import logger                                   from "../../../../../../../logger";
 
 
 export type MainControlHeaderButtonsProps = {

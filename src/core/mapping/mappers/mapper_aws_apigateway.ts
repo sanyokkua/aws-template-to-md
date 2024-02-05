@@ -20,7 +20,7 @@ import {
 }                                                               from "../../cloudformation/models/aws_apigateway";
 import { getFixedName, getStringValueForField }                 from "../utils/utils";
 import { isEmptyString }                                        from "../../string_utils";
-import logger from "../../../logger";
+import logger                                                   from "../../../logger";
 
 interface ParsedArn {
     service: string;

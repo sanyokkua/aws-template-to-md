@@ -3,7 +3,7 @@ import { DocumentResourcesTree }                 from "../../../mapping/models/m
 import { isEmptyArray }                          from "../../../common_utils";
 import { mdMakeContentBlock, mdMakeTable }       from "../../utils";
 import { CommonMappedResource }                  from "../../../mapping/models/mapped_common";
-import logger from "../../../../logger";
+import logger                                    from "../../../../logger";
 
 export const createAwsDiagramResourcesSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {
     if (dataValue === undefined || dataValue === null) {

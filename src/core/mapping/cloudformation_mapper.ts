@@ -24,7 +24,7 @@ import { MapperMappedSNSTopic }                               from "./mappers/ma
 import { MapperMappedSQSQueue }                               from "./mappers/mapper_aws_sqs";
 import { MapperMappedStepFunctionsStateMachine }              from "./mappers/mapper_aws_stepfunctions";
 import { isEmptyString }                                      from "../string_utils";
-import logger from "../../logger";
+import logger                                                 from "../../logger";
 
 
 const AWS_RES_TO_APP_STRUCT_MAPPERS = new Map<string, Mapper<CommonMappedResource>>(

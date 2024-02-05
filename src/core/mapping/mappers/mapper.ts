@@ -1,6 +1,6 @@
 import { CommonResource, RawCloudFormationResourcesCollection } from "../../cloudformation/models/common_models";
 import { ParsingOptions }                                       from "../options/parsing_options";
-import logger from "../../../logger";
+import logger                                                   from "../../../logger";
 
 export interface Mapper<O> {
     mapResource(resource: CommonResource, rawResourcesCollection: RawCloudFormationResourcesCollection, options?: ParsingOptions): O;

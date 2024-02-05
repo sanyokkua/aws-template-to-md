@@ -3,7 +3,7 @@ import { AccountInformation }                            from "../../../config/m
 import { isEmptyArray }                                  from "../../../common_utils";
 import { isEmptyString }                                 from "../../../string_utils";
 import { mdCreateLink, mdMakeContentBlock, mdMakeTable } from "../../utils";
-import logger from "../../../../logger";
+import logger                                            from "../../../../logger";
 
 export const createAccountInformationSectionText: MarkdownWriterFunc<AccountInformation[]> = (dataValue: AccountInformation[], additionalConfigs?: AdditionalConfigs): string => {
     if (isEmptyArray(dataValue)) {

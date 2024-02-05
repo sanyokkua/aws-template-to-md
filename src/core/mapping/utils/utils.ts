@@ -7,7 +7,7 @@ import {
     REPLACE_TEXT_IN_RESOURCE_NAME,
 }                                                                      from "../options/parsing_options";
 import { isEmptyString, removePrefix, removeSuffix, replaceSubstring } from "../../string_utils";
-import logger from "../../../logger";
+import logger                                                          from "../../../logger";
 
 export function getStringValueForField(field: StringType | undefined): string {
     if (field === undefined) {

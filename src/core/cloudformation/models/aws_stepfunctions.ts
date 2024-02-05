@@ -97,6 +97,7 @@ export interface State {
     "ItemProcessor"?: StateMachineDefinition;
     "ItemsPath"?: string;
     "ItemSelector": { [key: string]: any };
+    "Iterator"?: StateMachineDefinition,
 }
 
 export interface States {

@@ -1,7 +1,7 @@
 import React, { useState }                         from "react";
 import { Button, Card, Col, message, Row, Switch } from "antd";
 import MarkdownEditorPlusViewer, { Show }          from "../../../../../common/markdown/markdown_editor_plus_viewer";
-import logger from "../../../../../../../../logger";
+import logger                                      from "../../../../../../../../logger";
 
 type CustomMarkdownConfigurationProps = {
     markdown: string;

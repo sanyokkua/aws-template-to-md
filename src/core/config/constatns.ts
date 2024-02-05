@@ -107,6 +107,8 @@ export const DEFAULT_CUSTOM_MARKDOWN_TEXT: string = "";
 export const DEFAULT_OTHER_APP_CONFIGURATION: OtherAppConfiguration = {
     showStepFunctionDefinition: false,
     showStepFunctionSteps: true,
+    showStepFunctionStepsDetails: true,
+
     showLambdaVars: true,
     showLambdaVarsValues: false,
     showApiGatewayEndpointMaintainerColumn: true,
@@ -133,3 +135,7 @@ export const DefaultParsingConfiguration: ParsingConfiguration = {
     customMarkdownText: DEFAULT_CUSTOM_MARKDOWN_TEXT,
     otherAppConfiguration: DEFAULT_OTHER_APP_CONFIGURATION,
 };
+
+export const DEFAULT_INTERVAL_SECONDS: number = 1; // default value: 1
+export const DEFAULT_MAX_ATTEMPTS: number = 3; // default: 3
+export const DEFAULT_BACKOFF_RATE: number = 2.0; // default: 2.0

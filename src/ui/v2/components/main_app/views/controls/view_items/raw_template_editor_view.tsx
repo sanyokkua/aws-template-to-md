@@ -2,7 +2,7 @@ import React      from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { langs }  from "@uiw/codemirror-extensions-langs";
 import { Card }   from "antd";
-import logger from "../../../../../../../logger";
+import logger     from "../../../../../../../logger";
 
 
 export type RawTemplateEditorProps = {

@@ -22,7 +22,7 @@ import {
 }                                   from "../../../../../../../core/config/constatns";
 import { ParsingConfiguration }     from "../../../../../../../core/config/models";
 import OtherAppConfigurations       from "./parsing_configuration_editors/other_app_configuration";
-import logger from "../../../../../../../logger";
+import logger                       from "../../../../../../../logger";
 
 export type MainControlElementsProps = {
     showElement: boolean;

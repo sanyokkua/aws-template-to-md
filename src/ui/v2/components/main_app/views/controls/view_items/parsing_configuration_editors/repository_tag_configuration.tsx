@@ -5,7 +5,7 @@ import { Button, Card, Form, Input, message, Space } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { RepositoryTag }                     from "../../../../../../../../core/config/models";
 import { isEmptyString }                     from "../../../../../../../../core/string_utils";
-import logger from "../../../../../../../../logger";
+import logger                                from "../../../../../../../../logger";
 
 type RepositoryTagsConfigurationProps = {
     repositoryTags: RepositoryTag[];

@@ -11,7 +11,7 @@ import {
 import { MDCodeSyntax, MDHeader, MDListType, NEW_LINE }                               from "../../constants";
 import { mdCreateLink, mdMakeCodeBlock, mdMakeContentBlock, mdMakeList, mdMakeTable } from "../../utils";
 import { isEmptyString }                                                              from "../../../string_utils";
-import logger from "../../../../logger";
+import logger                                                                         from "../../../../logger";
 
 export const SHOW_API_GATEWAY_ENDPOINT_MAINTAINER_COLUMN = "showApiGatewayEndpointMaintainerColumn";
 export const SHOW_API_GATEWAY_ENDPOINT_DOCS_LINK_COLUMN = "showApiGatewayEndpointDocsLinkColumn";

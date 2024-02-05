@@ -1,7 +1,7 @@
 import { AdditionalConfigs, MarkdownWriterFunc } from "../common";
 import { isEmptyString }                         from "../../../string_utils";
 import { mdMakeContentBlock }                    from "../../utils";
-import logger from "../../../../logger";
+import logger                                    from "../../../../logger";
 
 
 export const createCustomMarkdownSectionText: MarkdownWriterFunc<string> = (dataValue: string, additionalConfigs?: AdditionalConfigs): string => {

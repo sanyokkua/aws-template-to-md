@@ -4,7 +4,7 @@ import { isEmptyArray }                          from "../../../common_utils";
 import { MappedSNSTopic }                        from "../../../mapping/models/mapped_aws_sns";
 import { mdMakeContentBlock, mdMakeTable }       from "../../utils";
 import { MDHeader, NEW_LINE }                    from "../../constants";
-import logger from "../../../../logger";
+import logger                                    from "../../../../logger";
 
 
 export const createAwsSnsSectionText: MarkdownWriterFunc<DocumentResourcesTree> = (dataValue: DocumentResourcesTree, additionalConfigs?: AdditionalConfigs): string => {

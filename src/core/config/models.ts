@@ -50,6 +50,7 @@ export type OtherAppConfiguration = {
     showLambdaVarsValues: boolean;
     showApiGatewayEndpointMaintainerColumn: boolean;
     showApiGatewayEndpointDocsLinkColumn: boolean;
+    showStepFunctionStepsDetails: boolean;
 
     addDynamoDbExamplesStub: boolean;
     addDesignLinkStub: boolean;

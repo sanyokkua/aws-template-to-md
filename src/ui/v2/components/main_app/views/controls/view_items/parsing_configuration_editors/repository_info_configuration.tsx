@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Card, Form, Input, message } from "antd";
 import TextArea                               from "antd/es/input/TextArea";
 import { RepositoryInfo }                     from "../../../../../../../../core/config/models";
-import logger from "../../../../../../../../logger";
+import logger                                 from "../../../../../../../../logger";
 
 type RepositoryInfoConfigurationProps = {
     repositoryInfo: RepositoryInfo;

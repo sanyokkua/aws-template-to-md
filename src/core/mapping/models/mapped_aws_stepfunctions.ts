@@ -43,6 +43,8 @@ export interface MappedState {
     "Branches"?: MappedStateMachineDefinition[];
     "MaxConcurrency"?: number;
     "ItemProcessor"?: MappedStateMachineDefinition;
+    "Choices"?: string[],
+    "Default"?: string,
 }
 
 export interface MappedStateMachineDefinition {
