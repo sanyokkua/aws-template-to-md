@@ -18,7 +18,7 @@ import {
 }                                                from "../../../mapping/models/mapped_aws_stepfunctions";
 import {
     mdAddStyleToText,
-    mdCreateLink,
+    mdCreateImageLink,
     mdMakeCodeBlock,
     mdMakeContentBlock,
     mdMakeList,
@@ -107,7 +107,7 @@ function createStateMachineDescription(stateMachine: MappedStepFunctionsStateMac
         content.push(stateMachineStepsDetails);
     }
     if (configuration.addStepFunctionDesignImgStub) {
-        const diagramLinkStub = mdCreateLink("TODO:", `${stateMachine.name} diagram`);
+        const diagramLinkStub = mdCreateImageLink("TODO:", `${stateMachine.name} diagram`);
         content.push(diagramLinkStub);
     }
 
